@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+
+# Compiled output
+dist
+*.class
+*.js
+*.js.map
+
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.test
+.env.test.local
+
+# Build artifacts
+build/
+out/
+
+# Cache and build directories
+.cache/
+.nyc_output/
+.pnp/
+.pnp.js
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
