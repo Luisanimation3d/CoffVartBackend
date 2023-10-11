@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
+    "dev": "tsc && node --watch dist/index.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv-ts": "^0.2.1",
     "express": "^4.18.2",
     "typescript": "^5.2.2"
   },
