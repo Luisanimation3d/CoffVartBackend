@@ -5,7 +5,7 @@ export function getTest(req: Request, res: Response){
         ok: true,
         msg: 'Todo bien',
         data: {
-            nombre: 'Luis',
+            nombre: 'Hola',
             edad: 20
         }
     })
