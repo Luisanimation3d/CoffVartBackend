@@ -1,5 +1,5 @@
 import express from "express";
-
+import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
 
 export class Server {
@@ -16,6 +16,7 @@ export class Server {
 
         this.middlewares();
         this.routes();
+        this.dbConnection();
 
     }
 
@@ -41,6 +42,15 @@ export class Server {
 
     routes() {
         this.app.use(this.testPath, routes);
+    }
+
+    async dbConnection(){
+        try{
+            await sequelize.authenticate();
+            console.log('db connection');
+        }catch(err){
+            console.log('db connection error: ' + err);
+        }
     }
 
     listen() {
