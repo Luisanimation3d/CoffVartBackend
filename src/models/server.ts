@@ -35,7 +35,7 @@ export class Server {
                 'Access-Control-Allow-Headers',
                 'Content-Type, Authorization'
             );
-            next();
+            return next();
         });
         this.app.use(express.json());
     }

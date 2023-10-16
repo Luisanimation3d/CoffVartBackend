@@ -4,15 +4,13 @@
 
 ### Descripción
 
-Este proyecto es un backend para la aplicación Coff-v-Art, que es una aplicación web que permite a los usuarios crear y compartir obras de arte hechas con café.
+Este proyecto es un backend para la aplicación Coff-v-Art, que es una aplicación web que permita gestionar los procesos de compra y venta de acuerdo con las necesidades del cliente.
 
 ### Objetivos
 
 Los objetivos de este proyecto son:
 
-* Proporcionar una API para que la aplicación Coff-v-Art pueda almacenar y recuperar datos de las obras de arte.
-* Proporcionar una interfaz de usuario para que los usuarios puedan crear y administrar sus obras de arte.
-* Proporcionar una forma para que los usuarios puedan compartir sus obras de arte con otros usuarios.
+* Proporcionar una API para que la aplicación Coff-v-Art pueda almacenar y recuperar datos.
 
 ### Tecnologías utilizadas
 
@@ -29,8 +27,12 @@ Para instalar y configurar este proyecto, sigue los siguientes pasos:
 1. Clona el repositorio del proyecto.
 2. Instala las dependencias del proyecto usando el siguiente comando:
 
-```
+```ts
 npm install
+```
+
+```ts
+npm install -D
 ```
 
 3. Configura las variables de entorno del proyecto. Para ello, crea un archivo llamado `.env` en la raíz del proyecto y agrega las siguientes variables:
