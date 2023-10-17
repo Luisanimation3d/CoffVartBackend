@@ -46,8 +46,8 @@ export class Server {
 
     async dbConnection(){
         try{
-            await sequelize.authenticate();
-            console.log('db connection');
+            await sequelize.sync({ force: false });
+            console.log('db connection success');
         }catch(err){
             console.log('db connection error: ' + err);
         }
