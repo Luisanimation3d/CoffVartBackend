@@ -1,11 +1,13 @@
 import express from "express";
 import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
+import permissionRoutes from "../routes/permissions.route";
 
 export class Server {
     public app: express.Application;
     public port: number = parseInt(process.env.PORT || '') || 3000;
     public testPath: string;
+    public permissionPath: string;
     private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
 
     constructor() {
@@ -13,6 +15,7 @@ export class Server {
         this.port = parseInt(process.env.PORT || '') || 3000;
 
         this.testPath = '/test';
+        this.permissionPath = '/api/permissions';
 
         this.middlewares();
         this.routes();
@@ -42,6 +45,7 @@ export class Server {
 
     routes() {
         this.app.use(this.testPath, routes);
+        this.app.use(this.permissionPath, permissionRoutes);
     }
 
     async dbConnection(){
