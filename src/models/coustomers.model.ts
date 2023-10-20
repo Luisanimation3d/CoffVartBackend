@@ -13,17 +13,7 @@ export const coustumersModel = sequelize.define('coustumers', {
     },
     email: {
         type: DataTypes.STRING(30),
-        allowNull: false,
-        validate: {
-            isEmail: {
-                msg: "El correo electrónico debe tener un formato válido"
-            },
-            customValidator(value: string) {
-                if (!value.includes('@') || !value.endsWith('.com')) {
-                    throw new Error('El correo electrónico debe contener "@" y terminar con ".com"');
-                }
-            }
-        }
+        allowNull: false
     },
     address: {
         type: DataTypes.STRING(50),
