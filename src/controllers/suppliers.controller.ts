@@ -7,19 +7,19 @@ export const getSuppliers = async (req: Request, res: Response)=> {
 }
 
 export const postSuppliers =async(req:Request, res:Response)=> {
-    const {name, address} = req.body;
-    const newSupplier = await supplierModel.create({name,address});
+    const {name, coffeType,address,phone,quiality,unitCost} = req.body;
+    const newSupplier = await supplierModel.create({name,coffeType,address,phone,quiality,unitCost});
     res.status(200).json({newSupplier});
 }
 
 export const putSuppliers = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, address } = req.body;
+    const { name, coffeType,address,phone,quiality,unitCost,state } = req.body;
     const suppliers = await supplierModel.findByPk(id);
     if (!suppliers) {
         return res.status(404).json({ msg: 'Supplier not found' });
     }
-    await suppliers.update({ name, address });
+    await suppliers.update({ name, coffeType,address,phone,quiality,unitCost,state });
     res.status(200).json({ suppliers });
 }
 
