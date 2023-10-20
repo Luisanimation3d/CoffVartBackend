@@ -2,7 +2,7 @@ import express from "express";
 import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
 import permissionRoutes from "../routes/permissions.route";
-import coustomersRoutes from "../routes/coustomers.route";
+import coustomersRoutes from "../routes/coustomers.routes";
 
 export class Server {
     public app: express.Application;
