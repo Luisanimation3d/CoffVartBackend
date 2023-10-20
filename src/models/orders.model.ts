@@ -10,7 +10,7 @@ export const ordersModel = sequelize.define('orders', {
         primaryKey: true
     },
     nit: {
-        type: DataTypes.INTEGER(50),
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     quantity: {
@@ -18,7 +18,7 @@ export const ordersModel = sequelize.define('orders', {
         allowNull: false
     },
     phone: {
-        type: DataTypes.INTEGER(15),
+        type: DataTypes.INTEGER,
         allowNull: false
 
     },
