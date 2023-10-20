@@ -2,7 +2,7 @@ import express from "express";
 import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
 import permissionRoutes from "../routes/permissions.route";
-import coustomersRoutes from "../routes/coustomers.route";
+import coustomersRoutes from "../routes/coustomers.routes";
 
 export class Server {
     public app: express.Application;
@@ -31,7 +31,7 @@ export class Server {
         this.app.use((req, res, next) => {
             const apiKeyHeader = req.headers["authorization"];
             const apiKeyQuery = req.query['apikey'];
-            if(!apiKeyQuery || apiKeyQuery !== this.apikey) {
+            if (!apiKeyQuery || apiKeyQuery !== this.apikey) {
                 res.status(401).json({ error: 'Unauthorized' })
                 return
             }
@@ -52,11 +52,11 @@ export class Server {
         this.app.use(this.coustomersPath, coustomersRoutes);
     }
 
-    async dbConnection(){
-        try{
+    async dbConnection() {
+        try {
             await sequelize.sync({ force: false });
             console.log('db connection success');
-        }catch(err){
+        } catch (err) {
             console.log('db connection error: ' + err);
         }
     }

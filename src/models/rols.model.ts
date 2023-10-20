@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/config";
-import { permissionsModel } from "./permissions.model";
 
 export const rolsModel = sequelize.define('rols', {
     id: {
@@ -9,11 +8,11 @@ export const rolsModel = sequelize.define('rols', {
         primaryKey: true
     },
     name: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.STRING(128),
         allowNull: false
     },
     description: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.STRING(128),
         allowNull: false
     },
     state: {
@@ -21,6 +20,3 @@ export const rolsModel = sequelize.define('rols', {
         defaultValue: true
     }
 })
-
-rolsModel.hasMany(permissionsModel, { foreignKey: 'rol_id', sourceKey: 'id' });
-permissionsModel.belongsTo(rolsModel, { foreignKey: 'rol_id', targetKey: 'id' });
