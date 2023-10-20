@@ -9,11 +9,11 @@ export const rolsModel = sequelize.define('rols', {
         primaryKey: true
     },
     name: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.STRING(128),
         allowNull: false
     },
     description: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.STRING(128),
         allowNull: false
     },
     state: {
