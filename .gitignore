@@ -32,3 +32,5 @@ out/
 # Misc
 .DS_Store
 *.pem
+
+.vscode/

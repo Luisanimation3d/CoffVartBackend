@@ -9,6 +9,7 @@ export const sequelize = new Sequelize(
 			ssl: {
 				require: 'true',
 			},
-		},
+		}
 	}
 );
+
