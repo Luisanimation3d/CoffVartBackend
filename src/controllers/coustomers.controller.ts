@@ -8,7 +8,11 @@ export const getCoustumers = async (req: Request, res: Response) => {
 
 export const postCoustumers= async (req: Request, res: Response) => {
     const { name, phone, email, address, state } = req.body;
-    const newCoustumers = await coustumersModel.create({ name, phone, email, address, state });
-    res.status(200).json({ newCoustumers });
+    try {
+        const newCoustumers = await coustumersModel.create({ name, phone, email, address, state });
+        res.status(200).json({ newCoustumers });
+    } catch (error) {
+        res.status(400).json({ msg: error });
+    }
 }
 
