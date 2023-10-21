@@ -1,14 +1,18 @@
 import express from "express";
 import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
-import permissionRoutes from "../routes/permissions.route";
+import permissionRoutes from "../routes/permissions.routes";
 import coustomersRoutes from "../routes/coustomers.routes";
+import suppliesRoutes from "../routes/supplies.routes";
+import productsRoutes from "../routes/products.routes";
 
 export class Server {
     public app: express.Application;
     public port: number = parseInt(process.env.PORT || '') || 3000;
     public testPath: string;
     public permissionPath: string;
+    public suppliesPath: string;
+    public productsPath: string;
     public coustomersPath: string;
     private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
     
@@ -19,6 +23,8 @@ export class Server {
 
         this.testPath = '/test';
         this.permissionPath = '/api/permissions';
+        this.suppliesPath = '/api/supplies';
+        this.productsPath = '/api/products';
         this.coustomersPath= '/api/coustumers';
         this.middlewares();
         this.routes();
@@ -49,6 +55,8 @@ export class Server {
     routes() {
         this.app.use(this.testPath, routes);
         this.app.use(this.permissionPath, permissionRoutes);
+        this.app.use(this.suppliesPath, suppliesRoutes);
+        this.app.use(this.productsPath, productsRoutes);
         this.app.use(this.coustomersPath, coustomersRoutes);
     }
 
