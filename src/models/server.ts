@@ -1,7 +1,7 @@
 import express from "express";
 import { sequelize } from "../database/config";
 import { routes } from "../routes/test";
-import permissionRoutes from "../routes/permissions.route";
+import permissionRoutes from "../routes/permissions.routes";
 import coustomersRoutes from "../routes/coustomers.routes";
 
 export class Server {
