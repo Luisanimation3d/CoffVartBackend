@@ -21,5 +21,5 @@ export const salesdetailsModel = sequelize.define('salesdetails', {
 {
     timestamps: true
 })
-salesdetailsModel.belongsTo(salesModel, { foreignKey: 'sale_id', targetKey: 'id' })
-salesdetailsModel.belongsTo(productModel, { foreignKey: 'product_id', targetKey: 'id' })
+salesModel.belongsToMany(productModel, { through: salesdetailsModel });
+productModel.belongsToMany(salesModel, { through: salesdetailsModel });

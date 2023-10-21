@@ -21,5 +21,5 @@ export const ordersderailsModel = sequelize.define('ordersderails', {
 {
     timestamps: true
 })
-ordersderailsModel.belongsTo(ordersModel, { foreignKey: 'order_id', targetKey: 'id' })
-ordersderailsModel.belongsTo(productModel, { foreignKey: 'product_id', targetKey: 'id' })
+ordersModel.belongsToMany(productModel, { through: ordersderailsModel });
+productModel.belongsToMany(ordersModel, { through: ordersderailsModel });
