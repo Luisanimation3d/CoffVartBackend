@@ -29,5 +29,5 @@ export const ordersModel = sequelize.define('orders', {
 {
     timestamps: true
 })
-ordersModel.belongsTo(coustumersModel, { foreignKey: 'coustumer_id', targetKey: 'id' })
-ordersModel.belongsTo(productModel, { foreignKey: 'product_id', targetKey: 'id' })
+coustumersModel.belongsToMany(productModel, { through: ordersModel });
+productModel.belongsToMany(coustumersModel, { through: ordersModel });
