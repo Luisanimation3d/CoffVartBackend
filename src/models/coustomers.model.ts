@@ -12,21 +12,31 @@ export const coustumersModel = sequelize.define('coustumers', {
         allowNull: false
     },
     phone: {
-        type: DataTypes.INTEGER(),
-        allowNull: false
-
+        type: DataTypes.STRING(15),
+        allowNull: false,
+        validate: {
+            isNumeric: true
+        }
     },
     email: {
         type: DataTypes.STRING(30),
-        allowNull: false
+        allowNull: false,
+        validate:{
+            isEmail:{
+              msg: 'El correo debe ser valido'
+            },
+        },
     },
     address: {
         type: DataTypes.STRING(50),
         allowNull: false
     }, 
     state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+        type: DataTypes.STRING(8),
+        defaultValue: 'activo',
+        validate: {
+            isIn: [['activo', 'inactivo']]
+        }
     }
 },
 {   
