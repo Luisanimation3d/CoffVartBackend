@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/config";
-import { rolsModel } from "./rols.model";
+import { rolesModel } from "./roles.model";
 
 export const userModel = sequelize.define('users', {
     id: {
@@ -32,4 +32,4 @@ export const userModel = sequelize.define('users', {
     timestamps: true
 })
 
-userModel.belongsTo(rolsModel, { foreignKey: 'rol_id', targetKey: 'id' });
+userModel.belongsTo(rolesModel, { foreignKey: 'rol_id', targetKey: 'id' });
