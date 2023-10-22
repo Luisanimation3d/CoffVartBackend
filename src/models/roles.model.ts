@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
-import { rolDetailsModel } from './rolDetails.model';
+import { roleDetailsModel } from './roleDetails.model';
 
-export const rolsModel = sequelize.define('rols', {
+export const rolesModel = sequelize.define('roles', {
 	id: {
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
@@ -22,12 +22,12 @@ export const rolsModel = sequelize.define('rols', {
 	},
 });
 
-rolsModel.hasMany(rolDetailsModel, {
+rolesModel.hasMany(roleDetailsModel, {
 	foreignKey: 'rolId',
 	sourceKey: 'id',
 });
 
-rolDetailsModel.belongsTo(rolsModel, {
+roleDetailsModel.belongsTo(rolesModel, {
 	foreignKey: 'rolId',
 	targetKey: 'id',
 });
