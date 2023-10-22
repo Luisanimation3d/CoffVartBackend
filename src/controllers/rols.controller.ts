@@ -7,15 +7,20 @@ interface rolsType {
 }
 
 export const getRols = async (req: Request, res: Response) => {
-    const rols = await rolsModel.findAll({
-        include: [
-            {
-                model: rolDetailsModel,
-                as: 'rolDetails'
-            }
-        ]
-    });
-    res.status(200).json({ rols });
+    try{
+        const rols = await rolsModel.findAll({
+            include: [
+                {
+                    model: rolDetailsModel,
+                    as: 'rolDetails'
+                }
+            ]
+        });
+        res.status(200).json({ rols });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ msg: error });
+    }
 }
 
 export const getRol = async (req: Request, res: Response) => {
