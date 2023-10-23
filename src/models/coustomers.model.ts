@@ -1,5 +1,6 @@
 import {DataTypes } from 'sequelize'
 import { sequelize } from '../database/config'
+import { salesdetailsModel } from './salesdetails.model';
 
 export const coustumersModel = sequelize.define('coustumers', {
     id: {
@@ -39,3 +40,14 @@ export const coustumersModel = sequelize.define('coustumers', {
 {   
     timestamps: true
 })
+
+coustumersModel.hasMany(salesdetailsModel, {
+    foreignKey: 'customerId', 
+    sourceKey: 'id'
+  });
+
+salesdetailsModel.belongsTo(coustumersModel, {
+    foreignKey: 'customerId',
+    targetKey: 'id'
+  });
+  

@@ -6,6 +6,7 @@ import coustomersRoutes from "../routes/coustomers.routes";
 import suppliesRoutes from "../routes/supplies.routes";
 import productsRoutes from "../routes/products.routes";
 import rolesRouter from "../routes/roles.routes";
+import salesRouter from "../routes/sales.routes";
 
 export class Server {
     public app: express.Application;
@@ -16,6 +17,7 @@ export class Server {
     public productsPath: string;
     public coustomersPath: string;
     public rolesPath: string;
+    public salesPath: string;
     private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
     
 
@@ -29,6 +31,7 @@ export class Server {
         this.productsPath = '/api/products';
         this.coustomersPath= '/api/coustumers';
         this.rolesPath = '/api/roles';
+        this.salesPath = '/api/sales';
         this.middlewares();
         this.routes();
         this.dbConnection();
@@ -62,6 +65,7 @@ export class Server {
         this.app.use(this.productsPath, productsRoutes);
         this.app.use(this.coustomersPath, coustomersRoutes);
         this.app.use(this.rolesPath, rolesRouter);
+        this.app.use(this.salesPath, salesRouter);
     }
 
     async dbConnection() {
