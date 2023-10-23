@@ -12,6 +12,10 @@ export const coustumersModel = sequelize.define('coustumers', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
+    document:{
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     phone: {
         type: DataTypes.STRING(15),
         allowNull: false,

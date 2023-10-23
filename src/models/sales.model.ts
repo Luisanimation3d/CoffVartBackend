@@ -1,4 +1,4 @@
-import {DataTypes} from "sequelize"
+import { DataTypes } from "sequelize"
 import { sequelize } from "../database/config"
 import { salesdetailsModel } from "./salesdetails.model"
 
@@ -17,19 +17,19 @@ export const salesModel = sequelize.define('sales', {
         defaultValue: true
     },
 },
-{
-    timestamps: true
-})
-
-
-salesdetailsModel.belongsTo(salesModel, {
-    foreignKey: 'saleId',
-    targetKey: 'id'
+    {
+        timestamps: true
     })
 
 salesModel.hasMany(salesdetailsModel, {
     foreignKey: 'saleId',
     sourceKey: 'id'
-    })
+})
+
+salesdetailsModel.belongsTo(salesModel, {
+    foreignKey: 'saleId',
+    targetKey: 'id'
+})
+
 
 
