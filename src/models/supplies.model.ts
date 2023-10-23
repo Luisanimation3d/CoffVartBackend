@@ -32,4 +32,3 @@ export const suppliesModel = sequelize.define('supplies', {
 {
     timestamps: true
 })
-suppliesModel.hasMany(supplierModel, { foreignKey: 'supplies_id', sourceKey: 'id' });

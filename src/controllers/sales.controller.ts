@@ -50,20 +50,32 @@ export const getSale = async (req: Request, res: Response) => {
 
 export const postSale = async (req: Request, res: Response) => {
     const { invoice, state, coustumer, products, quantities } = req.body;
+    console.log(req.body);
     try {
         // Crear una nueva venta
-        const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer });
+        const newSale = await salesModel.create({ invoice, state });
 
         // Crear una lista para guardar los detalles de la venta
         const saleDetails = [];
+
+        console.log('antes de ingresar al for')
+        console.log(products)
+        console.log(quantities)
+        console.log(typeof products)
+        console.log(typeof quantities)
 
         // Iterar a través de los productos y cantidades
         for (let i = 0; i < products.length; i++) {
             const productId = products[i];
             const quantity = quantities[i];
+            console.log('entro al for')
+            console.log(productId)
+            console.log(quantity)
 
             // Obtener el producto por su ID
             const product = await productModel.findByPk(productId);
+
+            console.log(product)
 
             if (!product) {
                 return res.status(404).json({ msg: `Product with ID ${productId} not found` });
@@ -79,9 +91,10 @@ export const postSale = async (req: Request, res: Response) => {
             // Crear un registro de detalle de venta
             const saleDetail = {
                 saleId: newSale.getDataValue('id'),
+                customerId: coustumer,
                 productId: productId,
                 quantity: quantity,
-                subtotal: subtotal,
+                value: subtotal,
             };
 
             // Agregar el detalle a la lista
@@ -96,7 +109,7 @@ export const postSale = async (req: Request, res: Response) => {
         await salesdetailsModel.bulkCreate(saleDetails);
 
         // Calcular el total de la venta sumando los subtotales de los productos
-        const total = saleDetails.reduce((acc, saleDetail) => acc + saleDetail.subtotal, 0);
+        const total = saleDetails.reduce((acc, saleDetail) => acc + saleDetail.value, 0);
 
         // Actualizar el total de la venta en la base de datos
         
