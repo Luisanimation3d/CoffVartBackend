@@ -16,3 +16,25 @@ export const postCoustumers= async (req: Request, res: Response) => {
     }
 }
 
+export const putCoustumers = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { name, phone, email, address, state } = req.body;
+    const coustumers = await coustumersModel.findByPk(id);
+    if (!coustumers) {
+        return res.status(404).json({ msg: 'Coustumers not found' });
+    }
+    await coustumers.update({ name, phone, email, address, state });
+    res.status(200).json({ coustumers });
+}
+
+
+export const deleteCoustumers = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const coustumers = await coustumersModel.findByPk(id);
+    if (!coustumers) {
+        return res.status(404).json({ msg: 'Coustumers not found' });
+    }
+    await coustumers.destroy();
+    res.status(200).json({ coustumers });
+}
+
