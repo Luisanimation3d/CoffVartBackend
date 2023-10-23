@@ -32,11 +32,8 @@ export const coustumersModel = sequelize.define('coustumers', {
         allowNull: false
     }, 
     state: {
-        type: DataTypes.STRING(8),
-        defaultValue: 'activo',
-        validate: {
-            isIn: [['activo', 'inactivo']]
-        }
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 },
 {   
