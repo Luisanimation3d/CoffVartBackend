@@ -5,7 +5,7 @@ import permissionRoutes from "../routes/permissions.routes";
 import coustomersRoutes from "../routes/coustomers.routes";
 import suppliesRoutes from "../routes/supplies.routes";
 import productsRoutes from "../routes/products.routes";
-import rolsRouter from "../routes/rols.routes";
+import rolesRouter from "../routes/roles.routes";
 
 export class Server {
     public app: express.Application;
@@ -15,7 +15,7 @@ export class Server {
     public suppliesPath: string;
     public productsPath: string;
     public coustomersPath: string;
-    public rolsPath: string;
+    public rolesPath: string;
     private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
     
 
@@ -28,7 +28,7 @@ export class Server {
         this.suppliesPath = '/api/supplies';
         this.productsPath = '/api/products';
         this.coustomersPath= '/api/coustumers';
-        this.rolsPath = '/api/rols';
+        this.rolesPath = '/api/roles';
         this.middlewares();
         this.routes();
         this.dbConnection();
@@ -61,12 +61,12 @@ export class Server {
         this.app.use(this.suppliesPath, suppliesRoutes);
         this.app.use(this.productsPath, productsRoutes);
         this.app.use(this.coustomersPath, coustomersRoutes);
-        this.app.use(this.rolsPath, rolsRouter);
+        this.app.use(this.rolesPath, rolesRouter);
     }
 
     async dbConnection() {
         try {
-            await sequelize.sync({ force: true });
+            await sequelize.sync({ force: false });
             console.log('db connection success');
         } catch (err) {
             console.log('db connection error: ' + err);
