@@ -1,13 +1,21 @@
 import { Response, Request } from 'express';
 import { rolesModel } from '../models/roles.model';
 import { roleDetailsModel } from '../models/roleDetails.model';
+import { permissionsModel } from '../models/permissions.model';
 
 export const getRoles = async (req: Request, res: Response) => {
 	try {
 		const roles = await rolesModel.findAll({
 			include: [
 				{
-					model: roleDetailsModel
+					model: roleDetailsModel,
+					// Get name of the permissions associated with the role
+					include: [
+						{
+							model: permissionsModel,
+							attributes: ['id', 'name'],
+						},
+					],
 				},
 			],
 		});

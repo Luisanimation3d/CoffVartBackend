@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
 import { roleDetailsModel } from './roleDetails.model';
+import { userModel } from './users.model';
 
 export const rolesModel = sequelize.define('roles', {
 	id: {
@@ -28,6 +29,16 @@ rolesModel.hasMany(roleDetailsModel, {
 });
 
 roleDetailsModel.belongsTo(rolesModel, {
+	foreignKey: 'rolId',
+	targetKey: 'id',
+});
+
+rolesModel.hasOne(userModel, {
+	foreignKey: 'rolId',
+	sourceKey: 'id',
+});
+
+userModel.belongsTo(rolesModel, {
 	foreignKey: 'rolId',
 	targetKey: 'id',
 });
