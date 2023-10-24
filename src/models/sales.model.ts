@@ -1,6 +1,6 @@
-import {DataTypes} from "sequelize"
+import { DataTypes } from "sequelize"
 import { sequelize } from "../database/config"
-import { coustumersModel } from "./coustomers.model"
+import { salesdetailsModel } from "./salesdetails.model"
 
 export const salesModel = sequelize.define('sales', {
     id: {
@@ -12,16 +12,24 @@ export const salesModel = sequelize.define('sales', {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    total: {
-        type: DataTypes.FLOAT(10, 2),
-        allowNull: false
-    },
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
     },
 },
-{
-    timestamps: true
+    {
+        timestamps: true
+    })
+
+salesModel.hasMany(salesdetailsModel, {
+    foreignKey: 'saleId',
+    sourceKey: 'id'
 })
-salesModel.belongsTo(coustumersModel, { foreignKey: 'coustumer_id', targetKey: 'id' })
+
+salesdetailsModel.belongsTo(salesModel, {
+    foreignKey: 'saleId',
+    targetKey: 'id'
+})
+
+
+

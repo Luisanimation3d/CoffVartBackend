@@ -9,17 +9,21 @@ export const ordersModel = sequelize.define('orders', {
         autoIncrement: true,
         primaryKey: true
     },
-    nit: {
+    code: {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
+    name: {
+        type: DataTypes.STRING(50),
+        allowNull: true
+     },
     phone: {
         type: DataTypes.STRING(15),
-        allowNull: false,
+        allowNull: true,
+    },
+    document: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     state: {
         type: DataTypes.BOOLEAN,
@@ -29,5 +33,6 @@ export const ordersModel = sequelize.define('orders', {
 {
     timestamps: true
 })
-ordersModel.belongsTo(coustumersModel, { foreignKey: 'coustumer_id', targetKey: 'id' })
-ordersModel.belongsTo(productModel, { foreignKey: 'product_id', targetKey: 'id' })
+
+coustumersModel.belongsToMany(productModel, { through: ordersModel });
+productModel.belongsToMany(coustumersModel, { through: ordersModel });

@@ -14,7 +14,7 @@ export const postProducts =async(req:Request, res:Response)=> {
 export const putProducts = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, amount, stockMin, stockMax, unitPrice, state, description } = req.body;
-    const products = await productModel.findByPk(id);
+    const products = await productModel.findByPk(id)
     if (!products) {
         return res.status(404).json({ msg: 'Supplies not found' });
     }
