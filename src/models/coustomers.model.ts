@@ -1,4 +1,4 @@
-import {DataTypes } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/config'
 import { salesdetailsModel } from './salesdetails.model';
 
@@ -8,11 +8,19 @@ export const coustumersModel = sequelize.define('coustumers', {
         autoIncrement: true,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    document:{
+
+    documentType: {
+        type: DataTypes.STRING(2),
+        allowNull: false,
+        validate: {
+            isIn: [['CC', 'TI']]
+        }
+    },
+    document: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -33,32 +41,31 @@ export const coustumersModel = sequelize.define('coustumers', {
     email: {
         type: DataTypes.STRING(30),
         allowNull: false,
-        validate:{
-            isEmail:{
-              msg: 'El correo debe ser valido'
+        validate: {
+            isEmail: {
+                msg: 'El correo debe ser valido'
             },
         },
     },
     address: {
         type: DataTypes.STRING(50),
         allowNull: false
-    }, 
+    },
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
     }
 },
-{   
-    timestamps: true
-})
+    {
+        timestamps: true
+    })
 
 coustumersModel.hasMany(salesdetailsModel, {
-    foreignKey: 'customerId', 
+    foreignKey: 'customerId',
     sourceKey: 'id'
-  });
+});
 
 salesdetailsModel.belongsTo(coustumersModel, {
     foreignKey: 'customerId',
     targetKey: 'id'
-  });
-  
+});
