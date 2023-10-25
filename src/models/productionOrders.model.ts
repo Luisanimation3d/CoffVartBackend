@@ -20,18 +20,19 @@ export const productionOrderModel = sequelize.define('productionOrders',{
     },
     finalWeight: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: true
     },
     process: {
         type: DataTypes.STRING(255),
         allowNull: false
     },
     orderState: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING(255),
+        allowNull: false
     },
     reasonCancellation: {
         type: DataTypes.STRING(500),
-        allowNull:false
+        allowNull:true
     },
     observations: {
         type: DataTypes.STRING(500),
@@ -39,7 +40,7 @@ export const productionOrderModel = sequelize.define('productionOrders',{
     },
     productQuality: {
         type: DataTypes.STRING(255),
-        allowNull:false
+        allowNull:true
     },
 },{
     timestamps: true

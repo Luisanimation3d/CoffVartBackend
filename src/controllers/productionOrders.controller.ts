@@ -7,19 +7,19 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
 }
 
 export const postProducionOrder =async(req:Request, res:Response)=> {
-    const {name, address} = req.body;
-    const newProductionOrder = await productionOrderModel.create({name,address});
+    const {expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality} = req.body;
+    const newProductionOrder = await productionOrderModel.create({expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality});
     res.status(200).json({newProductionOrder});
 }
 
 export const putProductionOrder = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, address } = req.body;
+    const {expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality } = req.body;
     const productionOrders = await productionOrderModel.findByPk(id);
     if (!productionOrders) {
         return res.status(404).json({ msg: 'ProductionOrder not found' });
     }
-    await productionOrders.update({ name, address });
+    await productionOrders.update({ expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality });
     res.status(200).json({ productionOrders });
 }
 

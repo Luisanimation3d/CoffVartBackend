@@ -23,8 +23,9 @@ export const companyModel = sequelize.define('companys',{
         type: DataTypes.STRING(255),
         allowNull: false
     },
-    State: {
+    state: {
         type: DataTypes.BOOLEAN,
+        defaultValue:true
     }
 },{
     timestamps: true

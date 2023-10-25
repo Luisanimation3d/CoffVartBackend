@@ -7,6 +7,9 @@ import suppliesRoutes from "../routes/supplies.routes";
 import productsRoutes from "../routes/products.routes";
 import rolesRouter from "../routes/roles.routes";
 import salesRouter from "../routes/sales.routes";
+import productionOrdersRouter from "../routes/productionOrders.routes"
+import companysRouter from "../routes/companys.routes"
+import suppliersRouter from "../routes/suppliers.routes"
 
 export class Server {
     public app: express.Application;
@@ -18,13 +21,15 @@ export class Server {
     public coustomersPath: string;
     public rolesPath: string;
     public salesPath: string;
+    public productionOrdersPath: string;
+    public companysPath: string;
+    public suppliersPath: string;
     private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
     
 
     constructor() {
         this.app = express();
         this.port = parseInt(process.env.PORT || '') || 3000;
-
         this.testPath = '/test';
         this.permissionPath = '/api/permissions';
         this.suppliesPath = '/api/supplies';
@@ -32,6 +37,9 @@ export class Server {
         this.coustomersPath= '/api/coustumers';
         this.rolesPath = '/api/roles';
         this.salesPath = '/api/sales';
+        this.productionOrdersPath = '/api/productionOrders';
+        this.companysPath= '/api/companys'
+        this.suppliersPath= '/api/suppliers'
         this.middlewares();
         this.routes();
         this.dbConnection();
@@ -66,6 +74,9 @@ export class Server {
         this.app.use(this.coustomersPath, coustomersRoutes);
         this.app.use(this.rolesPath, rolesRouter);
         this.app.use(this.salesPath, salesRouter);
+        this.app.use(this.productionOrdersPath,productionOrdersRouter);
+        this.app.use(this.companysPath,companysRouter)
+        this.app.use(this.suppliersPath,suppliersRouter)
     }
 
     async dbConnection() {

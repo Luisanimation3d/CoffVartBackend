@@ -31,12 +31,9 @@ export const supplierModel = sequelize.define('suppliers',{
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    lastOrderDate: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    State: {
+    state: {
         type: DataTypes.BOOLEAN,
+        defaultValue: true
     }
 },{
     timestamps: true
