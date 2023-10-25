@@ -7,9 +7,13 @@ export const getCoustumers = async (req: Request, res: Response) => {
 }
 
 export const postCoustumers= async (req: Request, res: Response) => {
-    const { name, phone, email, address, state } = req.body;
+    const { name, document , phone, email, address, state } = req.body;
     try {
-        const newCoustumers = await coustumersModel.create({ name, phone, email, address, state });
+        const existingCoustumer = await coustumersModel.findOne({ where: { document } });
+        if (existingCoustumer) {
+            return res.status(400).json({ msg: 'A customer with this ID document already exists' });
+        }
+        const newCoustumers = await coustumersModel.create({ name, document, phone, email, address, state });
         res.status(200).json({ newCoustumers });
     } catch (error) {
         res.status(400).json({ msg: error });

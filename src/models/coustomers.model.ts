@@ -14,7 +14,14 @@ export const coustumersModel = sequelize.define('coustumers', {
     },
     document:{
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isNotTooLong(value: number) {
+                if (value.toString().length > 10) {
+                    throw new Error('Document number must have no more than 10 digits');
+                }
+            }
+        }
     },
     phone: {
         type: DataTypes.STRING(15),
