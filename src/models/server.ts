@@ -47,7 +47,6 @@ export class Server {
     }
 
     middlewares() {
-        console.log()
         this.app.use((req, res, next) => {
             const apiKeyHeader = req.headers["authorization"];
             const apiKeyQuery = req.query['apikey'];
@@ -81,7 +80,7 @@ export class Server {
 
     async dbConnection() {
         try {
-            await sequelize.sync({ force: false });
+            await sequelize.sync({ force: true });
             console.log('db connection success');
         } catch (err) {
             console.log('db connection error: ' + err);
