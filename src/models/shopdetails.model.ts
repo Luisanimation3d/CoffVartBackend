@@ -1,8 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/config";
-import { supplierModel } from "./suppliers.model";
-import { shopModel } from "./shops.model";
-import { suppliesModel } from "./supplies.model";
 
 
 
@@ -36,6 +33,3 @@ export const shopdetailsModel = sequelize.define('shopdetails', {
 {
     timestamps: true
 })
-shopdetailsModel.belongsTo(shopModel, { foreignKey: 'shopdetails_id', targetKey: 'id' });
-shopdetailsModel.belongsTo(supplierModel, { foreignKey: 'shopdetails_id', targetKey: 'id' });
-shopdetailsModel.hasMany(suppliesModel, { foreignKey: 'shop_id', sourceKey: 'id' });
