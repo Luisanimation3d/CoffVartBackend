@@ -39,6 +39,6 @@ export const deleteCoustumers = async (req: Request, res: Response) => {
         return res.status(404).json({ msg: 'Coustumers not found' });
     }
     await coustumers.destroy();
-    res.status(200).json({ coustumers });
+    res.status(200).json({ msg: 'Coustumer delete' });
 }
 

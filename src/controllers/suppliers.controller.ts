@@ -7,8 +7,8 @@ export const getSuppliers = async (req: Request, res: Response)=> {
 }
 
 export const postSuppliers =async(req:Request, res:Response)=> {
-    const {name, coffeType,address,phone,quiality,unitCost} = req.body;
-    const newSupplier = await supplierModel.create({name,coffeType,address,phone,quiality,unitCost});
+    const {name, coffeType,address,phone,quality,unitCost} = req.body;
+    const newSupplier = await supplierModel.create({name,coffeType,address,phone,quality,unitCost});
     res.status(200).json({newSupplier});
 }
 
