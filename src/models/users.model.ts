@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
-import { rolesModel } from './roles.model';
+import { UserModelType } from 'user';
 
-export const userModel = sequelize.define(
+export const userModel = sequelize.define<UserModelType>(
 	'users',
 	{
 		id: {
@@ -28,6 +28,15 @@ export const userModel = sequelize.define(
 		},
 		phone: {
 			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		email: {
+			type: DataTypes.STRING(128),
+			allowNull: false,
+			unique: true,
+		},
+		password: {
+			type: DataTypes.STRING(128),
 			allowNull: false,
 		},
 	},
