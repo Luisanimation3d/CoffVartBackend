@@ -22,10 +22,10 @@ export const GetUsersMiddleware = async (req: ExtendRequest, res: Response, next
                         model: roleDetailsModel,
                         include: [
                             {
-                            model: permissionsModel,
-                            attributes: ['name']
-                        }
-                    ]
+                                model: permissionsModel,
+                                attributes: ['name']
+                            }
+                        ]
                     }
                 ]
             }
@@ -42,30 +42,26 @@ export const GetUsersMiddleware = async (req: ExtendRequest, res: Response, next
 }
 
 export const PostUsersMiddleware = async (req: ExtendRequest, res: Response, next: NextFunction) => {
-    const userId = req.user.id;
+    const userId = req.user.role;
     console.log(userId)
-    const user = await userModel.findOne({
-        where: { id: userId }, include: [
+    const user = await rolesModel.findByPk(userId, {
+        include: [
             {
-                model: rolesModel,
+                model: roleDetailsModel,
                 include: [
                     {
-                        model: roleDetailsModel,
-                        include: [
-                            {
-                                model: permissionsModel,
-                                attributes: ['name']
-                            }
-                        ]
+                        model: permissionsModel,
+                        attributes: ['name']
                     }
                 ]
             }
         ]
     });
-    console.log(user.role.rol_details.permission)
+    console.log(user?.getDataValue('rol_details').getDataValue('permission'))
 
-    if (!(user.role.rol_details.include(permissionsModel, { where: { name: 'Post Users' } }))) {
-        res.status(401).json({ error: 'Unauthorized' });
+    if ((user)) {
+        // res.status(401).json({ error: 'Unauthorized' });
+        res.status(200).json({ user });
         return;
     }
 
