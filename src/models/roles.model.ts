@@ -34,11 +34,11 @@ roleDetailsModel.belongsTo(rolesModel, {
 });
 
 rolesModel.hasOne(userModel, {
-	foreignKey: 'rolId',
+	foreignKey: 'roleId',
 	sourceKey: 'id',
 });
 
 userModel.belongsTo(rolesModel, {
-	foreignKey: 'rolId',
+	foreignKey: 'roleId',
 	targetKey: 'id',
 });
