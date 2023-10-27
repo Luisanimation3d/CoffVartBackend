@@ -7,8 +7,8 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
         return;
     }
     if (name) {
-        const permissionFound = await suppliesModel.findOne({ where: { name } });
-        if (permissionFound) {
+        const suppliesFound = await suppliesModel.findOne({ where: { name } });
+        if (suppliesFound) {
             res.status(400).json({ error: 'name already exists' });
             return;
         }
@@ -18,8 +18,16 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
         res.status(400).json({ error: 'amount is required' });
         return;
     }
+    if(!amount.isNumeric){
+        res.status(400).json({ error: 'amount must be numeric' });
+        return;
+    }
     if (!unitPrice) {
         res.status(400).json({ error: 'unitPrice is required' });
+        return;
+    }
+    if (!unitPrice.isNumeric) {
+        res.status(400).json({ error: 'unitPrice must be numeric' });
         return;
     }
     if (!description) {
