@@ -21,14 +21,6 @@ export const shopdetailsModel = sequelize.define('shopdetails', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    },
-    description: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
 },
 {
     timestamps: true

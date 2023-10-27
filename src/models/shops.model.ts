@@ -10,6 +10,10 @@ export const shopModel = sequelize.define(
 			autoIncrement: true,
 			primaryKey: true,
 		},
+		invoice: {
+			type: DataTypes.STRING(100),
+			allowNull: false
+		},
 		total: {
 			type: DataTypes.FLOAT,
 			allowNull: false,
