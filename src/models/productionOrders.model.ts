@@ -36,7 +36,7 @@ export const productionOrderModel = sequelize.define('productionOrders',{
     },
     observations: {
         type: DataTypes.STRING(500),
-        allowNull:false
+        allowNull:true
     },
     productQuality: {
         type: DataTypes.STRING(255),
