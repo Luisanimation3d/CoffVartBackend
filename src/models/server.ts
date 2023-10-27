@@ -52,7 +52,6 @@ export class Server {
 
 	middlewares() {
 		this.app.use((req, res, next) => {
-			const apiKeyHeader = req.headers['authorization'];
 			const apiKeyQuery = req.query['apikey'];
 			if (!apiKeyQuery || apiKeyQuery !== this.apikey) {
 				res.status(401).json({ error: 'Unauthorized' });
