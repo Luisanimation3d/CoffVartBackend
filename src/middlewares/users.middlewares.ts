@@ -20,10 +20,12 @@ export const GetUsersMiddleware = async (req: ExtendRequest, res: Response, next
                 include: [
                     {
                         model: roleDetailsModel,
-                        include: [{
+                        include: [
+                            {
                             model: permissionsModel,
                             attributes: ['name']
-                        }]
+                        }
+                    ]
                     }
                 ]
             }
@@ -41,6 +43,7 @@ export const GetUsersMiddleware = async (req: ExtendRequest, res: Response, next
 
 export const PostUsersMiddleware = async (req: ExtendRequest, res: Response, next: NextFunction) => {
     const userId = req.user.id;
+    console.log(userId)
     const user = await userModel.findOne({
         where: { id: userId }, include: [
             {
@@ -48,17 +51,20 @@ export const PostUsersMiddleware = async (req: ExtendRequest, res: Response, nex
                 include: [
                     {
                         model: roleDetailsModel,
-                        include: [{
-                            model: permissionsModel,
-                            attributes: ['name']
-                        }]
+                        include: [
+                            {
+                                model: permissionsModel,
+                                attributes: ['name']
+                            }
+                        ]
                     }
                 ]
             }
         ]
     });
+    console.log(user.role.rol_details.permission)
 
-    if (!(user.roleId.rol_details.include(permissionsModel, { where: { name: 'Post Users' } }))) {
+    if (!(user.role.rol_details.include(permissionsModel, { where: { name: 'Post Users' } }))) {
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
