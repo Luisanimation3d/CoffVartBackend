@@ -2,68 +2,77 @@ import { Request, Response, NextFunction } from 'express';
 import { roleDetailsModel } from '../models/roleDetails.model';
 import { permissionsModel } from '../models/permissions.model';
 import { rolesModel } from '../models/roles.model';
-import { userModel } from '../models/users.model';
 import { JwtPayloadWithTokenData } from 'token';
 
 interface ExtendRequest extends Request {
-    user?: JwtPayloadWithTokenData
+	user?: JwtPayloadWithTokenData;
 }
 
-export const GetUsersMiddleware = async (req: ExtendRequest, res: Response, next: NextFunction) => {
+export const GetUsersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
 
-    const userId = req.user.id;
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
 
-    const user = await userModel.findOne({
-        where: { id: userId }, include: [
-            {
-                model: rolesModel,
-                include: [
-                    {
-                        model: roleDetailsModel,
-                        include: [
-                            {
-                                model: permissionsModel,
-                                attributes: ['name']
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    });
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Get Users'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
 
-    if (!(user.roleId.rol_details.include(permissionsModel, { where: { name: 'Get Users' } }))) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-    }
+	next();
 
-    next();
+};
 
-}
+export const PostUsersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+	const roleId = req.user.role;
+	console.log(roleId);
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
 
-export const PostUsersMiddleware = async (req: ExtendRequest, res: Response, next: NextFunction) => {
-    const userId = req.user.role;
-    console.log(userId)
-    const user = await rolesModel.findByPk(userId, {
-        include: [
-            {
-                model: roleDetailsModel,
-                include: [
-                    {
-                        model: permissionsModel,
-                        attributes: ['name']
-                    }
-                ]
-            }
-        ]
-    });
-    console.log(user?.getDataValue('rol_details').getDataValue('permission'))
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Users'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
 
-    if ((user)) {
-        // res.status(401).json({ error: 'Unauthorized' });
-        res.status(200).json({ user });
-        return;
-    }
-
-    next();
-}
+	next();
+};
