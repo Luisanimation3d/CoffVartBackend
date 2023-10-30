@@ -48,12 +48,64 @@ export const getSale = async (req: Request, res: Response) => {
     res.status(200).json({ sale });
 };
 
+/*export const postSale = async (req: Request, res: Response) => {
+    const { invoice, state, customer, products, quantities, total } = req.body;
+
+    try {
+        // Crear una nueva venta
+        const newSale = await salesModel.create({ invoice, state, total });
+
+        // Crear una lista para guardar los detalles de la venta
+        const saleDetails = [];
+
+        // Iterar a través de los productos y cantidades
+        for (let i = 0; i < products.length; i++) {
+            const productId = products[i];
+            const quantity = quantities[i];
+
+            // Obtener el producto por su ID
+            const product = await productModel.findByPk(productId);
+
+            if (!product) {
+                return res.status(404).json({ msg: `Product with ID ${productId} not found` });
+            }
+
+            if (quantity > product.getDataValue('amount')) {
+                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productId}` });
+            }
+
+            // Crear un registro de detalle de venta
+            const saleDetail = {
+                saleId: newSale.getDataValue('id'),
+                customerId: customer,
+                productId: productId,
+                quantity: quantity,
+                value: total, // Aquí usamos el total proporcionado en la solicitud
+            };
+
+            // Agregar el detalle a la lista
+            saleDetails.push(saleDetail);
+
+            // Actualizar la cantidad de productos disponibles
+            product.setDataValue('amount', product.getDataValue('amount') - quantity);
+            await product.save();
+        }
+
+        // Crear los registros de detalles de venta en la base de datos
+        await salesdetailsModel.bulkCreate(saleDetails);
+
+        res.status(201).json({ newSale, saleDetails, total });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: error });
+    }
+};*/
 export const postSale = async (req: Request, res: Response) => {
-    const { invoice, state, coustumer, products, quantities } = req.body;
+    const { invoice, state, coustumer, products, quantities, total } = req.body;
     console.log(req.body);
     try {
         // Crear una nueva venta
-        const newSale = await salesModel.create({ invoice, state });
+        const newSale = await salesModel.create({ invoice, state, total });
 
         // Crear una lista para guardar los detalles de la venta
         const saleDetails = [];
@@ -86,7 +138,7 @@ export const postSale = async (req: Request, res: Response) => {
             }
 
             // Calcular el subtotal para este producto
-            const subtotal = product.getDataValue('unitPrice') * quantity;
+           
 
             // Crear un registro de detalle de venta
             const saleDetail = {
@@ -94,7 +146,7 @@ export const postSale = async (req: Request, res: Response) => {
                 customerId: coustumer,
                 productId: productId,
                 quantity: quantity,
-                value: subtotal,
+                value: total,
             };
 
             // Agregar el detalle a la lista
@@ -107,12 +159,7 @@ export const postSale = async (req: Request, res: Response) => {
 
         // Crear los registros de detalles de venta en la base de datos
         await salesdetailsModel.bulkCreate(saleDetails);
-
-        // Calcular el total de la venta sumando los subtotales de los productos
-        const total = saleDetails.reduce((acc, saleDetail) => acc + saleDetail.value, 0);
-
-        // Actualizar el total de la venta en la base de datos
-        
+      
 
         res.status(201).json({ newSale, saleDetails, total});
     } catch (error) {

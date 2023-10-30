@@ -7,13 +7,13 @@ export const getCoustumers = async (req: Request, res: Response) => {
 }
 
 export const postCoustumers= async (req: Request, res: Response) => {
-    const { name, document , phone, email, address, state } = req.body;
+    const { name, documentType, document , phone, email, address, state } = req.body;
     try {
         const existingCoustumer = await coustumersModel.findOne({ where: { document } });
         if (existingCoustumer) {
             return res.status(400).json({ msg: 'A customer with this ID document already exists' });
         }
-        const newCoustumers = await coustumersModel.create({ name, document, phone, email, address, state });
+        const newCoustumers = await coustumersModel.create({ name, documentType, document, phone, email, address, state });
         res.status(200).json({ newCoustumers });
     } catch (error) {
         res.status(400).json({ msg: error });
@@ -22,12 +22,12 @@ export const postCoustumers= async (req: Request, res: Response) => {
 
 export const putCoustumers = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { name, phone, email, address, state } = req.body;
+    const { name, document, documentType, phone, email, address, state } = req.body;
     const coustumers = await coustumersModel.findByPk(id);
     if (!coustumers) {
         return res.status(404).json({ msg: 'Coustumers not found' });
     }
-    await coustumers.update({ name, phone, email, address, state });
+    await coustumers.update({ name, document, documentType, phone, email, address, state });
     res.status(200).json({ coustumers });
 }
 
