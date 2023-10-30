@@ -2,6 +2,8 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
 import { UserModelType } from 'user';
 
+/* The code `export const userModel = sequelize.define<UserModelType>(...)` is defining a Sequelize
+model for the "users" table in the database. */
 export const userModel = sequelize.define<UserModelType>(
 	'users',
 	{

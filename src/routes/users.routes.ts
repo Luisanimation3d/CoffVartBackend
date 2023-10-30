@@ -6,6 +6,7 @@ import { GetUsersMiddleware, PostUsersMiddleware } from "../middlewares/users.mi
 
 const router = Router();
 
+/* The code is defining the routes for handling HTTP requests related to users. */
 router.get('/', extractUserMiddlewares, GetUsersMiddleware, getUsers);
 router.get('/:id', getUser);
 router.post('/', extractUserMiddlewares, PostUsersMiddleware, postUser);

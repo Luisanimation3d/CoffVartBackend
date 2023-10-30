@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/config";
 
+/* The code is defining a Sequelize model called `tokenModel` for a table named "tokens" in the
+database. The model has two columns: "id" and "token". */
 export const tokenModel = sequelize.define(
     "tokens",
     {
