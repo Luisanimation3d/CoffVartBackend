@@ -1,0 +1,7 @@
+{
+	"options": {
+		"out": "./docs",
+		"template": "default",
+		"source": "module"
+	}
+}

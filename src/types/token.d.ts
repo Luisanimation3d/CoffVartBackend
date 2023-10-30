@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 interface userToken {
     id: number,
     name: string,

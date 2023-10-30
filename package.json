@@ -7,7 +7,8 @@
     "start": "tsc && node dist/index.js",
     "dev": "concurrently \"tsc --watch\" \"node --watch dist/index.js\"",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "keywords": [],
   "author": "",

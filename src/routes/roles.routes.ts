@@ -3,6 +3,7 @@ import { getRoles, getRole, postRole, putRole, deleteRole } from "../controllers
 
 const router = Router();
 
+/* The code is defining the routes for handling HTTP requests in an Express application. */
 router.get('/', getRoles);
 router.get('/:id', getRole);
 router.post('/', postRole);  
