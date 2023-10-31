@@ -12,6 +12,10 @@ export const salesModel = sequelize.define('sales', {
         type: DataTypes.STRING(100),
         allowNull: false
     },
+    total:{
+        type: DataTypes.FLOAT(10, 2),
+        allowNull: false
+    },
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
