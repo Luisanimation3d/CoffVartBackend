@@ -54,7 +54,6 @@ export const GetUsersMiddleware = async (
 	}
 
 	next();
-
 };
 
 /**
@@ -95,7 +94,7 @@ export const PostUsersMiddleware = async (
 	const permission = rolePermission
 		?.getDataValue('rol_details')
 		.find(
-			(element: any) => element.getDataValue('permission').name === 'Post Users'
+			(element: any) => element.getDataValue('permission').name === 'Post User'
 		);
 	if (!permission) {
 		res.status(401).json({ error: 'Unauthorized' });
@@ -104,3 +103,441 @@ export const PostUsersMiddleware = async (
 
 	next();
 };
+
+export const GetSuppliesMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Get Supplies'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+export const PostSuppliesMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Supplies'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const PutSuppliesMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Put Supplies'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const GetProductsMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Get Products'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const PostProudctsMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Products'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const PutProductsMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Put Products'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+export const GetShopsMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Get Shops'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const PostShopsMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Shops'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const GetCoustumersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Get Coustumers'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+export const PostCoustumersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Coustumers'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+export const PutCoustumersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Put Coustumers'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+export const DeleteCoustumersMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'delete Coustumers'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+
+export const PostSalesMiddleware = async (
+	req: ExtendRequest,
+	res: Response,
+	next: NextFunction
+) => {
+
+    const roleId = req.user.role;
+	const rolePermission = await rolesModel.findByPk(roleId, {
+		include: [
+			{
+				model: roleDetailsModel,
+				include: [
+					{
+						model: permissionsModel,
+						attributes: ['name'],
+					},
+				],
+			},
+		],
+	});
+
+	const permission = rolePermission
+		?.getDataValue('rol_details')
+		.find(
+			(element: any) => element.getDataValue('permission').name === 'Post Sales'
+		);
+	if (!permission) {
+		res.status(401).json({ error: 'Unauthorized' });
+		return;
+	}
+
+	next();
+};
+

@@ -40,3 +40,14 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
     }
     next();
 }
+export const validateRoutePut = async (req: any, res: any, next: any) => {
+    const { id } = req.params;
+    const { name, document, documentType, phone, email, address, state } = req.body;
+    if (document){
+        const coustumerFound = await coustumersModel.findOne({ where: { document } });
+        if (coustumerFound) {
+            res.status(400).json({ error: 'coustumer already exists' });
+            return;
+        }
+    }
+}

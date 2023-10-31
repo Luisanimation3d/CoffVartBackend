@@ -1,14 +1,16 @@
 import { Router } from "express";
 import { getShops } from "../controllers/shop.controller";
 import {validateRoutePost} from '../middlewares/shops.middlewares';
-import { postShop } from "../controllers/shop.controller";
+import { postShops } from "../controllers/shop.controller";
+import { GetShopsMiddleware, PostShopsMiddleware } from "../middlewares/users.middlewares";
+import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
 
 
 const router= Router();
 
-router.get("/",getShops);
+router.get("/",extractUserMiddlewares,GetShopsMiddleware,getShops);
 router.get("/:id",getShops);
-router.post("/",validateRoutePost, postShop);
+router.post("/",extractUserMiddlewares,PostShopsMiddleware,validateRoutePost, postShops);
 
 
 export default router;

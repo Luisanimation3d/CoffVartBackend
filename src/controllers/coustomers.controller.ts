@@ -20,15 +20,23 @@ export const postCoustumers= async (req: Request, res: Response) => {
     }
 }
 
-export const putCoustumers = async (req: Request, res: Response) => {
+export const putCoustumers = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const { name, document, documentType, phone, email, address, state } = req.body;
-    const coustumers = await coustumersModel.findByPk(id);
-    if (!coustumers) {
-        return res.status(404).json({ msg: 'Coustumers not found' });
+    const coustomers = await coustumersModel.findByPk(id);
+    try {
+        if (!coustomers) {
+            return res.status(404).json({ msg: 'Coustumers not found' });
+        } 
+        const existingCoustumer = await coustumersModel.findOne({ where: { document } });
+        if (existingCoustumer) {
+            return res.status(400).json({ msg: 'A customer with this ID document already exists' });
+        }
+        await coustomers.update({ name, document, documentType, phone, email, address, state });
+        res.status(200).json({ coustomers });
+    } catch (error) {
+        res.status(400).json({ msg: error });
     }
-    await coustumers.update({ name, document, documentType, phone, email, address, state });
-    res.status(200).json({ coustumers });
 }
 
 
