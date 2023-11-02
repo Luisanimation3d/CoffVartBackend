@@ -37,6 +37,7 @@ export const GetUsersMiddleware = async (
 					{
 						model: permissionsModel,
 						attributes: ['name'],
+						
 					},
 				],
 			},

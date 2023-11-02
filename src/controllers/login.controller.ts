@@ -20,14 +20,14 @@ export const loginController = async (req: Request, res: Response) => {
     const user: UserModelType | null = await userModel.findOne({ where: { email } })
 
     if (!user) {
-        return res.status(400).json({ msg: 'Email or password are incorrect 1' });
+        return res.status(400).json({ msg: 'Email or password are incorrect' });
     }
     if (!user.state) {
-        return res.status(400).json({ msg: 'Email or password are incorrect 2' });
+        return res.status(400).json({ msg: 'Email or password are incorrect' });
     }
     const validPassword = bcrypt.compareSync(password, user.password);
     if (!validPassword) {
-        return res.status(400).json({ msg: 'Email or password are incorrect 3' });
+        return res.status(400).json({ msg: 'Email or password are incorrect' });
     }
 
     const token = jwt.sign({    
