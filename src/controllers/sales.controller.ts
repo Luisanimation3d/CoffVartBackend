@@ -101,33 +101,29 @@ export const getSale = async (req: Request, res: Response) => {
     }
 };*/
 export const postSale = async (req: Request, res: Response) => {
-    const { invoice, state, coustumer, products, quantities, total } = req.body;
-    console.log(req.body);
+    const { invoice, state, coustumerId, products, quantities, total } = req.body;
+
     try {
-        // Crear una nueva venta
-        const newSale = await salesModel.create({ invoice, state, total });
+        // Obtener el cliente por su ID
+        const customer = await coustumersModel.findByPk(coustumerId);
+
+        if (!customer) {
+            return res.status(404).json({ msg: `Customer with ID ${coustumerId} not found` });
+        }
+
+        // Crear una nueva venta con el cliente asociado
+        const newSale = await salesModel.create({ invoice, state, total, coustumerId: customer.getDataValue('id')});
 
         // Crear una lista para guardar los detalles de la venta
         const saleDetails = [];
-
-        console.log('antes de ingresar al for')
-        console.log(products)
-        console.log(quantities)
-        console.log(typeof products)
-        console.log(typeof quantities)
 
         // Iterar a través de los productos y cantidades
         for (let i = 0; i < products.length; i++) {
             const productId = products[i];
             const quantity = quantities[i];
-            console.log('entro al for')
-            console.log(productId)
-            console.log(quantity)
 
             // Obtener el producto por su ID
             const product = await productModel.findByPk(productId);
-
-            console.log(product)
 
             if (!product) {
                 return res.status(404).json({ msg: `Product with ID ${productId} not found` });
@@ -138,15 +134,13 @@ export const postSale = async (req: Request, res: Response) => {
             }
 
             // Calcular el subtotal para este producto
-           
 
             // Crear un registro de detalle de venta
             const saleDetail = {
                 saleId: newSale.getDataValue('id'),
-                customerId: coustumer,
                 productId: productId,
                 quantity: quantity,
-                value: total,
+                value: total, // Ajusta el valor del detalle según tus necesidades
             };
 
             // Agregar el detalle a la lista
@@ -159,12 +153,12 @@ export const postSale = async (req: Request, res: Response) => {
 
         // Crear los registros de detalles de venta en la base de datos
         await salesdetailsModel.bulkCreate(saleDetails);
-      
 
-        res.status(201).json({ newSale, saleDetails, total});
+        res.status(201).json({ newSale, saleDetails, total });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
     }
 };
+
 
