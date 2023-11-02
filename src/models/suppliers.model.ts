@@ -14,6 +14,10 @@ export const supplierModel = sequelize.define(
 			type: DataTypes.STRING(255),
 			allowNull: false,
 		},
+		nit:{
+			type: DataTypes.STRING(255),
+			allowNull: false,
+		},
 		coffeType: {
 			type: DataTypes.STRING(255),
 			allowNull: false,

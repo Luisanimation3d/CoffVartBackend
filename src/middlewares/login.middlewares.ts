@@ -14,11 +14,12 @@ import { Request, Response, NextFunction } from 'express';
  * @returns In this code, if any of the validation checks fail, a response with an error message is
  * sent and the function returns. If all the validation checks pass, the function calls the `next()`
  * function to proceed to the next middleware or route handler.
- */
+*/
+export const emailValidation = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 export const loginMiddlewares = (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     try{
-        const emailValidation = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        
         if (!email || !password) {
             res.status(400).json({ error: 'Username and password are required' });
             return;
