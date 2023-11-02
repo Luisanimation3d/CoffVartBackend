@@ -1,5 +1,7 @@
 import {DataTypes} from "sequelize"
 import { sequelize } from "../database/config"
+import { salesModel } from "./sales.model"
+import { coustumersModel } from "./coustomers.model"
 
 
 export const salesdetailsModel = sequelize.define('salesdetails', {

@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/config'
+import { salesModel } from './sales.model';
 import { salesdetailsModel } from './salesdetails.model';
 
 export const coustumersModel = sequelize.define('coustumers', {
@@ -60,12 +61,21 @@ export const coustumersModel = sequelize.define('coustumers', {
         timestamps: true
     })
 
-coustumersModel.hasMany(salesdetailsModel, {
-    foreignKey: 'customerId',
-    sourceKey: 'id'
-});
-
-salesdetailsModel.belongsTo(coustumersModel, {
-    foreignKey: 'customerId',
-    targetKey: 'id'
-});
+    coustumersModel.hasMany(salesModel, {
+        foreignKey: 'customerId',
+        sourceKey: 'id'
+    });
+    
+    salesModel.belongsTo(coustumersModel, {
+        foreignKey: 'customerId',
+        targetKey: 'id'
+    });
+    coustumersModel.hasMany(salesdetailsModel, {
+        foreignKey: 'customerId',
+        sourceKey: 'id'
+    });
+    
+    salesdetailsModel.belongsTo(coustumersModel, {
+        foreignKey: 'customerId',
+        targetKey: 'id'
+    });
