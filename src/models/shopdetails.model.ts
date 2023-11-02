@@ -13,11 +13,7 @@ export const shopdetailsModel = sequelize.define('shopdetails', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    iva: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    totaliva: {
+    unitPrice: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
