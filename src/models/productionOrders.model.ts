@@ -10,6 +10,10 @@ export const productionOrderModel = sequelize.define('productionOrders',{
         autoIncrement: true,
         primaryKey: true
     },
+    orderNumber: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+    },
     expirationDate: {
         type: DataTypes.DATE,
         allowNull: false

@@ -1,5 +1,6 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
+/* The code is defining a Sequelize model for a table called "companys" in a database. */
 
 export const companyModel = sequelize.define('companys',{
     id: {
@@ -8,6 +9,10 @@ export const companyModel = sequelize.define('companys',{
         primaryKey: true
     },
     name: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    nit: {
         type: DataTypes.STRING(255),
         allowNull: false
     },

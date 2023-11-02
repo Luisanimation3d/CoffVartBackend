@@ -18,6 +18,10 @@ export const shopModel = sequelize.define(
 			type: DataTypes.FLOAT,
 			allowNull: false,
 		},
+		date: {
+			type: DataTypes.STRING(100),
+			allowNull: false,
+		},
 		state: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true,
