@@ -7,9 +7,9 @@ const router = Router();
 
 /* These lines of code are defining the routes for handling HTTP requests in an Express.js application. */
 router.get('/', getPermissions);
-router.get('/:id', extractUserMiddlewares, validateRouteGet, getPermission);
-router.post('/', extractUserMiddlewares, validateRoutePost, postPermission);
-router.put('/:id', extractUserMiddlewares, validateRoutePut, putPermission);
-router.delete('/:id', extractUserMiddlewares, validateRouteDelete, deletePermission);
+router.get('/:id',  validateRouteGet, getPermission);
+router.post('/',  validateRoutePost, postPermission);
+router.put('/:id',  validateRoutePut, putPermission);
+router.delete('/:id', validateRouteDelete, deletePermission);
 
 export default router;
