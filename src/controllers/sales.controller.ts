@@ -105,14 +105,14 @@ export const postSale = async (req: Request, res: Response) => {
 
     try {
         // Obtener el cliente por su ID
-        const customer = await coustumersModel.findByPk(coustumerId);
+        const coustumer = await coustumersModel.findByPk(coustumerId);
 
-        if (!customer) {
+        if (!coustumer) {
             return res.status(404).json({ msg: `Customer with ID ${coustumerId} not found` });
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newSale = await salesModel.create({ invoice, state, total, coustumerId: customer.getDataValue('id')});
+        const newSale = await salesModel.create({ invoice, state, total, coustumerId: coustumer.getDataValue('id')});
 
         // Crear una lista para guardar los detalles de la venta
         const saleDetails = [];
