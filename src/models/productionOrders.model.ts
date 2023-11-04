@@ -12,18 +12,18 @@ export const productionOrderModel = sequelize.define('productionOrders',{
     },
     orderNumber: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
+        allowNull: false
     },
     expirationDate: {
         type: DataTypes.DATE,
         allowNull: false
     },
     initialWeight: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.FLOAT(10, 2),
         allowNull: false
     },
     finalWeight: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.FLOAT(10, 2),
         allowNull: true
     },
     process: {

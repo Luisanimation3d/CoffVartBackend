@@ -7,6 +7,7 @@ import suppliesRoutes from '../routes/supplies.routes';
 import productsRoutes from '../routes/products.routes';
 import rolesRouter from '../routes/roles.routes';
 import salesRouter from '../routes/sales.routes';
+import ordersRouter from '../routes/orders.routes';
 import productionOrdersRouter from '../routes/productionOrders.routes';
 import companysRouter from '../routes/companys.routes';
 import suppliersRouter from '../routes/suppliers.routes';
@@ -23,6 +24,7 @@ export class Server {
 	public coustomersPath: string;
 	public rolesPath: string;
 	public salesPath: string;
+	public ordersPath: string;
 	public productionOrdersPath: string;
 	public companysPath: string;
 	public suppliersPath: string;
@@ -40,6 +42,7 @@ export class Server {
 		this.coustomersPath = '/api/coustumers';
 		this.rolesPath = '/api/roles';
 		this.salesPath = '/api/sales';
+		this.ordersPath = '/api/orders';
 		this.productionOrdersPath = '/api/productionOrders';
 		this.companysPath = '/api/companys';
 		this.suppliersPath = '/api/suppliers';
@@ -76,6 +79,7 @@ export class Server {
 		this.app.use(this.coustomersPath, coustomersRoutes);
 		this.app.use(this.rolesPath, rolesRouter);
 		this.app.use(this.salesPath, salesRouter);
+		this.app.use(this.ordersPath, ordersRouter);
 		this.app.use(this.productionOrdersPath, productionOrdersRouter);
 		this.app.use(this.companysPath, companysRouter);
 		this.app.use(this.suppliersPath, suppliersRouter);
@@ -85,7 +89,7 @@ export class Server {
 
 	async dbConnection() {
 		try {
-			await sequelize.sync({ force: true });
+			await sequelize.sync({ force: false });
 			console.log('db connection success');
 		} catch (err) {
 			console.log('db connection error: ' + err);
