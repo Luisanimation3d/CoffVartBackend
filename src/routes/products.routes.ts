@@ -8,7 +8,7 @@ const router= Router();
 
 router.get("/", /*extractUserMiddlewares*/ getProducts,  GetProductsMiddleware);
 router.get("/:id",getProducts); 
-router.post("/",extractUserMiddlewares, postProducts, validateRoutePost,  PostProductsMiddleware);
+router.post("/", /*extractUserMiddlewares*/ postProducts, validateRoutePost,  /*PostProductsMiddleware*/);
 router.put("/:id",extractUserMiddlewares, putProducts, PutProductsMiddleware);
 router.delete("/:id",deleteProducts);
 

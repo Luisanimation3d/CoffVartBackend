@@ -3,11 +3,33 @@ import { salesModel } from "../models/sales.model";
 import { salesdetailsModel } from "../models/salesdetails.model";
 import { productModel } from "../models/products.model";
 import { coustumersModel } from "../models/coustomers.model";
+import { optionsPagination } from '../types/generalTypes';
+
+/**
+ * The `getRoles` function is an asynchronous function that retrieves roles from a database with
+ * pagination and includes associated role details and permissions.
+ * @param {Request} req - The `req` parameter is the request object that contains information about the
+ * HTTP request made to the server. It includes details such as the request method, headers, query
+ * parameters, and body.
+ * @param {Response} res - The `res` parameter is the response object that is used to send the response
+ * back to the client. It contains methods and properties that allow you to control the response, such
+ * as setting the status code and sending JSON data.
+ */
 
 
 export const getSales = async (req: Request, res: Response) => {
     try {
-        const sales = await salesModel.findAll({
+        const {page, limit, order} = req.query;
+        const options : optionsPagination = {
+            page: parseInt(page as string, 10) || 1,
+            limit: parseInt(limit as string, 10) || 10,
+			paginate: parseInt(limit as string, 10) || 10,
+			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+        };
+        const sales= await salesModel.findAndCountAll({
+            limit: options.limit,
+            offset: options.limit * (options.page - 1),
+            order: [options.order],
             include: [
                 {
                     model: salesdetailsModel,
@@ -25,7 +47,7 @@ export const getSales = async (req: Request, res: Response) => {
                 },
             ],
         });
-        res.status(200).json({ sales });
+        res.status(200).json({ sales, options });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });

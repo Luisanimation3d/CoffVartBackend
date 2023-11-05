@@ -9,17 +9,15 @@ export const ordersderailsModel = sequelize.define('ordersderails', {
         autoIncrement: true,
         primaryKey: true
     },
-    total: {
-        type: DataTypes.FLOAT(10, 2),
-        allowNull: false
-    },
     quantity: {
         type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    value: {
+        type: DataTypes.FLOAT(10, 2),
         allowNull: false
     }
 },
 {
     timestamps: true
 })
-ordersModel.belongsToMany(productModel, { through: ordersderailsModel });
-productModel.belongsToMany(ordersModel, { through: ordersderailsModel });

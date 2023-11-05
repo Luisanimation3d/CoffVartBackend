@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../database/config";
 import { coustumersModel } from "./coustomers.model";
 import { productModel } from "./products.model";
+import { ordersderailsModel } from "./ordersderails.model";
 
 export const ordersModel = sequelize.define('orders', {
     id: {
@@ -13,18 +14,15 @@ export const ordersModel = sequelize.define('orders', {
         type: DataTypes.STRING(50),
         allowNull: false
     },
-    name: {
+    total:{
+        type: DataTypes.FLOAT(10, 2),
+        allowNull: false
+    },
+    coustumerId: {
         type: DataTypes.STRING(50),
         allowNull: true
      },
-    phone: {
-        type: DataTypes.STRING(15),
-        allowNull: true,
-    },
-    document: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
+
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
@@ -34,5 +32,12 @@ export const ordersModel = sequelize.define('orders', {
     timestamps: true
 })
 
-coustumersModel.belongsToMany(productModel, { through: ordersModel });
-productModel.belongsToMany(coustumersModel, { through: ordersModel });
+ordersModel.hasMany(ordersderailsModel, {
+    foreignKey: 'orderId',
+    sourceKey: 'id'
+})
+
+ordersderailsModel.belongsTo(ordersModel, {
+    foreignKey: 'orderId',
+    targetKey: 'id'
+});
