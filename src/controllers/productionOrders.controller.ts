@@ -69,14 +69,14 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
 
 export const postProducionOrder =async(req:Request, res:Response)=> {
     try {
-        const {expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality} = req.body;
+        const {orderNumber, expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality} = req.body;
         const newProductionOrder = await productionOrderModel.create({orderNumber,expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality});
         res.status(200).json({newProductionOrder});
     } catch (error) {
         console.log(error);
 		res.status(500).json({ msg: error });
     }
-    const {expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality} = req.body;
+    const {orderNumber, expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality} = req.body;
     const newProductionOrder = await productionOrderModel.create({orderNumber,expirationDate,initialWeight,finalWeight,process,orderState,reasonCancellation,observations,productQuality});
     res.status(200).json({newProductionOrder});
 };
