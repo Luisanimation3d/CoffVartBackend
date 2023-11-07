@@ -4,7 +4,7 @@ import { optionsPagination } from '../types/generalTypes';
 
 
 
-export const getRoles = async (req: Request, res: Response) => {
+export const getSupplies = async (req: Request, res: Response) => {
 	try {
 		const { page, limit, order } = req.query;
 		const options: optionsPagination = {

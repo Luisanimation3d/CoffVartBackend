@@ -6,8 +6,8 @@ import {validateRoutePost} from '../middlewares/orders.middlewares';
 
 const router= Router()
 
-router.get('/', extractUserMiddlewares, GetOrdersMiddleware, getOrders);
+router.get('/', /*extractUserMiddlewares, GetOrdersMiddleware,*/ getOrders);
 router.get('/:id', getOrder);
-router.post('/', extractUserMiddlewares, PostOrdersMiddleware, validateRoutePost,  postOrder);
+router.post('/', /*extractUserMiddlewares, PostOrdersMiddleware, validateRoutePost,*/  postOrder);
 
 export default router;

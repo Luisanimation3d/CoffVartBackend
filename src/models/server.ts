@@ -13,6 +13,7 @@ import companysRouter from '../routes/companys.routes';
 import suppliersRouter from '../routes/suppliers.routes';
 import userRouter from '../routes/users.routes';
 import loginRouter from '../routes/login.routes';
+import shopRouter from '../routes/shops.routes';
 
 export class Server {
 	public app: express.Application;
@@ -30,6 +31,7 @@ export class Server {
 	public suppliersPath: string;
 	public userPath: string;
     public loginPath: string;
+	public shopPath: string;
 	private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
 
 	constructor() {
@@ -48,6 +50,7 @@ export class Server {
 		this.suppliersPath = '/api/suppliers';
 		this.userPath = '/api/users';
 		this.loginPath = '/api/login';
+		this.shopPath = '/api/shops';
 		this.middlewares();
 		this.routes();
 		this.dbConnection();
@@ -85,6 +88,7 @@ export class Server {
 		this.app.use(this.suppliersPath, suppliersRouter);
 		this.app.use(this.userPath, userRouter);
         this.app.use(this.loginPath, loginRouter);
+		this.app.use(this.shopPath, shopRouter);
 	}
 
 	async dbConnection() {

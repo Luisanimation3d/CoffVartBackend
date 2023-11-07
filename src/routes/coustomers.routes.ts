@@ -6,8 +6,8 @@ import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
 const router = Router();
 router.get('/:id', /*extractUserMiddlewares*/ getCoustumer);
 router.get('/', /*extractUserMiddlewares*/  /*GetCoustumersMiddleware*/ getCoustumers);
-router.post('/', /*extractUserMiddlewares*/ /*PostCoustumersMiddleware*/ validateRoutePost, postCoustumers);
-router.put('/:id',  /*extractUserMiddlewares*/ /*PutCoustumersMiddleware*/ validateRoutePut, putCoustumers);
+router.post('/', /*extractUserMiddlewares*/ /*PostCoustumersMiddleware*/ /*validateRoutePost,*/ postCoustumers);
+router.put('/:id',  /*extractUserMiddlewares*/ /*PutCoustumersMiddleware*/ /*validateRoutePut,*/ putCoustumers);
 router.delete('/:id', /*extractUserMiddlewares*/ /*DeleteCoustumersMiddleware*/ deleteCoustumers);
 
 export default router;
