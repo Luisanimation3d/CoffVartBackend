@@ -105,7 +105,7 @@ export const putUser = async (req: Request, res: Response) => {
             return res.status(404).json({ msg: 'User not found' });
         }
         const passwordHash = bcrypt.hashSync(password, 10);
-        await user.update({ name, lastname, address, phone, email, passwordHash, roleId });
+        await user.update({ name, lastname, address, phone, email, password: passwordHash, roleId });
         res.status(200).json({ user });
     } catch (error) {
         console.log(error);
