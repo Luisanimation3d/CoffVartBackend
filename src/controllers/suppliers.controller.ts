@@ -70,7 +70,7 @@ export const getSupplier = async (req: Request, res: Response) => {
 export const postSuppliers =async(req:Request, res:Response)=> {
     try {
         const {name, coffeType,address,phone,quality,unitCost} = req.body;
-        const newSupplier = await supplierModel.create({name,coffeType,address,phone,quality,unitCost});
+        const newSupplier = await supplierModel.create({name,nit,coffeType,address,phone,quality,unitCost});
         res.status(200).json({newSupplier});
     } catch (error) {
         console.log(error);
@@ -100,7 +100,7 @@ export const putSuppliers = async (req: Request, res: Response) => {
         if (!suppliers) {
             return res.status(404).json({ msg: 'Supplier not found' });
         }
-        await suppliers.update({ name, coffeType,address,phone,quiality,unitCost,state });
+        await suppliers.update({ name, nit, coffeType,address,phone,quiality,unitCost,state });
         res.status(200).json({ suppliers });
     } catch (error) {
         console.log(error);
