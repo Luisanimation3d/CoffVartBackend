@@ -51,5 +51,5 @@ export const productionOrderModel = sequelize.define('productionOrders',{
 })
 productionOrderModel.belongsTo(companyModel,{foreignKey:'company_id',targetKey:'id'});
 productionOrderModel.belongsTo(suppliesModel,{foreignKey:'supplie_id',targetKey:'id'});
-productionOrderModel.hasMany(productModel,{foreignKey:'product_id',sourceKey:'id'});
+productionOrderModel.hasMany(productModel,{foreignKey:'productionOrder_id',sourceKey:'id'});
 productModel.belongsTo(productionOrderModel,{foreignKey:'productionOrder_id',targetKey:'id'});
