@@ -8,6 +8,6 @@ const router = Router();
 
 router.get('/', /*extractUserMiddlewares*/ /*GetSalesMiddleware*/ getSales);
 router.get('/:id', getSale);
-router.post('/',  /*extractUserMiddlewares*/  /*PostSalesMiddleware*/ validateRoutePost, postSale);
+router.post('/',  /*extractUserMiddlewares*/  /*PostSalesMiddleware*/ /*validateRoutePost,*/ postSale);
 
 export default router;

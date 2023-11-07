@@ -5,10 +5,10 @@ import { validateRouteGet, validateRoutePost, validateRoutePut, validateRouteDel
 
 const router= Router();
 
-router.get("/",extractUserMiddlewares,getSuppliers);
-router.get('/:id', extractUserMiddlewares, validateRouteGet, getSupplier)
-router.post("/",extractUserMiddlewares,validateRoutePost,postSuppliers);
-router.put("/:id",extractUserMiddlewares,validateRoutePut,putSuppliers);
-router.delete("/:id",extractUserMiddlewares,validateRouteDelete,deleteSuppliers);
+router.get("/",/*extractUserMiddlewares,*/getSuppliers);
+router.get('/:id', /*extractUserMiddlewares, validateRouteGet,*/ getSupplier)
+router.post("/",/*extractUserMiddlewares,validateRoutePost,*/postSuppliers);
+router.put("/:id",/*extractUserMiddlewares,validateRoutePut,*/putSuppliers);
+router.delete("/:id",/*extractUserMiddlewares,validateRouteDelete,*/deleteSuppliers);
 
 export default router;
