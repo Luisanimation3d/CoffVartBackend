@@ -2,7 +2,7 @@ import { Response, Request } from 'express';
 import { rolesModel } from '../models/roles.model';
 import { roleDetailsModel } from '../models/roleDetails.model';
 import { permissionsModel } from '../models/permissions.model';
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -152,6 +152,6 @@ export const deleteRole = async (req: Request, res: Response) => {
 	if (!role) {
 		return res.status(404).json({ msg: 'role not found' });
 	}
-	role.update({ state: false });
+	role.update({ state: !role.getDataValue('state') });
 	res.status(200).json({ role });
 };
