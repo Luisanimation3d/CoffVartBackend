@@ -1,8 +1,8 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
-import { companyModel } from "./companys.model";
 import { suppliesModel } from "./supplies.model";
 import { productModel } from "./products.model";
+import { processModel } from "./process.model";
 
 export const productionOrderModel = sequelize.define('productionOrders',{
     id: {
@@ -11,7 +11,7 @@ export const productionOrderModel = sequelize.define('productionOrders',{
         primaryKey: true
     },
     orderNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(500),
         allowNull: false
     },
     quantity: {
@@ -22,14 +22,32 @@ export const productionOrderModel = sequelize.define('productionOrders',{
         type: DataTypes.STRING(500),
         allowNull:true
     },
-    state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    },
 },{
     timestamps: true
 })
-productionOrderModel.belongsTo(companyModel,{foreignKey:'company_id',targetKey:'id'});
-productionOrderModel.belongsTo(suppliesModel,{foreignKey:'supplie_id',targetKey:'id'});
-productionOrderModel.hasMany(productModel,{foreignKey:'productionOrder_id',sourceKey:'id'});
-productModel.belongsTo(productionOrderModel,{foreignKey:'productionOrder_id',targetKey:'id'});
+suppliesModel.hasOne(productionOrderModel,{
+    foreignKey: 'supplieId',
+    sourceKey: 'id',
+});
+productionOrderModel.belongsTo(suppliesModel,{
+    foreignKey:'supplie_id',
+    targetKey:'id'});
+productionOrderModel.hasMany(productModel,{
+    foreignKey:'productionOrder_id',
+    sourceKey:'id'});
+productModel.belongsTo(productionOrderModel,{
+    foreignKey:'productionOrder_id',
+    targetKey:'id'});
+processModel.hasOne(productionOrderModel,{
+    foreignKey: 'processId',
+    sourceKey: 'id',
+});
+    
+productionOrderModel.belongsTo(processModel,{
+    foreignKey: 'processId',
+    targetKey: 'id',
+});
+    
+
+
+    

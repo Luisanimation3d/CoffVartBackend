@@ -1,5 +1,8 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
+import { suppliesModel } from "./supplies.model";
+import { companyModel } from "./companys.model";
+import { processModel } from "./process.model";
 
 export const productionRequestModel = sequelize.define('productionRequests',{
     id: {
@@ -8,7 +11,7 @@ export const productionRequestModel = sequelize.define('productionRequests',{
         primaryKey: true
     },
     requestNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(500),
         allowNull: false
     },
     dateOfDispatch: {
@@ -27,11 +30,35 @@ export const productionRequestModel = sequelize.define('productionRequests',{
         type: DataTypes.STRING(500),
         allowNull:true
     },
-    state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    },
 },{
     timestamps: true
 })
+suppliesModel.hasOne(productionRequestModel,{
+    foreignKey: 'supplieId',
+    sourceKey: 'id',
+});
+
+productionRequestModel.belongsTo(suppliesModel,{
+    foreignKey: 'supplieId',
+    targetKey: 'id',
+});
+companyModel.hasOne(productionRequestModel,{
+    foreignKey: 'companyId',
+    sourceKey: 'id',
+});
+
+productionRequestModel.belongsTo(companyModel,{
+    foreignKey: 'companyId',
+    targetKey: 'id',
+});
+processModel.hasOne(productionRequestModel,{
+    foreignKey: 'processId',
+    sourceKey: 'id',
+});
+
+productionRequestModel.belongsTo(processModel,{
+    foreignKey: 'processId',
+    targetKey: 'id',
+});
+
 

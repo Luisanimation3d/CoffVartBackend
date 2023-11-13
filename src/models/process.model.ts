@@ -15,10 +15,6 @@ export const processModel = sequelize.define('process',{
         type: DataTypes.STRING,
         allowNull: false
     },
-    state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    },
 },{
     timestamps: true
 })
