@@ -36,6 +36,7 @@ export class Server {
 
 	constructor() {
 		this.app = express();
+		this.middlewares();
 		this.port = parseInt(process.env.PORT || '') || 3000;
 		this.testPath = '/test';
 		this.permissionPath = '/api/permissions';
@@ -51,7 +52,6 @@ export class Server {
 		this.userPath = '/api/users';
 		this.loginPath = '/api/login';
 		this.shopPath = '/api/shops';
-		this.middlewares();
 		this.routes();
 		this.dbConnection();
 	}
