@@ -1,4 +1,4 @@
-import { productionOrderModel } from "../models/productionOrders.model";
+import { productionRequestModel } from "../models/productionRequest.model";
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
  * @param {any} req - The `req` parameter represents the HTTP request object, which contains
@@ -15,9 +15,9 @@ import { productionOrderModel } from "../models/productionOrders.model";
  */
 export const validateRouteGet = async (req: any, res: any, next: any) => {
     const { id } = req.params;
-    const productionOrderFound = await productionOrderModel.findByPk(id);
-    if(!productionOrderFound){
-        res.status(400).json({ error: 'productionOrder not found'});
+    const productionRequestFound = await productionRequestModel.findByPk(id);
+    if(!productionRequestFound){
+        res.status(400).json({ error: 'productionRequest not found'});
         return;
     }
     next();
@@ -38,18 +38,22 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePost = async (req: any, res: any, next: any) => {
-    const {orderNumber, quantity } = req.body;
+    const {requestNumber, dateOfDispatch,quantity } = req.body;
 
-    if (!orderNumber) {
+    if (!requestNumber) {
         res.status(400).json({ error: 'expirationDate  is required' });
         return;
     }
 
-    if(!quantity){
+    if(!dateOfDispatch){
         res.status(400).json({ error: 'process is required' });
         return;
     }
-
+    if (!quantity) {
+        res.status(400).json({ error: 'initial Weight is required' });
+        return;
+    }
+    
     next();
 }
 /**
@@ -67,17 +71,22 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
  * @returns nothing.
  */
 export const validateRoutePut = async (req: any, res: any, next: any) => {
-    const {orderNumber, quantity} = req.body;
+    const {requestNumber, dateOfDispatch,quantity } = req.body;
 
-    if (!orderNumber) {
+    if (!requestNumber) {
         res.status(400).json({ error: 'expirationDate  is required' });
         return;
     }
 
-    if(!quantity){
+    if(!dateOfDispatch){
         res.status(400).json({ error: 'process is required' });
         return;
     }
+    if (!quantity) {
+        res.status(400).json({ error: 'initial Weight is required' });
+        return;
+    }
+    
     next();
 }
 /**
@@ -98,9 +107,9 @@ export const validateRoutePut = async (req: any, res: any, next: any) => {
  */
 export const validateRouteDelete = async (req: any, res: any, next: any) => {
     const { id } = req.params;
-    const productionOrderFound = await productionOrderModel.findByPk(id);
-    if (!productionOrderFound) {
-        res.status(400).json({ error: 'productionOrder not found' });
+    const productionRequestFound = await productionRequestModel.findByPk(id);
+    if (!productionRequestFound) {
+        res.status(400).json({ error: 'productionRequest not found' });
         return;
     }
     next();
