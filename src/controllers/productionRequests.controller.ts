@@ -1,5 +1,5 @@
 import {Response, Request} from "express";
-import { productionOrderModel } from "../models/productionOrders.model";
+import { productionRequestModel } from "../models/productionRequest.model";
 import { optionsPagination } from '../types/generalTypes';
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
@@ -13,7 +13,7 @@ import { optionsPagination } from '../types/generalTypes';
  * as setting the status code, headers, and sending the response body.
  */
 
-export const getProductionOrders = async (req: Request, res: Response)=> {
+export const getProductionRequests = async (req: Request, res: Response)=> {
     try {
 		const { page, limit, order } = req.query;
 		const options: optionsPagination = {
@@ -22,12 +22,12 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
 			paginate: parseInt(limit as string, 10) || 10,
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
-		const productionOrders = await productionOrderModel.findAndCountAll({
+		const ProductionRequests = await productionRequestModel.findAndCountAll({
 			limit: options.limit,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
-		res.status(200).json({ productionOrders, options });
+		res.status(200).json({ ProductionRequests, options });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: error });
@@ -44,14 +44,14 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
  * message "suppliers not found" if the suppliers does not exist. If there is an error, it will
  * return a 500 status code with the error message.
  */
-export const getProductionOrder = async (req: Request, res: Response)=> {
+export const getProductionRequest = async (req: Request, res: Response)=> {
     try {
 		const { id } = req.params;
-		const productionOrder = await productionOrderModel.findByPk(id);
-		if (!productionOrder) {
-			return res.status(404).json({ msg: 'productionOrder not found' });
+		const ProductionRequest = await productionRequestModel.findByPk(id);
+		if (!ProductionRequest) {
+			return res.status(404).json({ msg: 'ProductionRequest not found' });
 		}
-		res.status(200).json({ productionOrder });
+		res.status(200).json({ ProductionRequest });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: error });
@@ -67,18 +67,18 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
  * as setting the status code and sending JSON data.
  */
 
-export const postProductionOrder =async(req:Request, res:Response)=> {
+export const postProductionRequest =async(req:Request, res:Response)=> {
     try {
-        const {orderNumber, quantity} = req.body;
-        const newProductionOrder = await productionOrderModel.create({orderNumber, quantity});
-        res.status(200).json({newProductionOrder});
+        const {requestNumber, dateOfDispatch,quantity} = req.body;
+        const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity});
+        res.status(200).json({newProductionRequest});
     } catch (error) {
         console.log(error);
 		res.status(500).json({ msg: error });
     }
-    const {orderNumber, quantity} = req.body;
-    const newProductionOrder = await productionOrderModel.create({orderNumber, quantity});
-    res.status(200).json({newProductionOrder});
+    const {requestNumber, dateOfDispatch,quantity} = req.body;
+    const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity});
+    res.status(200).json({newProductionRequest});
 };
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,
@@ -95,16 +95,16 @@ export const postProductionOrder =async(req:Request, res:Response)=> {
  * 500 status code with a JSON response containing the error message.
  */
 
-export const putProductionOrder = async (req: Request, res: Response) => {
+export const putProductionRequest = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const {orderNumber, quantity,reasonCancellation } = req.body;
-        const productionOrders = await productionOrderModel.findByPk(id);
-        if (!productionOrders) {
-            return res.status(404).json({ msg: 'ProductionOrder not found' });
+        const {{requestNumber, dateOfDispatch,quantity,reasonCancellation,observations } = req.body;
+        const ProductionRequests = await productionRequestModel.findByPk(id);
+        if (!ProductionRequests) {
+            return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        await productionOrders.update({ orderNumber, quantity,reasonCancellation  });
-        res.status(200).json({ productionOrders });
+        await ProductionRequests.update({ requestNumber, dateOfDispatch,quantity,reasonCancellation,observations });
+        res.status(200).json({ ProductionRequests });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
@@ -124,15 +124,15 @@ export const putProductionOrder = async (req: Request, res: Response) => {
  * message if it does not exist. If there is an error, it will return a 500 status code with the error
  * message.
  */
-export const deleteProductionOrder= async (req: Request, res: Response) => {
+export const deleteProductionRequest= async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const productionOrders = await productionOrderModel.findByPk(id);
-        if (!productionOrders) {
-            return res.status(404).json({ msg: 'ProductionOrder not found' });
+        const ProductionRequests = await productionRequestModel.findByPk(id);
+        if (!ProductionRequests) {
+            return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        await productionOrders.destroy();
-        res.status(200).json({ productionOrders });
+        await ProductionRequests.destroy();
+        res.status(200).json({ ProductionRequests });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
