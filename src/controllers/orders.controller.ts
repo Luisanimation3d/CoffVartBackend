@@ -71,21 +71,21 @@ export const getOrder = async (req: Request, res: Response) => {
 };
 
 export const postOrder = async (req: Request, res: Response) => {
-    const { code, state, coustumerId, products, quantities, total } = req.body;
+    const { code, state, coustumerId, products, quantities } = req.body;
     try{
         const coustumer = await coustumersModel.findByPk(coustumerId);
 
         if(!coustumer){
             return res.status(404).json({msg: 'Coustumer not found'})
         }
-        const newOrder = await ordersModel.create({ code, state, total, coustumerId: coustumer.getDataValue('id')});
+        const newOrder = await ordersModel.create({ code, state, customerId: coustumer.getDataValue('id'), total: 0});
         const orderDetails = [];
-
         for (let i= 0; i< products.length; i++){
             const productId= products[i];
             const quantity = quantities[i];
 
             const product = await productModel.findByPk(productId);
+            
 
             if(!product){
                 return res.status(404).json({msg: 'Product not found'})
@@ -93,11 +93,13 @@ export const postOrder = async (req: Request, res: Response) => {
             if(quantity > product.getDataValue('amount')){
                 return res.status(400).json({msg: `Product ${product.getDataValue('name')} doesn't have enough stock`})
             }
+            const subtotal = product.getDataValue('unitPrice') * quantity;
             const orderDetail={
                 orderId: newOrder.getDataValue('id'),
                 productId: productId,
                 quantity: quantity,
-                value: total
+                value: product.getDataValue('unitPrice'), 
+                subtotal: subtotal
             };
             orderDetails.push(orderDetail);
 
@@ -106,8 +108,10 @@ export const postOrder = async (req: Request, res: Response) => {
         }
 
         await ordersderailsModel.bulkCreate(orderDetails);
+        const total = orderDetails.reduce((acc, orderDetail) => acc + orderDetail.subtotal, 0);
+        await newOrder.update({total: total});
 
-        res.status(201).json({newOrder, orderDetails, total})
+        res.status(201).json({newOrder, orderDetails, total});
     } catch(error){
         console.log(error);
         res.status(500).json({msg: error})

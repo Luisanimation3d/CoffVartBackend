@@ -98,7 +98,7 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
 export const putProductionRequest = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const {{requestNumber, dateOfDispatch,quantity,reasonCancellation,observations } = req.body;
+        const {requestNumber, dateOfDispatch,quantity,reasonCancellation,observations } = req.body;
         const ProductionRequests = await productionRequestModel.findByPk(id);
         if (!ProductionRequests) {
             return res.status(404).json({ msg: 'ProductionRequest not found' });
@@ -109,8 +109,7 @@ export const putProductionRequest = async (req: Request, res: Response) => {
         console.log(error);
         res.status(500).json({ msg: error });
     }
-    
-};
+ };
 /**
  * The `deletesuppliers` function is an asynchronous function that deletes a suppliers based on the
  * provided ID and returns a response with the deleted suppliers or an error message.

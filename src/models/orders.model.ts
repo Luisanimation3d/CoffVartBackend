@@ -18,11 +18,6 @@ export const ordersModel = sequelize.define('orders', {
         type: DataTypes.FLOAT(10, 2),
         allowNull: false
     },
-    coustumerId: {
-        type: DataTypes.STRING(50),
-        allowNull: true
-     },
-
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
