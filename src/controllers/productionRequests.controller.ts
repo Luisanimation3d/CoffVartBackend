@@ -1,5 +1,5 @@
 import {Response, Request} from "express";
-import { productionRequestModel } from "../models/productionRequest.model";
+import { productionRequestModel } from "../models/productionRequests.model";
 import { optionsPagination } from '../types/generalTypes';
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
@@ -76,9 +76,6 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
         console.log(error);
 		res.status(500).json({ msg: error });
     }
-    const {requestNumber, dateOfDispatch,quantity} = req.body;
-    const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity});
-    res.status(200).json({newProductionRequest});
 };
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,

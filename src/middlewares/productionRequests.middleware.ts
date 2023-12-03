@@ -1,4 +1,4 @@
-import { productionRequestModel } from "../models/productionRequest.model";
+import { productionRequestModel } from "../models/productionRequests.model";
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
  * @param {any} req - The `req` parameter represents the HTTP request object, which contains
