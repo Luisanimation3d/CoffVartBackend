@@ -76,9 +76,6 @@ export const postProductionOrder =async(req:Request, res:Response)=> {
         console.log(error);
 		res.status(500).json({ msg: error });
     }
-    const {orderNumber, quantity} = req.body;
-    const newProductionOrder = await productionOrderModel.create({orderNumber, quantity});
-    res.status(200).json({newProductionOrder});
 };
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,
