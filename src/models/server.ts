@@ -9,6 +9,7 @@ import rolesRouter from '../routes/roles.routes';
 import salesRouter from '../routes/sales.routes';
 import ordersRouter from '../routes/orders.routes';
 import productionOrdersRouter from '../routes/productionOrders.routes';
+import productionRequestsRouter from '../routes/productionRequests.routes';
 import companysRouter from '../routes/companys.routes';
 import suppliersRouter from '../routes/suppliers.routes';
 import userRouter from '../routes/users.routes';
@@ -27,6 +28,7 @@ export class Server {
 	public salesPath: string;
 	public ordersPath: string;
 	public productionOrdersPath: string;
+	public productionRequestsPath: string;
 	public companysPath: string;
 	public suppliersPath: string;
 	public userPath: string;
@@ -47,6 +49,7 @@ export class Server {
 		this.salesPath = '/api/sales';
 		this.ordersPath = '/api/orders';
 		this.productionOrdersPath = '/api/productionOrders';
+		this.productionRequestsPath = '/api/productionRequests';
 		this.companysPath = '/api/companys';
 		this.suppliersPath = '/api/suppliers';
 		this.userPath = '/api/users';
@@ -84,6 +87,7 @@ export class Server {
 		this.app.use(this.salesPath, salesRouter);
 		this.app.use(this.ordersPath, ordersRouter);
 		this.app.use(this.productionOrdersPath, productionOrdersRouter);
+		this.app.use(this.productionRequestsPath, productionRequestsRouter);
 		this.app.use(this.companysPath, companysRouter);
 		this.app.use(this.suppliersPath, suppliersRouter);
 		this.app.use(this.userPath, userRouter);
