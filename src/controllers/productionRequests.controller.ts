@@ -1,5 +1,5 @@
 import {Response, Request} from "express";
-import { productionRequestModel } from "../models/productionRequest.model";
+import { productionRequestModel } from "../models/productionRequests.model";
 import { optionsPagination } from '../types/generalTypes';
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database

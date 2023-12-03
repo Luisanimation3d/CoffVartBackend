@@ -2,7 +2,7 @@ import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
 import { processModel } from "./process.model";
 import { productionOrderModel } from "./productionOrders.model";
-import { productionRequestModel } from "./productionRequest.model";
+import { productionRequestModel } from "./productionRequests.model";
 
 
 export const processDetailModel = sequelize.define('processDetail',{
