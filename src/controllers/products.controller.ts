@@ -16,16 +16,6 @@ export const getProducts = async (req: Request, res: Response) => {
 			limit: options.limit,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
-            include: [
-                {
-                    include: [
-                        {
-                        model: productionOrderModel,
-                        attributes: ['id', 'name'],
-                        },
-                    ],
-                },
-            ],
 		});
 		res.status(200).json({ products, options });
 	} catch (error) {
@@ -37,16 +27,6 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
 	try{const { id } = req.params;
 	const product = await productModel.findByPk(id, {
-        include: [
-			{
-				include: [
-					{
-						model: productionOrderModel,
-						attributes: ['id', 'name'],
-					},
-				]
-			},
-		],
 	});
 	if (!product) {
 		return res.status(404).json({ msg: 'Product not found' });
@@ -73,7 +53,7 @@ export const putProducts = async (req: Request, res: Response) => {
     const { name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder } = req.body;
     const products = await productModel.findByPk(id)
     if (!products) {
-        return res.status(404).json({ msg: 'Supplies not found' });
+        return res.status(404).json({ msg: 'Product not found' });
     }
     await products.update({ name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder });
     res.status(200).json({ products });
@@ -87,7 +67,7 @@ export const deleteProducts= async (req: Request, res: Response) => {
     try{const { id } = req.params;
     const products = await productModel.findByPk(id);
     if (!products) {
-        return res.status(404).json({ msg: 'Supplies not found' });
+        return res.status(404).json({ msg: 'Product not found' });
     }
     await products.destroy();
     res.status(200).json({ products});
