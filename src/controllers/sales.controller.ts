@@ -123,7 +123,7 @@ export const getSale = async (req: Request, res: Response) => {
     }
 };*/
 export const postSale = async (req: Request, res: Response) => {
-    const { invoice, state, coustumerId, products, quantities, total } = req.body;
+    const { invoice, state, coustumerId, Productdetails} = req.body;
 
     try {
         // Obtener el cliente por su ID
@@ -134,47 +134,33 @@ export const postSale = async (req: Request, res: Response) => {
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newSale = await salesModel.create({ invoice, state, total, coustumerId: coustumer.getDataValue('id')});
+        const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer.getDataValue('id')});
+        let total = 0;
 
         // Crear una lista para guardar los detalles de la venta
-        const saleDetails = [];
-
-        // Iterar a través de los productos y cantidades
-        for (let i = 0; i < products.length; i++) {
-            const productId = products[i];
-            const quantity = quantities[i];
-
-            // Obtener el producto por su ID
-            const product = await productModel.findByPk(productId);
-
+        const saleDetails = Productdetails?.map(async(productDetail: any) => {
+            const product = await productModel.findByPk(productDetail.productId);
             if (!product) {
-                return res.status(404).json({ msg: `Product with ID ${productId} not found` });
+                return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
             }
-
-            if (quantity > product.getDataValue('amount')) {
-                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productId}` });
+            if (productDetail.quantity > product.getDataValue('amount')) {
+                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
             }
-
-            // Calcular el subtotal para este producto
-
-            // Crear un registro de detalle de venta
-            const saleDetail = {
-                saleId: newSale.getDataValue('id'),
-                productId: productId,
-                quantity: quantity,
-                value: total, // Ajusta el valor del detalle según tus necesidades
-            };
-
-            // Agregar el detalle a la lista
-            saleDetails.push(saleDetail);
-
-            // Actualizar la cantidad de productos disponibles
-            product.setDataValue('amount', product.getDataValue('amount') - quantity);
+            
+            product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
             await product.save();
-        }
+            total += product.getDataValue('unitPrice') * productDetail.quantity;
+            return {
+                saleId: newSale.getDataValue('id'),
+                productId: productDetail.productId,
+                quantity: productDetail.quantity,
+                value: product.getDataValue('unitPrice') * productDetail.quantity,
+            };
+        });
 
         // Crear los registros de detalles de venta en la base de datos
         await salesdetailsModel.bulkCreate(saleDetails);
+        await newSale.update({total: total});
 
         res.status(201).json({ newSale, saleDetails, total });
     } catch (error) {
