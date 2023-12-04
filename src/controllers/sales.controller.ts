@@ -3,7 +3,7 @@ import { salesModel } from "../models/sales.model";
 import { salesdetailsModel } from "../models/salesdetails.model";
 import { productModel } from "../models/products.model";
 import { coustumersModel } from "../models/coustomers.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -134,7 +134,7 @@ export const postSale = async (req: Request, res: Response) => {
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer.getDataValue('id')});
+        const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer.getDataValue('id'), total: 0 });
         let total = 0;
 
         // Crear una lista para guardar los detalles de la venta
