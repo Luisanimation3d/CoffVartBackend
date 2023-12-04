@@ -19,14 +19,14 @@ import { optionsPagination } from 'generalTypes';
 
 export const getSales = async (req: Request, res: Response) => {
     try {
-        const {page, limit, order} = req.query;
-        const options : optionsPagination = {
+        const { page, limit, order } = req.query;
+        const options: optionsPagination = {
             page: parseInt(page as string, 10) || 1,
             limit: parseInt(limit as string, 10) || 10,
-			paginate: parseInt(limit as string, 10) || 10,
-			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+            paginate: parseInt(limit as string, 10) || 10,
+            order: order ? JSON.parse(order as string) : ['id', 'ASC'],
         };
-        const sales= await salesModel.findAndCountAll({
+        const sales = await salesModel.findAndCountAll({
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
@@ -39,10 +39,10 @@ export const getSales = async (req: Request, res: Response) => {
                             model: productModel,
                             attributes: ['id', 'name'],
                         },
-                    {
-                        model: coustumersModel,
-                        attributes: ['id', 'name'],
-                    }
+                        {
+                            model: coustumersModel,
+                            attributes: ['id', 'name'],
+                        }
                     ],
                 },
             ],
@@ -123,7 +123,8 @@ export const getSale = async (req: Request, res: Response) => {
     }
 };*/
 export const postSale = async (req: Request, res: Response) => {
-    const { invoice, state, coustumerId, Productdetails} = req.body;
+    const { invoice, state, coustumerId, Productdetails }: { invoice: string, state: boolean, coustumerId: number, Productdetails: Array<{ productId: number, quantity: number }> } = req.body;
+    console.log(Productdetails, 'Detalles')
 
     try {
         // Obtener el cliente por su ID
@@ -135,10 +136,14 @@ export const postSale = async (req: Request, res: Response) => {
 
         // Crear una nueva venta con el cliente asociado
         const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer.getDataValue('id'), total: 0 });
-        let total = 0;
 
         // Crear una lista para guardar los detalles de la venta
-        const saleDetails = Productdetails?.map(async(productDetail: any) => {
+        let saleDetails: any = [];
+        let total= 0
+
+        for (const productDetail of Productdetails) {
+
+            console.log(productDetail, 'Porduct Detail Aqui')
             const product = await productModel.findByPk(productDetail.productId);
             if (!product) {
                 return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
@@ -146,21 +151,26 @@ export const postSale = async (req: Request, res: Response) => {
             if (productDetail.quantity > product.getDataValue('amount')) {
                 return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
             }
-            
+
             product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
             await product.save();
-            total += product.getDataValue('unitPrice') * productDetail.quantity;
-            return {
+            const subtotal = product.getDataValue('unitPrice') * productDetail.quantity;
+            saleDetails = [...saleDetails, {
                 saleId: newSale.getDataValue('id'),
                 productId: productDetail.productId,
                 quantity: productDetail.quantity,
-                value: product.getDataValue('unitPrice') * productDetail.quantity,
-            };
-        });
+                value: product.getDataValue('unitPrice'),
+                subtotal: subtotal
+            }];
+        }
+
+        console.log(saleDetails, 'Detal de ventas alla')
 
         // Crear los registros de detalles de venta en la base de datos
         await salesdetailsModel.bulkCreate(saleDetails);
-        await newSale.update({total: total});
+        total = saleDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
+
+        await newSale.update({ total: total });
 
         res.status(201).json({ newSale, saleDetails, total });
     } catch (error) {
@@ -168,5 +178,19 @@ export const postSale = async (req: Request, res: Response) => {
         res.status(500).json({ msg: error });
     }
 };
+
+export const deleteSales= async (req: Request, res: Response) => {
+    try{const { id } = req.params;
+    const sales = await salesModel.findByPk(id);
+    if (!sales) {
+        return res.status(404).json({ msg: 'sale not found' });
+    }
+    await sales.destroy();
+    res.status(200).json({ sales});
+    }catch (error){
+    console.log(error);
+    res.status(500).json({msg:error});
+    }
+}
 
 
