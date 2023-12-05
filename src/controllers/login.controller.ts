@@ -4,6 +4,14 @@ import jwt from 'jsonwebtoken';
 import { userModel } from '../models/users.model';
 import { UserModelType } from 'user';
 import { tokenModel } from '../models/token.model';
+import {JwtPayloadWithTokenData} from "token";
+import {rolesModel} from "../models/roles.model";
+import {roleDetailsModel} from "../models/roleDetails.model";
+import {permissionsModel} from "../models/permissions.model";
+
+interface ExtendRequest extends Request {
+    user?: JwtPayloadWithTokenData
+}
 
 /**
  * The loginController function handles user login by checking the email and password, generating a JWT
@@ -39,7 +47,7 @@ export const loginController = async (req: Request, res: Response) => {
             iat: Math.floor(Date.now() / 1000),
             exp: Math.floor(Date.now() / 1000) + 60 * 60
         }
-    }, process.env.SECRET_KEY || "Klingon", { expiresIn: '1h' });
+    }, process.env.SECRET_KEY || "Klingon", { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 });
 
     await tokenModel.create({ token });
 
@@ -70,6 +78,41 @@ export const logoutController = async (req: Request, res: Response) => {
         res.status(200).json({ msg: 'Logout' });
     }catch(err){
         res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}
+
+export const getTokenData = async (req: ExtendRequest, res: Response) => {
+    console.log('ingresa aqui')
+    try{
+
+        const rolePermission = await rolesModel.findByPk(req.user?.role, {
+            include: [
+                {
+                    model: roleDetailsModel,
+                    include: [
+                        {
+                            model: permissionsModel,
+                            attributes: ['name'],
+
+                        },
+                    ],
+                },
+            ],
+        });
+        console.log(rolePermission)
+        const user = {
+            name: req.user?.name,
+            email: req.user?.email,
+            permissions: rolePermission?.getDataValue('rol_details').map((element: any) => element.getDataValue('permission').name)
+            // permission: rolePermission
+        };
+
+        console.log(user)
+
+        res.status(200).json({ user });
+    }catch (e) {
+        res.status(500).json({ error: e });
         return;
     }
 }
