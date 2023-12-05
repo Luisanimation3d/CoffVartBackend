@@ -30,13 +30,13 @@ suppliesModel.hasOne(productionOrderModel,{
     sourceKey: 'id',
 });
 productionOrderModel.belongsTo(suppliesModel,{
-    foreignKey:'supplie_id',
+    foreignKey:'supplieId',
     targetKey:'id'});
 productionOrderModel.hasMany(productModel,{
-    foreignKey:'productionOrder_id',
+    foreignKey:'productionOrderId',
     sourceKey:'id'});
 productModel.belongsTo(productionOrderModel,{
-    foreignKey:'productionOrder_id',
+    foreignKey:'productionOrderId',
     targetKey:'id'});
 processesModel.hasOne(productionOrderModel,{
     foreignKey: 'processId',
