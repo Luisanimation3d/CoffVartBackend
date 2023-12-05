@@ -1,7 +1,7 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
 
-export const processModel = sequelize.define('process',{
+export const processesModel = sequelize.define('process',{
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

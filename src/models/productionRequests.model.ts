@@ -2,7 +2,7 @@ import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
 import { suppliesModel } from "./supplies.model";
 import { companyModel } from "./companys.model";
-import { processModel } from "./process.model";
+import { processesModel } from "./processes.model";
 
 export const productionRequestModel = sequelize.define('productionRequests',{
     id: {
@@ -51,12 +51,12 @@ productionRequestModel.belongsTo(companyModel,{
     foreignKey: 'companyId',
     targetKey: 'id',
 });
-processModel.hasOne(productionRequestModel,{
+processesModel.hasOne(productionRequestModel,{
     foreignKey: 'processId',
     sourceKey: 'id',
 });
 
-productionRequestModel.belongsTo(processModel,{
+productionRequestModel.belongsTo(processesModel,{
     foreignKey: 'processId',
     targetKey: 'id',
 });
