@@ -1,6 +1,9 @@
 import {Response, Request} from "express";
 import { productionOrderModel } from "../models/productionOrders.model";
 import { optionsPagination } from '../types/generalTypes';
+import { productModel } from "../models/products.model";
+import { processesModel } from "../models/processes.model";
+import { suppliesModel } from "../models/supplies.model";
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
  * based on the provided request parameters and returns them along with pagination options in the
@@ -26,6 +29,20 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
 			limit: options.limit,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
+            include: [
+                {
+                    model: suppliesModel,
+                    attributes: ['id','name']
+                },
+                {
+                    model: processesModel,
+                    attributes: ['id','name']
+                },
+                {
+                    model: productModel,
+                    attributes: ['id','name']
+                }
+            ]
 		});
 		res.status(200).json({ productionOrders, options });
 	} catch (error) {
@@ -69,8 +86,33 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
 
 export const postProductionOrder =async(req:Request, res:Response)=> {
     try {
-        const {orderNumber, quantity} = req.body;
-        const newProductionOrder = await productionOrderModel.create({orderNumber, quantity});
+        const {orderNumber, quantity,supplieId,productId,processId,} = req.body;
+        const supplie = await suppliesModel.findByPk(supplieId);
+    if (!supplie) {
+      return res.status(404).json({
+        msg: `Insumo con ID ${supplieId} no encontrado`,
+      });
+    }
+
+    // Validar que la empresa exista
+    const product = await productModel.findByPk(productId);
+    if (!product) {
+      return res.status(404).json({
+        msg: `Empresa con ID ${productId} no encontrada`,
+      });
+    }
+
+    // Validar que el proceso exista
+    const process = await processesModel.findByPk(processId);
+    if (!process) {
+      return res.status(404).json({
+        msg: `Proceso con ID ${processId} no encontrado`,
+      });
+    }
+        const newProductionOrder = await productionOrderModel.create({orderNumber, quantity,
+            supplieId: supplie.getDataValue('id'),
+            productId: product.getDataValue('id'),
+            processId: process.getDataValue('id')});
         res.status(200).json({newProductionOrder});
     } catch (error) {
         console.log(error);
