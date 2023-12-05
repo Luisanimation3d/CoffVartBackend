@@ -1,9 +1,9 @@
-import { Response, Request } from "express";
-import { salesModel } from "../models/sales.model";
-import { salesdetailsModel } from "../models/salesdetails.model";
-import { productModel } from "../models/products.model";
-import { coustumersModel } from "../models/coustomers.model";
-import { optionsPagination } from 'generalTypes';
+import {Response, Request} from "express";
+import {salesModel} from "../models/sales.model";
+import {salesdetailsModel} from "../models/salesdetails.model";
+import {productModel} from "../models/products.model";
+import {coustumersModel} from "../models/coustomers.model";
+import {optionsPagination} from 'generalTypes';
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -19,7 +19,7 @@ import { optionsPagination } from 'generalTypes';
 
 export const getSales = async (req: Request, res: Response) => {
     try {
-        const { page, limit, order } = req.query;
+        const {page, limit, order} = req.query;
         const options: optionsPagination = {
             page: parseInt(page as string, 10) || 1,
             limit: parseInt(limit as string, 10) || 10,
@@ -47,15 +47,15 @@ export const getSales = async (req: Request, res: Response) => {
                 },
             ],
         });
-        res.status(200).json({ sales, options });
+        res.status(200).json({sales, options});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
 };
 
 export const getSale = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const {id} = req.params;
     const sale = await salesModel.findByPk(id, {
         include: [
             {
@@ -65,9 +65,9 @@ export const getSale = async (req: Request, res: Response) => {
         ],
     });
     if (!sale) {
-        return res.status(404).json({ msg: 'sale not found' });
+        return res.status(404).json({msg: 'sale not found'});
     }
-    res.status(200).json({ sale });
+    res.status(200).json({sale});
 };
 
 /*export const postSale = async (req: Request, res: Response) => {
@@ -172,10 +172,10 @@ export const postSale = async (req: Request, res: Response) => {
 
         await newSale.update({ total: total });
 
-        res.status(201).json({ newSale, saleDetails, total });
+        res.status(201).json({newSale, saleDetails, total});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
 };
 
