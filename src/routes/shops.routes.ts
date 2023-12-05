@@ -8,8 +8,8 @@ import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
 
 const router= Router();
 
-router.get("/",/*extractUserMiddlewares,GetShopsMiddleware,*/getShop);
-router.get("/:id",getShops);
+router.get("/",/*extractUserMiddlewares,GetShopsMiddleware,*/getShops);
+router.get("/:id",getShop);
 router.post("/",/*extractUserMiddlewares,PostShopsMiddleware,validateRoutePost,*/ postShop);
 router.delete('/:id', deleteShop);
 
