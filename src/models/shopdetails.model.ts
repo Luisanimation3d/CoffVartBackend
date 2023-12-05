@@ -9,14 +9,14 @@ export const shopdetailsModel = sequelize.define('shopdetails', {
         autoIncrement: true,
         primaryKey: true
     },
-    amount: {
-        type: DataTypes.FLOAT,
+    quantity: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    unitPrice: {
-        type: DataTypes.FLOAT,
+    value: {
+        type: DataTypes.FLOAT(10, 2),
         allowNull: false
-    },
+    }
 },
 {
     timestamps: true
