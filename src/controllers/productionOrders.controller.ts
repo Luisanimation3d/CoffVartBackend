@@ -4,6 +4,7 @@ import { optionsPagination } from '../types/generalTypes';
 import { productModel } from "../models/products.model";
 import { processesModel } from "../models/processes.model";
 import { suppliesModel } from "../models/supplies.model";
+import { productionOrdersDetailsModel } from "../models/productionOrdersDetails.model";
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
  * based on the provided request parameters and returns them along with pagination options in the
@@ -30,18 +31,20 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
             include: [
-                {
-                    model: suppliesModel,
-                    attributes: ['id','name']
+                {   
+                    model:productionOrdersDetailsModel,
+                    include: [
+                        {
+                            model: suppliesModel,
+                            attributes: ['id','name'],
+                        },
+                        {
+                            model: processesModel,
+                            attributes: ['id','name']
+                        },
+                    ],     
                 },
-                {
-                    model: processesModel,
-                    attributes: ['id','name']
-                },
-                {
-                    model: productModel,
-                    attributes: ['id','name']
-                }
+                
             ]
 		});
 		res.status(200).json({ productionOrders, options });
@@ -50,6 +53,8 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
 		res.status(500).json({ msg: error });
 	}
 };
+
+
 /**
  * The function `getsuppliers` retrieves a suppliers by its ID and returns it in the response.
  * @param {Request} req - The `req` parameter is an object that represents the HTTP request made to the
@@ -93,16 +98,15 @@ export const postProductionOrder =async(req:Request, res:Response)=> {
         msg: `Insumo con ID ${supplieId} no encontrado`,
       });
     }
+    
 
-    // Validar que la empresa exista
     const product = await productModel.findByPk(productId);
     if (!product) {
       return res.status(404).json({
-        msg: `Empresa con ID ${productId} no encontrada`,
+        msg: `producto con ID ${productId} no encontrada`,
       });
     }
 
-    // Validar que el proceso exista
     const process = await processesModel.findByPk(processId);
     if (!process) {
       return res.status(404).json({
