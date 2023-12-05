@@ -26,7 +26,7 @@ export const getShops = async (req: Request, res: Response) => {
             paginate: parseInt(limit as string, 10) || 10,
             order: order ? JSON.parse(order as string) : ['id', 'ASC'],
         };
-        const sales = await shopModel.findAndCountAll({
+        const shops = await shopModel.findAndCountAll({
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
@@ -47,7 +47,7 @@ export const getShops = async (req: Request, res: Response) => {
                 },
             ],
         });
-        res.status(200).json({sales, options});
+        res.status(200).json({shops, options});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
@@ -56,7 +56,7 @@ export const getShops = async (req: Request, res: Response) => {
 
 export const getShop = async (req: Request, res: Response) => {
     const {id} = req.params;
-    const sale = await shopModel.findByPk(id, {
+    const shop = await shopModel.findByPk(id, {
         include: [
             {
                 model: shopdetailsModel,
@@ -64,10 +64,10 @@ export const getShop = async (req: Request, res: Response) => {
             },
         ],
     });
-    if (!sale) {
+    if (!shop) {
         return res.status(404).json({msg: 'Shop not found'});
     }
-    res.status(200).json({sale});
+    res.status(200).json({shop});
 };
 
 /*export const postSale = async (req: Request, res: Response) => {
@@ -164,6 +164,8 @@ export const postShop = async (req: Request, res: Response) => {
             }];
         }
 
+      
+
         console.log(shopDetails, 'Detal de compras alla')
 
         // Crear los registros de detalles de venta en la base de datos
@@ -181,12 +183,12 @@ export const postShop = async (req: Request, res: Response) => {
 
 export const deleteShop= async (req: Request, res: Response) => {
     try{const { id } = req.params;
-    const sales = await shopModel.findByPk(id);
-    if (!sales) {
+    const shops = await shopModel.findByPk(id);
+    if (!shops) {
         return res.status(404).json({ msg: 'Shop not found' });
     }
-    await sales.destroy();
-    res.status(200).json({ sales});
+    await shops.destroy();
+    res.status(200).json({ shops});
     }catch (error){
     console.log(error);
     res.status(500).json({msg:error});

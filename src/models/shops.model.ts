@@ -18,6 +18,10 @@ export const shopModel = sequelize.define(
 			type: DataTypes.FLOAT,
 			allowNull: false,
 		},
+		supplierId: {
+			type: DataTypes.INTEGER,
+			allowNull: false
+		},
 		date: {
 			type: DataTypes.STRING(100),
 			allowNull: false,
