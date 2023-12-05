@@ -9,6 +9,6 @@ const router = Router();
 router.get('/', /*extractUserMiddlewares*/ /*GetSalesMiddleware*/ getSales);
 router.get('/:id', getSale);
 router.post('/',  /*extractUserMiddlewares*/  /*PostSalesMiddleware*/ /*validateRoutePost,*/ postSale);
-router.delete('/', deleteSales)
+router.delete('/:id', deleteSales)
 
 export default router;
