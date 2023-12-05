@@ -41,7 +41,7 @@ export const loginController = async (req: Request, res: Response) => {
     const token = jwt.sign({    
         user: {
             id: user.id,
-            name: user.name,
+            name: `${user.name.split(' ')[0]} ${user.lastname.split(' ')[0]}`,
             email: user.email,
             role: user.roleId,
             iat: Math.floor(Date.now() / 1000),
@@ -104,6 +104,7 @@ export const getTokenData = async (req: ExtendRequest, res: Response) => {
         const user = {
             name: req.user?.name,
             email: req.user?.email,
+            role: rolePermission?.getDataValue('name'),
             permissions: rolePermission?.getDataValue('rol_details').map((element: any) => element.getDataValue('permission').name)
             // permission: rolePermission
         };
