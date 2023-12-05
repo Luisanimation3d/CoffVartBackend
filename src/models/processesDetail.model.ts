@@ -1,6 +1,6 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
-import { processModel } from "./process.model";
+import { processesModel } from "./processes.model";
 import { productionOrderModel } from "./productionOrders.model";
 import { productionRequestModel } from "./productionRequests.model";
 
@@ -18,11 +18,11 @@ export const processDetailModel = sequelize.define('processDetail',{
 },{
     timestamps: true
 })
-processModel.hasOne(processDetailModel,{
+processesModel.hasOne(processDetailModel,{
     foreignKey: 'processId',
     sourceKey: 'id',
 });
-processDetailModel.belongsTo(processModel,{
+processDetailModel.belongsTo(processesModel,{
     foreignKey: 'processId',
     targetKey: 'id',
 });

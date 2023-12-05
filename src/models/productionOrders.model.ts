@@ -2,7 +2,7 @@ import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
 import { suppliesModel } from "./supplies.model";
 import { productModel } from "./products.model";
-import { processModel } from "./process.model";
+import { processesModel } from "./processes.model";
 
 export const productionOrderModel = sequelize.define('productionOrders',{
     id: {
@@ -38,12 +38,12 @@ productionOrderModel.hasMany(productModel,{
 productModel.belongsTo(productionOrderModel,{
     foreignKey:'productionOrder_id',
     targetKey:'id'});
-processModel.hasOne(productionOrderModel,{
+processesModel.hasOne(productionOrderModel,{
     foreignKey: 'processId',
     sourceKey: 'id',
 });
     
-productionOrderModel.belongsTo(processModel,{
+productionOrderModel.belongsTo(processesModel,{
     foreignKey: 'processId',
     targetKey: 'id',
 });
