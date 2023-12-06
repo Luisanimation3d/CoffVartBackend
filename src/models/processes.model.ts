@@ -1,5 +1,6 @@
 import {DataTypes} from "sequelize";
 import {sequelize} from "../database/config";
+import { productionOrdersDetailsModel } from "./productionOrdersDetails.model";
 
 export const processesModel = sequelize.define('process',{
     id: {
@@ -18,4 +19,12 @@ export const processesModel = sequelize.define('process',{
 },{
     timestamps: true
 })
+processesModel.hasMany(productionOrdersDetailsModel, {
+    foreignKey: 'processId',
+    sourceKey: 'id'
+    });
 
+productionOrdersDetailsModel.belongsTo(processesModel, {
+    foreignKey: 'processId',
+    targetKey: 'id'
+    });

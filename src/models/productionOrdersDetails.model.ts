@@ -19,4 +19,3 @@ export const productionOrdersDetailsModel = sequelize.define('productionOrdersDe
 {
     timestamps: true
 })
-
