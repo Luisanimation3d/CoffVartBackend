@@ -102,6 +102,8 @@ export const recoveryPassword = async (req: Request, res: Response) => {
         const passwordHash = bcrypt.hashSync(password, 10);
 
         await user.update({password: passwordHash});
+
+        return res.status(200).json({msg: 'Password updated'});
     }catch (e) {
         console.log(e);
         return res.status(500).json({msg: 'Internal server error'});
