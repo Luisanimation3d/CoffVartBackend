@@ -71,7 +71,7 @@ export const getOrder = async (req: Request, res: Response) => {
 };
 
 export const postOrder = async (req: Request, res: Response) => {
-    const { code, state, coustumerId, products, quantities } = req.body;
+    const { code, state, coustumerId, Productdetails }: {code: string, state: string, coustumerId: number,Productdetails: Array<{ productId: number, quantity: number }> } = req.body;
     try{
         const coustumer = await coustumersModel.findByPk(coustumerId);
 
@@ -79,36 +79,36 @@ export const postOrder = async (req: Request, res: Response) => {
             return res.status(404).json({msg: 'Coustumer not found'})
         }
         const newOrder = await ordersModel.create({ code, state, customerId: coustumer.getDataValue('id'), total: 0});
-        const orderDetails = [];
-        for (let i= 0; i< products.length; i++){
-            const productId= products[i];
-            const quantity = quantities[i];
+        let orderDetails: any= [];
+        let total= 0
 
-            const product = await productModel.findByPk(productId);
-            
+        for (const productDetail of Productdetails) {
+            console.log(productDetail, 'Porduct Detail Aqui')
+            const product = await productModel.findByPk(productDetail.productId);
 
-            if(!product){
-                return res.status(404).json({msg: 'Product not found'})
+            if (!product) {
+                return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
             }
-            if(quantity > product.getDataValue('amount')){
-                return res.status(400).json({msg: `Product ${product.getDataValue('name')} doesn't have enough stock`})
+            if (productDetail.quantity > product.getDataValue('amount')) {
+                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
             }
-            const subtotal = product.getDataValue('unitPrice') * quantity;
-            const orderDetail={
+
+            product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
+            await product.save();
+            const subtotal = product.getDataValue('unitPrice') * productDetail.quantity;
+            orderDetails =  [... orderDetails, {
                 orderId: newOrder.getDataValue('id'),
-                productId: productId,
-                quantity: quantity,
+                productId: productDetail.productId,
+                quantity: productDetail.quantity,
                 value: product.getDataValue('unitPrice'), 
                 subtotal: subtotal
-            };
-            orderDetails.push(orderDetail);
-
-            product.setDataValue('amount', product.getDataValue('amount') - quantity);
-            await product.save();
+            }];
         }
+        console.log(orderDetails, 'Detal de ventas alla')
+
 
         await ordersderailsModel.bulkCreate(orderDetails);
-        const total = orderDetails.reduce((acc, orderDetail) => acc + orderDetail.subtotal, 0);
+        total = orderDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
         await newOrder.update({total: total});
 
         res.status(201).json({newOrder, orderDetails, total});
