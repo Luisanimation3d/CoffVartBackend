@@ -33,13 +33,13 @@ export const getCoustumer = async (req: Request, res: Response) => {
 }
 
 export const postCoustumers= async (req: Request, res: Response) => {
-    const { name, documentType, document , phone, email, address, state } = req.body;
+    const { name, documentType, document , phone, address, state } = req.body;
     try {
         const existingCoustumer = await coustumersModel.findOne({ where: { document } });
         if (existingCoustumer) {
             return res.status(400).json({ msg: 'A customer with this ID document already exists' });
         }
-        const newCoustumers = await coustumersModel.create({ name, documentType, document, phone, email, address, state });
+        const newCoustumers = await coustumersModel.create({ name, documentType, document, phone,  address, state });
         res.status(200).json({ newCoustumers });
     } catch (error) {
         res.status(400).json({ msg: error });
