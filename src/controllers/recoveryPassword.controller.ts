@@ -48,7 +48,7 @@ export const sendEmail = async (req: Request, res: Response) => {
                 <br>
                 Para continuar con el proceso, haz click en el siguiente botón:
                 <div style="display: flex; justify-content: center; align-items: center; margin: 1rem 0;">
-                  <a href="http://localhost:5173/#/recoverypassword/${token}" style="text-decoration: none; text-align: center; padding: .5rem 1rem; background-color: #9F212F; color: #D6CAB0; font-weight: bolder; border-radius: .5rem;">
+                  <a href="http://localhost:5173/#/reset-password/${token}" style="text-decoration: none; text-align: center; padding: .5rem 1rem; background-color: #9F212F; color: #D6CAB0; font-weight: bolder; border-radius: .5rem;">
                     Cambiar Contraseña
                   </a>
                 </div>
