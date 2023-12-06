@@ -41,7 +41,7 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
                         {
                             model: processesModel,
                             attributes: ['id','name']
-                        },
+                        }
                     ],     
                 },
                 
