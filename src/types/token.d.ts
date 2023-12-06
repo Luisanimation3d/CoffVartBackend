@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 interface userToken {
     id: number,
     name: string,
@@ -8,8 +6,19 @@ interface userToken {
     exp: number
 }
 
+interface userRecoveryPassword {
+    id: number
+}
+
 export interface tokenData {
     user: userToken
 }
 
+export interface recoveryPasswordTokenData {
+    user: userRecoveryPassword
+}
+
 type JwtPayloadWithTokenData = Omit<tokenData, 'id'> & JwtPayload;
+
+type JwtPayloadWithRecoveryPasswordTokenData = Omit<recoveryPasswordTokenData, 'id'> & JwtPayload;
+
