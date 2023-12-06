@@ -19,9 +19,12 @@ export const ordersModel = sequelize.define('orders', {
         allowNull: false
     },
     state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
-    }
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isIn: [['anulado', 'pendiente', 'confirmado']],
+        },
+      },
 },
 {
     timestamps: true
