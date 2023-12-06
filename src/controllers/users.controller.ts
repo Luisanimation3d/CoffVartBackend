@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { userModel } from '../models/users.model';
 import { UserModelType } from 'user';
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -72,10 +72,13 @@ export const getUser = async (req: Request, res: Response) => {
  * as setting the status code, headers, and sending the response body.
  */
 export const postUser = async (req: Request, res: Response) => {
-    const { name, lastname, address, phone, email, password, roleId } = req.body;
+    const { name, lastname, address, phone, email, password, roleId, documentType, document } = req.body;
 	try {
         const passwordHash = bcrypt.hashSync(password, 10);
 		const newUser = await userModel.create({ name, lastname, address, phone, email, password: passwordHash, roleId });
+        if(documentType && document){
+            await newUser.createCoustumer({documentType, document});
+        }
 		res.status(200).json({ newUser });
 	} catch (error) {
 		console.log(error);
