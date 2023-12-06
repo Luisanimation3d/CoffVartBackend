@@ -97,7 +97,7 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
  */
 
 export const postProductionOrder =async(req:Request, res:Response)=> {
-    const {orderNumber,quantity, supplieId,processId,Productdetails}: { orderNumber:String,quantity:Float64Array,supplieId:Number, processId:Number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
+    const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}: { orderNumber:String,quantity:Float64Array, reasonCancellation:String, supplieId:Number, processId:Number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
     console.log(Productdetails, 'Detalles')
 
     try {
@@ -107,7 +107,7 @@ export const postProductionOrder =async(req:Request, res:Response)=> {
         });
     }
 
-    const newProductionOrder = await productionOrderModel.create({orderNumber,quantity,supplieId: supplie.getDataValue('id'), total:0});
+    const newProductionOrder = await productionOrderModel.create({orderNumber,quantity,reasonCancellation,supplieId: supplie.getDataValue('id'), total:0,processId: process.getDataValue('id'),total:0});
     
     let productionOrdersDetails: any = [];
     let total = 0
@@ -167,12 +167,12 @@ export const postProductionOrder =async(req:Request, res:Response)=> {
 export const putProductionOrder = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const {orderNumber, quantity,reasonCancellation } = req.body;
+        const {orderNumber, quantity,reasonCancellation,processId } = req.body;
         const productionOrders = await productionOrderModel.findByPk(id);
         if (!productionOrders) {
             return res.status(404).json({ msg: 'ProductionOrder not found' });
         }
-        await productionOrders.update({ orderNumber, quantity,reasonCancellation  });
+        await productionOrders.update({ orderNumber, quantity,reasonCancellation,processId});
         res.status(200).json({ productionOrders });
     } catch (error) {
         console.log(error);

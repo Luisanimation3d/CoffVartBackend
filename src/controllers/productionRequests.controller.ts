@@ -86,7 +86,7 @@ export const getProductionRequest = async (req: Request, res: Response)=> {
 
 export const postProductionRequest =async(req:Request, res:Response)=> {
     try {
-        const {requestNumber, dateOfDispatch,quantity,supplieId,companyId,processId} = req.body;
+        const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId} = req.body;
         const supplie = await suppliesModel.findByPk(supplieId);
     if (!supplie) {
       return res.status(404).json({
@@ -137,12 +137,12 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
 export const putProductionRequest = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const {requestNumber, dateOfDispatch,quantity,reasonCancellation,observations } = req.body;
+        const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,processId } = req.body;
         const ProductionRequests = await productionRequestModel.findByPk(id);
         if (!ProductionRequests) {
             return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        await ProductionRequests.update({ requestNumber, dateOfDispatch,quantity,reasonCancellation,observations });
+        await ProductionRequests.update({ requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,processId });
         res.status(200).json({ ProductionRequests });
     } catch (error) {
         console.log(error);
