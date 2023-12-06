@@ -4,6 +4,6 @@ import {sendEmail, recoveryPassword} from "../controllers/recoveryPassword.contr
 const router = Router();
 
 router.post('/forgot-password', sendEmail);
-router.post('/changePass', recoveryPassword);
+router.post('/reset-password', recoveryPassword);
 
 export default router;
