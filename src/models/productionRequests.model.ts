@@ -22,6 +22,10 @@ export const productionRequestModel = sequelize.define('productionRequests',{
         type: DataTypes.FLOAT(10, 2),
         allowNull: false
     },
+    supplieLost:{
+        type: DataTypes.FLOAT(10,2),
+        allowNull: true
+    },
     reasonCancellation: {
         type: DataTypes.STRING(500),
         allowNull:true

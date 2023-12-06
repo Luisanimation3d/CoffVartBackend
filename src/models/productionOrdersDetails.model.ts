@@ -11,8 +11,11 @@ export const productionOrdersDetailsModel = sequelize.define('productionOrdersDe
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    value: {
+        type: DataTypes.FLOAT(10, 2),
+        allowNull: false
+    }
 },
 {
     timestamps: true
 })
-
