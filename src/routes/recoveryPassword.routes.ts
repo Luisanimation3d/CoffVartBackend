@@ -3,7 +3,7 @@ import {sendEmail, recoveryPassword} from "../controllers/recoveryPassword.contr
 
 const router = Router();
 
-router.post('/', sendEmail);
+router.post('/forgot-password', sendEmail);
 router.post('/changePass', recoveryPassword);
 
 export default router;
