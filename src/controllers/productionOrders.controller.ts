@@ -97,7 +97,7 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
  */
 
 export const postProductionOrder =async(req:Request, res:Response)=> {
-    const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}: { orderNumber:String,quantity:Float64Array, reasonCancellation:String, supplieId:Number, processId:Number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
+    const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}: { orderNumber:string,quantity:Float64Array, reasonCancellation:string, supplieId:number, processId:number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
     console.log(Productdetails, 'Detalles')
 
     try {
