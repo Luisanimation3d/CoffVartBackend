@@ -123,7 +123,7 @@ export const getShop = async (req: Request, res: Response) => {
     }
 };*/
 export const postShop = async (req: Request, res: Response) => {
-    const { invoice, state, supplierId, Suppliesdetails }: { invoice: string, state: boolean, supplierId: number, Suppliesdetails: Array<{ supplyId: number, quantity: number }> } = req.body;
+    const { invoice, state, date, description, supplierId, Suppliesdetails }: { invoice: string, state: boolean, date: string, description: string, supplierId: number, Suppliesdetails: Array<{ supplyId: number, quantity: number }> } = req.body;
     console.log(Suppliesdetails, 'Detalles')
 
     try {
@@ -135,7 +135,7 @@ export const postShop = async (req: Request, res: Response) => {
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newShop = await shopModel.create({ invoice, state, supplierId: supplier.getDataValue('id'), total: 0 });
+        const newShop = await shopModel.create({ invoice, state, date, description, supplierId: supplier.getDataValue('id'), total: 0 });
 
         // Crear una lista para guardar los detalles de la venta
         let shopDetails: any = [];
