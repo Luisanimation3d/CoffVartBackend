@@ -41,15 +41,6 @@ export const coustumersModel = sequelize.define('coustumers', {
             isNumeric: true
         }
     },
-    email: {
-        type: DataTypes.STRING(30),
-        allowNull: false,
-        validate: {
-            isEmail: {
-                msg: 'El correo debe ser valido'
-            },
-        },
-    },
     address: {
         type: DataTypes.STRING(50),
         allowNull: false
