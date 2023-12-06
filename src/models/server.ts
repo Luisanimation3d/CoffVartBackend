@@ -60,7 +60,7 @@ export class Server {
 		this.userPath = '/api/users';
 		this.loginPath = '/api/login';
 		this.shopPath = '/api/shops';
-		this.recoveryPasswordPath = '/auth/';
+		this.recoveryPasswordPath = '/api/auth/';
 		this.routes();
 		this.dbConnection();
 	}
