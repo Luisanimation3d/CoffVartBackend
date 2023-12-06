@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
 import { UserModelType } from 'user';
+import { coustumersModel} from "./coustomers.model";
 
 /* The code `export const userModel = sequelize.define<UserModelType>(...)` is defining a Sequelize
 model for the "users" table in the database. */
@@ -24,10 +25,6 @@ export const userModel = sequelize.define<UserModelType>(
 			type: DataTypes.BOOLEAN,
 			defaultValue: true,
 		},
-		address: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
 		phone: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -46,3 +43,13 @@ export const userModel = sequelize.define<UserModelType>(
 		timestamps: true,
 	}
 );
+
+userModel.hasOne(coustumersModel, {
+	foreignKey: 'userId',
+	sourceKey: 'id',
+});
+
+coustumersModel.belongsTo(userModel, {
+	foreignKey: 'userId',
+	targetKey: 'id',
+});
