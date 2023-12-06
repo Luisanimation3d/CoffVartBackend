@@ -24,7 +24,7 @@ export const coustumersModel = sequelize.define('coustumers', {
         }
     },
     document: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(10),
         allowNull: false,
         validate: {
             isNotTooLong(value: number) {
