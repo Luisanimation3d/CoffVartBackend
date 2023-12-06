@@ -16,6 +16,10 @@ export const sendEmail = async (req: Request, res: Response) => {
 
         const {email} = req.body;
 
+        if (!email) {
+            return res.status(400).json({msg: 'Falta el correo electrónico'});
+        }
+
         const user: UserModelType | null = await userModel.findOne({where: {email}});
 
         if (!user) {
@@ -29,7 +33,7 @@ export const sendEmail = async (req: Request, res: Response) => {
         }, process.env.SECRET_KEY || "Klingon", {expiresIn: Math.floor(Date.now() / 1000) + 60 * 60});
         await transporter.sendMail({
             from: 'micorreo@example.com',
-            to: 'luisangelcorreadev@gmail.com',
+            to: email,
             subject: 'Prueba de correo',
             html: `
         <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
