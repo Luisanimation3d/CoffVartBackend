@@ -1,6 +1,6 @@
 import {Response, Request} from "express";
 import {productionOrderModel} from "../models/productionOrders.model";
-import {optionsPagination} from '../types/generalTypes';
+import {optionsPagination} from 'generalTypes';
 import {productModel} from "../models/products.model";
 import {processesModel} from "../models/processes.model";
 import {suppliesModel} from "../models/supplies.model";
@@ -159,7 +159,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
                 subtotal: subtotal,
                 productionOrderId: newProductionOrder.getDataValue('id'),
                 processId: processId,
-                supplyId: supplieId
+                supplyId: supplieId,
             }];
         }
 
