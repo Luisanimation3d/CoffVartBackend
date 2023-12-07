@@ -26,7 +26,24 @@ export const productionOrderModel = sequelize.define('productionOrders',{
 },{
     timestamps: true
 });
+suppliesModel.hasOne(productionOrderModel,{
+    foreignKey: 'supplieId',
+    sourceKey: 'id'
+});
 
+productionOrderModel.belongsTo(suppliesModel,{
+    foreignKey: 'supplieId',
+    targetKey: 'id'
+});
+processesModel.hasOne(productionOrderModel,{
+    foreignKey: 'processId',
+    sourceKey: 'id'
+});
+
+productionOrderModel.belongsTo(processesModel,{
+    foreignKey: 'processId',
+    targetKey: 'id'
+});
 
 productionOrderModel.hasMany(productionOrdersDetailsModel, {
 	foreignKey: 'productionOrderId',
