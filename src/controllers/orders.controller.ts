@@ -4,6 +4,7 @@ import { ordersderailsModel } from "../models/ordersderails.model";
 import { productModel } from "../models/products.model";
 import { coustumersModel } from "../models/coustomers.model";
 import { optionsPagination } from '../types/generalTypes';
+import { salesModel } from "../models/sales.model";
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -118,3 +119,17 @@ export const postOrder = async (req: Request, res: Response) => {
     }
 };
 
+export const putOrders = async (req: any, res: any, next: any) => {
+    try{
+    const { id } = req.params;
+    const { state } = req.body;
+    const orders = await salesModel.findByPk(id);
+        if (!orders) {
+            return res.status(404).json({ msg: 'orders not found' });
+        }
+        await orders.update({ state });
+        res.status(200).json({ orders });
+    } catch (error) {
+        res.status(500).json({ msg: error });
+    }
+};
