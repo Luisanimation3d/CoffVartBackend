@@ -1,10 +1,11 @@
 import {Response, Request} from "express";
-import { productionOrderModel } from "../models/productionOrders.model";
-import { optionsPagination } from '../types/generalTypes';
-import { productModel } from "../models/products.model";
-import { processesModel } from "../models/processes.model";
-import { suppliesModel } from "../models/supplies.model";
-import { productionOrdersDetailsModel } from "../models/productionOrdersDetails.model";
+import {productionOrderModel} from "../models/productionOrders.model";
+import {optionsPagination} from 'generalTypes';
+import {productModel} from "../models/products.model";
+import {processesModel} from "../models/processes.model";
+import {suppliesModel} from "../models/supplies.model";
+import {productionOrdersDetailsModel} from "../models/productionOrdersDetails.model";
+
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
  * based on the provided request parameters and returns them along with pagination options in the
@@ -17,47 +18,46 @@ import { productionOrdersDetailsModel } from "../models/productionOrdersDetails.
  * as setting the status code, headers, and sending the response body.
  */
 
-export const getProductionOrders = async (req: Request, res: Response)=> {
+export const getProductionOrders = async (req: Request, res: Response) => {
     try {
-		const { page, limit, order } = req.query;
-		const options: optionsPagination = {
-			page: parseInt(page as string, 10) || 1,
-			limit: parseInt(limit as string, 10) || 10,
-			paginate: parseInt(limit as string, 10) || 10,
-			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
-		};
-		const productionOrders = await productionOrderModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
-			order: [options.order],
+        const {page, limit, order} = req.query;
+        const options: optionsPagination = {
+            page: parseInt(page as string, 10) || 1,
+            limit: parseInt(limit as string, 10) || 10,
+            paginate: parseInt(limit as string, 10) || 10,
+            order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+        };
+        const productionOrders = await productionOrderModel.findAndCountAll({
+            limit: options.limit,
+            offset: options.limit * (options.page - 1),
+            order: [options.order],
             include: [
-                {   
-                    model:productionOrdersDetailsModel,
+                {
+                    model: productionOrdersDetailsModel,
                     include: [
-                        
+
                         {
                             model: productModel,
-                            attributes: ['id','name'],
-                        },{
+                            attributes: ['id', 'name'],
+                        }, {
                             model: suppliesModel,
-                            attributes: ['id','name'],
+                            attributes: ['id', 'name'],
                         },
-                        
-                    ],     
-                },{
-                     model: processesModel,
-                        attributes: ['id','name']
-                    }
-                
-            ],
-		});
-		res.status(200).json({ productionOrders, options });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
-};
 
+                    ],
+                }, {
+                    model: processesModel,
+                    attributes: ['id', 'name']
+                }
+
+            ],
+        });
+        res.status(200).json({productionOrders, options});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
+};
 
 
 /**
@@ -71,10 +71,10 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
  * message "suppliers not found" if the suppliers does not exist. If there is an error, it will
  * return a 500 status code with the error message.
  */
-export const getProductionOrder = async (req: Request, res: Response)=> {
+export const getProductionOrder = async (req: Request, res: Response) => {
     try {
-		const {id} = req.params;
-		const productionOrder = await productionOrderModel.findByPk(id, {
+        const {id} = req.params;
+        const productionOrder = await productionOrderModel.findByPk(id, {
             include: [
                 {
                     model: productionOrdersDetailsModel,
@@ -82,14 +82,14 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
                 }
             ]
         });
-		if (!productionOrder) {
-			return res.status(404).json({ msg: 'productionOrder not found' });
-		}
-		res.status(200).json({ productionOrder });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+        if (!productionOrder) {
+            return res.status(404).json({msg: 'productionOrder not found'});
+        }
+        res.status(200).json({productionOrder});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 /**
  * The above function handles the creation of a new suppliers in a TypeScript application.
@@ -101,24 +101,39 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
  * as setting the status code and sending JSON data.
  */
 
-    export const postProductionOrder =async(req:Request, res:Response)=> {
-        const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}:
-        { orderNumber:string,quantity:number, reasonCancellation:string, supplieId:number, processId:number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
-        console.log(Productdetails, 'Detalles')
+export const postProductionOrder = async (req: Request, res: Response) => {
+    const {orderNumber, quantity, reasonCancellation, supplieId, processId, Productdetails}:
+        {
+            orderNumber: string,
+            quantity: number,
+            reasonCancellation: string,
+            supplieId: number,
+            processId: number,
+            Productdetails: Array<{ productId: number, quantity: number }>
+        } = req.body;
+    console.log(Productdetails, 'Detalles')
 
-        try {
-            const supplie = await suppliesModel.findByPk(supplieId);
-            if (!supplie) {
-                return res.status(404).json({msg: `Insumo con ID ${supplieId} no encontrado`,
+    try {
+        const supplie = await suppliesModel.findByPk(supplieId);
+        if (!supplie) {
+            return res.status(404).json({
+                msg: `Insumo con ID ${supplieId} no encontrado`,
             });
         }
-            const process = await processesModel.findByPk(processId);
+        const process = await processesModel.findByPk(processId);
         if (!process) {
-            return res.status(404).json({ msg: `Proceso con ID ${processId} no encontrado` });
+            return res.status(404).json({msg: `Proceso con ID ${processId} no encontrado`});
         }
 
-        const newProductionOrder = await productionOrderModel.create({orderNumber,quantity,reasonCancellation,supplieId: supplie.getDataValue('id'), processId: process.getDataValue('id'), total:0});
-        
+        const newProductionOrder = await productionOrderModel.create({
+            orderNumber,
+            quantity,
+            reasonCancellation,
+            supplieId: supplie.getDataValue('id'),
+            processId: process.getDataValue('id'),
+            total: 0
+        });
+
         let productionOrdersDetails: any = [];
         let total = 0
 
@@ -127,10 +142,10 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
             console.log(productDetail, 'Porduct Detail Aqui')
             const product = await productModel.findByPk(productDetail.productId);
             if (!product) {
-                return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
+                return res.status(404).json({msg: `Product with ID ${productDetail.productId} not found`});
             }
             if (productDetail.quantity > product.getDataValue('amount')) {
-                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
+                return res.status(400).json({msg: `Quantity exceeds available stock for product ID ${productDetail.productId}`});
             }
 
             product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
@@ -141,7 +156,10 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
                 productId: productDetail.productId,
                 quantity: productDetail.quantity,
                 value: product.getDataValue('unitPrice'),
-                subtotal: subtotal
+                subtotal: subtotal,
+                productionOrderId: newProductionOrder.getDataValue('id'),
+                processId: processId,
+                supplyId: supplieId,
             }];
         }
 
@@ -151,14 +169,14 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
         await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
         total = productionOrdersDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
 
-        await newProductionOrder.update({ total: total });
+        await newProductionOrder.update({total: total});
 
         res.status(201).json({newProductionOrder, productionOrdersDetails, total});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
     }
-    };
+};
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,
  * name, and description.
@@ -176,19 +194,19 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
 
 export const putProductionOrder = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const {orderNumber, quantity,reasonCancellation,processId } = req.body;
+        const {id} = req.params;
+        const {orderNumber, quantity, reasonCancellation, processId} = req.body;
         const productionOrders = await productionOrderModel.findByPk(id);
         if (!productionOrders) {
-            return res.status(404).json({ msg: 'ProductionOrder not found' });
+            return res.status(404).json({msg: 'ProductionOrder not found'});
         }
-        await productionOrders.update({ orderNumber, quantity,reasonCancellation,processId});
-        res.status(200).json({ productionOrders });
+        await productionOrders.update({orderNumber, quantity, reasonCancellation, processId});
+        res.status(200).json({productionOrders});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
-    
+
 };
 /**
  * The `deletesuppliers` function is an asynchronous function that deletes a suppliers based on the
@@ -203,18 +221,18 @@ export const putProductionOrder = async (req: Request, res: Response) => {
  * message if it does not exist. If there is an error, it will return a 500 status code with the error
  * message.
  */
-export const deleteProductionOrder= async (req: Request, res: Response) => {
+export const deleteProductionOrder = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const {id} = req.params;
         const productionOrders = await productionOrderModel.findByPk(id);
         if (!productionOrders) {
-            return res.status(404).json({ msg: 'ProductionOrder not found' });
+            return res.status(404).json({msg: 'ProductionOrder not found'});
         }
         await productionOrders.destroy();
-        res.status(200).json({ productionOrders });
+        res.status(200).json({productionOrders});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
-    
+
 };
