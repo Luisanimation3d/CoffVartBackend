@@ -17,6 +17,7 @@ import userRouter from '../routes/users.routes';
 import loginRouter from '../routes/login.routes';
 import shopRouter from '../routes/shops.routes';
 import recoveryPasswordRoter from '../routes/recoveryPassword.routes';
+import detailsRouter from '../routes/details.routes'
 
 export class Server {
 	public app: express.Application;
@@ -38,6 +39,7 @@ export class Server {
     public loginPath: string;
 	public shopPath: string;
 	public recoveryPasswordPath: string;
+	public detailsPath: string;
 	private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
 
 	constructor() {
@@ -61,6 +63,7 @@ export class Server {
 		this.loginPath = '/api/login';
 		this.shopPath = '/api/shops';
 		this.recoveryPasswordPath = '/api/auth/';
+		this.detailsPath= '/api/details';
 		this.routes();
 		this.dbConnection();
 	}
@@ -101,6 +104,7 @@ export class Server {
         this.app.use(this.loginPath, loginRouter);
 		this.app.use(this.shopPath, shopRouter);
 		this.app.use(this.recoveryPasswordPath, recoveryPasswordRoter);
+		this.app.use(this.detailsPath,detailsRouter)
 	}
 
 	async dbConnection() {

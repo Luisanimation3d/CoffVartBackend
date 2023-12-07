@@ -34,20 +34,20 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
                 {   
                     model:productionOrdersDetailsModel,
                     include: [
-                        {
-                            model: suppliesModel,
-                            attributes: ['id','name'],
-                        },
+                        
                         {
                             model: productModel,
                             attributes: ['id','name'],
+                        },{
+                            model: suppliesModel,
+                            attributes: ['id','name'],
                         },
-                        {
-                            model: processesModel,
-                            attributes: ['id','name']
-                        }
+                        
                     ],     
-                },
+                },{
+                     model: processesModel,
+                        attributes: ['id','name']
+                    }
                 
             ],
 		});
@@ -57,6 +57,7 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
 		res.status(500).json({ msg: error });
 	}
 };
+
 
 
 /**
