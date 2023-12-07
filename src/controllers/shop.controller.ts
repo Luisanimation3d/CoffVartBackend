@@ -152,7 +152,7 @@ export const postShop = async (req: Request, res: Response) => {
                 return res.status(400).json({ msg: `Quantity exceeds available stock for supply ID ${supplyDetail.supplyId}` });
             }
 
-            supply.setDataValue('amount', supply.getDataValue('amount') - supplyDetail.quantity);
+            supply.setDataValue('amount', supply.getDataValue('amount') + supplyDetail.quantity);
             await supply.save();
             const subtotal = supply.getDataValue('unitPrice') * supplyDetail.quantity;
             shopDetails = [...shopDetails, {
