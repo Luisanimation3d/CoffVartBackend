@@ -39,6 +39,10 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
                             attributes: ['id','name'],
                         },
                         {
+                            model: productModel,
+                            attributes: ['id','name'],
+                        },
+                        {
                             model: processesModel,
                             attributes: ['id','name']
                         }
@@ -68,7 +72,7 @@ export const getProductionOrders = async (req: Request, res: Response)=> {
  */
 export const getProductionOrder = async (req: Request, res: Response)=> {
     try {
-		const { id } = req.params;
+		const {id} = req.params;
 		const productionOrder = await productionOrderModel.findByPk(id, {
             include: [
                 {
@@ -96,59 +100,64 @@ export const getProductionOrder = async (req: Request, res: Response)=> {
  * as setting the status code and sending JSON data.
  */
 
-export const postProductionOrder =async(req:Request, res:Response)=> {
-    const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}: { orderNumber:string,quantity:Float64Array, reasonCancellation:string, supplieId:number, processId:number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
-    console.log(Productdetails, 'Detalles')
+    export const postProductionOrder =async(req:Request, res:Response)=> {
+        const {orderNumber,quantity, reasonCancellation ,supplieId,processId,Productdetails}:
+        { orderNumber:string,quantity:number, reasonCancellation:string, supplieId:number, processId:number, Productdetails:Array<{ productId: number, quantity: number }> }= req.body;
+        console.log(Productdetails, 'Detalles')
 
-    try {
-        const supplie = await suppliesModel.findByPk(supplieId);
-        if (!supplie) {
-            return res.status(404).json({msg: `Insumo con ID ${supplieId} no encontrado`,
-        });
-    }
-
-    const newProductionOrder = await productionOrderModel.create({orderNumber,quantity,reasonCancellation,supplieId: supplie.getDataValue('id'), total:0,processId: process.getDataValue('id'),total:0});
-    
-    let productionOrdersDetails: any = [];
-    let total = 0
-
-    for (const productDetail of Productdetails) {
-
-        console.log(productDetail, 'Porduct Detail Aqui')
-        const product = await productModel.findByPk(productDetail.productId);
-        if (!product) {
-            return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
+        try {
+            const supplie = await suppliesModel.findByPk(supplieId);
+            if (!supplie) {
+                return res.status(404).json({msg: `Insumo con ID ${supplieId} no encontrado`,
+            });
         }
-        if (productDetail.quantity > product.getDataValue('amount')) {
-            return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
+            const process = await processesModel.findByPk(processId);
+        if (!process) {
+            return res.status(404).json({ msg: `Proceso con ID ${processId} no encontrado` });
         }
 
-        product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
-        await product.save();
-        const subtotal = product.getDataValue('unitPrice') * productDetail.quantity;
-        productionOrdersDetails = [...productionOrdersDetails, {
-            saleId: newProductionOrder.getDataValue('id'),
-            productId: productDetail.productId,
-            quantity: productDetail.quantity,
-            value: product.getDataValue('unitPrice'),
-            subtotal: subtotal
-        }];
+        const newProductionOrder = await productionOrderModel.create({orderNumber,quantity,reasonCancellation,supplieId: supplie.getDataValue('id'), processId: process.getDataValue('id'), total:0});
+        
+        let productionOrdersDetails: any = [];
+        let total = 0
+
+        for (const productDetail of Productdetails) {
+
+            console.log(productDetail, 'Porduct Detail Aqui')
+            const product = await productModel.findByPk(productDetail.productId);
+            if (!product) {
+                return res.status(404).json({ msg: `Product with ID ${productDetail.productId} not found` });
+            }
+            if (productDetail.quantity > product.getDataValue('amount')) {
+                return res.status(400).json({ msg: `Quantity exceeds available stock for product ID ${productDetail.productId}` });
+            }
+
+            product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
+            await product.save();
+            const subtotal = product.getDataValue('unitPrice') * productDetail.quantity;
+            productionOrdersDetails = [...productionOrdersDetails, {
+                productionOrdersDetailId: newProductionOrder.getDataValue('id'),
+                productId: productDetail.productId,
+                quantity: productDetail.quantity,
+                value: product.getDataValue('unitPrice'),
+                subtotal: subtotal
+            }];
+        }
+
+        console.log(productionOrdersDetails, 'Detal de ventas alla')
+
+        // Crear los registros de detalles de venta en la base de datos
+        await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
+        total = productionOrdersDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
+
+        await newProductionOrder.update({ total: total });
+
+        res.status(201).json({newProductionOrder, productionOrdersDetails, total});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
     }
-
-    console.log(productionOrdersDetails, 'Detal de ventas alla')
-
-    // Crear los registros de detalles de venta en la base de datos
-    await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
-    total = productionOrdersDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
-
-    await newProductionOrder.update({ total: total });
-
-    res.status(201).json({newProductionOrder, productionOrdersDetails, total});
-} catch (error) {
-    console.log(error);
-    res.status(500).json({msg: error});
-}
-};
+    };
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,
  * name, and description.

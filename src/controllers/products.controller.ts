@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { productModel } from "../models/products.model";
 import { optionsPagination } from '../types/generalTypes';
-import { productionOrderModel } from "../models/productionOrders.model";
+
 
 export const getProducts = async (req: Request, res: Response) => {
 	try {
@@ -39,8 +39,8 @@ export const getProduct = async (req: Request, res: Response) => {
 };
 
 export const postProducts =async(req:Request, res:Response)=> {
-    try{const {name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder} = req.body;
-    const newProducts = await productModel.create({name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder});
+    try{const {name, amount, stockMin, stockMax, unitPrice, state, description} = req.body;
+    const newProducts = await productModel.create({name, amount, stockMin, stockMax, unitPrice, state, description});
     res.status(200).json({newProducts});
     }catch (error){
         console.log(error);
@@ -50,12 +50,12 @@ export const postProducts =async(req:Request, res:Response)=> {
 
 export const putProducts = async (req: Request, res: Response) => {
     try{const { id } = req.params;
-    const { name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder } = req.body;
+    const { name, amount, stockMin, stockMax, unitPrice, state, description } = req.body;
     const products = await productModel.findByPk(id)
     if (!products) {
         return res.status(404).json({ msg: 'Product not found' });
     }
-    await products.update({ name, amount, stockMin, stockMax, unitPrice, state, description, productionOrder });
+    await products.update({ name, amount, stockMin, stockMax, unitPrice, state, description });
     res.status(200).json({ products });
     }catch (error){
     console.log(error);
