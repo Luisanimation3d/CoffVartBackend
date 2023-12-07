@@ -69,6 +69,7 @@ export const getOrder = async (req: Request, res: Response) => {
         return res.status(404).json({ msg: 'order not found' });
     }
     res.status(200).json({ order });
+    return;
 };
 
 export const postOrder = async (req: Request, res: Response) => {
