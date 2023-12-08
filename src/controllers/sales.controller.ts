@@ -39,10 +39,6 @@ export const getSales = async (req: Request, res: Response) => {
                             model: productModel,
                             attributes: ['id', 'name'],
                         },
-                        {
-                            model: coustumersModel,
-                            attributes: ['id', 'name'],
-                        }
                     ],
                 },
                 {
@@ -140,7 +136,7 @@ export const postSale = async (req: Request, res: Response) => {
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newSale = await salesModel.create({ invoice, state, coustumerId: coustumer.getDataValue('id'), total: 0 });
+        const newSale = await salesModel.create({ invoice, state, customerId: coustumer.getDataValue('id'), total: 0 });
 
         // Crear una lista para guardar los detalles de la venta
         let saleDetails: any = [];
