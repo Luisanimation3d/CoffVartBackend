@@ -4,6 +4,7 @@ import { userModel } from '../models/users.model';
 import { UserModelType } from 'user';
 import { optionsPagination } from 'generalTypes';
 import {coustumersModel} from "../models/coustomers.model";
+import {rolesModel} from "../models/roles.model";
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -28,6 +29,13 @@ export const getUsers = async (req: Request, res: Response) => {
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
+            include: [
+                {
+                    model: rolesModel,
+                    as: 'role',
+                    attributes: ['name'],
+                }
+            ]
         });
 		res.status(200).json({ users, options });
 	} catch (error) {
@@ -100,6 +108,7 @@ export const postUser = async (req: Request, res: Response) => {
  */
 export const putUser = async (req: Request, res: Response) => {
     const { id } = req.params;
+    // const { name, lastname, address, phone, email, password, roleId } = req.body;
     const { name, lastname, address, phone, email, password, roleId } = req.body;
     try {
         const user: UserModelType | null = await userModel.findByPk(id);
