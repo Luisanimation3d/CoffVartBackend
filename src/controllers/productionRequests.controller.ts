@@ -32,10 +32,12 @@ export const getProductionRequests = async (req: Request, res: Response)=> {
             include: [
                 {
                     model: suppliesModel,
+                    as:'supplie',
                     attributes: ['id','name']
                 },
                 {
                     model: processesModel,
+                    as: 'process',
                     attributes: ['id','name']
                 },
                 {
