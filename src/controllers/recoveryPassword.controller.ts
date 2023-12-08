@@ -1003,7 +1003,7 @@ color: #d6cab0;
 font-weight: bolder;
 "
 >
-© 2021 Burdeo. Todos los
+© ${new Date().getFullYear()} Burdeo. Todos los
 derechos reservados.
 </p>
 </td>
