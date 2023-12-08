@@ -40,12 +40,15 @@ export const getOrders = async (req: Request, res: Response) => {
                             model: productModel,
                             attributes: ['id', 'name'],
                         },
-                    {
-                        model: coustumersModel,
-                        attributes: ['id', 'name'],
-                    }
                     ],
                 },
+
+                {
+                model: coustumersModel,
+                as: 'coustumer',
+                attributes: [ 'id', 'name'],
+                }
+                
             ],
         });
         res.status(200).json({ orders, options });
