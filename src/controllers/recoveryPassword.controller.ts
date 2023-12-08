@@ -1,6 +1,5 @@
 import {transporter} from "../models/mailer.model";
 import {Request, Response} from "express";
-import fs from "fs";
 import jwt from "jsonwebtoken";
 import {UserModelType} from "user";
 import {userModel} from "../models/users.model";
@@ -11,8 +10,6 @@ import { JwtPayloadWithRecoveryPasswordTokenData } from "token";
 export const sendEmail = async (req: Request, res: Response) => {
 
     try {
-        const pathImage = './src/assets/burdeoLogo.png';
-        const image = fs.readFileSync(pathImage, {encoding: 'base64'});
 
         const {email} = req.body;
 
@@ -31,48 +28,12 @@ export const sendEmail = async (req: Request, res: Response) => {
                 id: user.id,
             }
         }, process.env.SECRET_KEY || "Klingon", {expiresIn: Math.floor(Date.now() / 1000) + 60 * 60});
-        await transporter.sendMail({
-            from: 'micorreo@example.com',
-            to: email,
-            subject: 'Prueba de correo',
-      //       html: `
-      //   <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
-      //     <div style="background: #E0D6D6; width: 100%; max-width: 500px;">
-      //       <header style="width:100%; height: 50px; overflow: hidden; background: #D6CAB0; display: flex; justify-content: center; align-items: center; padding: 0;">
-      //         <img src="cid:burdeoLogo" alt="burdeoLogo" style="width: auto; height: 130%; object-fit: cover;">
-      //       </header>
-      //       <main style="width: 100%; padding: 1rem;">
-      //         <p>
-      //           Estimado/a <strong>Luis</strong>,<br>
-      //           Hemos recibido tu solicitud de cambio de contraseña.<br>
-      //           <br>
-      //           Para continuar con el proceso, haz click en el siguiente botón:
-      //           <div style="display: flex; justify-content: center; align-items: center; margin: 1rem 0;">
-      //             <a href="http://localhost:5173/#/user/reset-password/${token}" style="text-decoration: none; text-align: center; padding: .5rem 1rem; background-color: #9F212F; color: #D6CAB0; font-weight: bolder; border-radius: .5rem;">
-      //               Cambiar Contraseña
-      //             </a>
-      //           </div>
-      //           Si no has solicitado este cambio, ignora este correo.<br>
-      //           <br>
-      //           Saludos,<br>
-      //           Equipo Burdeo
-      //         </p>
-      //       </main>
-      //       <footer>
-      //         <p style="text-align: center; font-size: .8rem; color: #9F212F;">
-      //           Este correo fue enviado automáticamente, por favor no responder.
-      //         </p>
-      //         <div style="width: 100%; background-color: #9F212F; height: 50px; display: flex; justify-content: center; align-items: center;">
-      //           <p style="text-align: center; font-size: .8rem; color: #D6CAB0; font-weight: bolder;">
-      //             © 2021 Burdeo. Todos los derechos reservados.
-      //           </p>
-      //         </div>
-      //       </footer>
-      //     </div>
-      //   </div>
-      // `,
-            html: `
-                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+        const urlProject = `http://localhost:5173/#/user/reset-password/${token}`;
+
+        const name = user?.name;
+
+        const htmlForTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html
 dir="ltr"
 xmlns="http://www.w3.org/1999/xhtml"
@@ -688,8 +649,8 @@ width: 100% !important;
 }
 
 .adapt-img {
-width: 100% !important;
-height: auto !important;
+/* width: 100% !important; */
+height: 100% !important;
 }
 
 .es-m-p0 {
@@ -860,6 +821,7 @@ class="esd-block-image"
 style="
 font-size: 0;
 background: #d6cab0;
+height: 64px;
 "
 >
 <img
@@ -912,7 +874,7 @@ class="esd-block-text es-p15"
 >
 <p>
 Estimado/a
-<strong>${user.name}</strong>,
+<strong>${name}</strong>,
 </p>
 <p>
 Hemos recibido tu solicitud de
@@ -939,7 +901,7 @@ border-color: #2cb543;
 background: #9f212f;
 "
 ><a
-href="http://localhost:5173/#/user/reset-password/${token}"
+href="${urlProject}"
 class="es-button"
 target="_blank"
 style="
@@ -1067,12 +1029,13 @@ derechos reservados.
 </div>
 </body>
 </html>
-
-            `,
-            attachments: [{
-                filename: 'burdeoLogo.png',
-                content: image,
-            }],
+`
+        
+        await transporter.sendMail({
+            from: 'micorreo@example.com',
+            to: email,
+            subject: 'Prueba de correo',
+            html: htmlForTemplate
         });
         res.status(200).json({msg: 'Email sent'});
     } catch (e) {
