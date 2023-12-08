@@ -16,10 +16,6 @@ export const salesModel = sequelize.define('sales', {
         type: DataTypes.FLOAT(10, 2),
         allowNull: false
     },
-    coustumerId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     state: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
