@@ -32,17 +32,18 @@ export const getProductionRequests = async (req: Request, res: Response)=> {
             include: [
                 {
                     model: suppliesModel,
-                    as:'supplie',
-                    attributes: ['id','name']
+                    as:'supply',
+                    attributes: ['name']
                 },
                 {
                     model: processesModel,
                     as: 'process',
-                    attributes: ['id','name']
+                    attributes: ['name']
                 },
                 {
                     model: companyModel,
-                    attributes: ['id','name']
+                    as: 'company',
+                    attributes: ['name']
                 }
             ]
 		});
