@@ -45,6 +45,11 @@ export const getSales = async (req: Request, res: Response) => {
                         }
                     ],
                 },
+                {
+                    model: coustumersModel,
+                    as: 'coustumer',
+                    attributes: [ 'id', 'name'],
+                }
             ],
         });
         res.status(200).json({sales, options});
