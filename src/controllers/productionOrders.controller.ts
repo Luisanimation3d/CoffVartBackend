@@ -5,6 +5,7 @@ import {productModel} from "../models/products.model";
 import {processesModel} from "../models/processes.model";
 import {suppliesModel} from "../models/supplies.model";
 import {productionOrdersDetailsModel} from "../models/productionOrdersDetails.model";
+import { productionRequestModel } from "../models/productionRequests.model";
 
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
@@ -102,13 +103,14 @@ export const getProductionOrder = async (req: Request, res: Response) => {
  */
 
 export const postProductionOrder = async (req: Request, res: Response) => {
-    const {orderNumber, quantity, reasonCancellation, supplieId, processId, Productdetails}:
+    const {orderNumber, quantity, reasonCancellation, supplieId, processId,productionRId, Productdetails}:
         {
             orderNumber: string,
             quantity: number,
             reasonCancellation: string,
             supplieId: number,
             processId: number,
+            productionRId: number,
             Productdetails: Array<{ productId: number, quantity: number }>
         } = req.body;
     console.log(Productdetails, 'Detalles')
@@ -124,6 +126,11 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         if (!process) {
             return res.status(404).json({msg: `Proceso con ID ${processId} no encontrado`});
         }
+        const productionR = await productionRequestModel.findByPk(productionRId);
+        if (!productionR) {
+            return res.status(404).json({msg: `Proceso con ID ${productionRId} no encontrado`});
+        }
+        const quantityR = productionR.getDataValue('quantity');
 
         const newProductionOrder = await productionOrderModel.create({
             orderNumber,
@@ -131,11 +138,12 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             reasonCancellation,
             supplieId: supplie.getDataValue('id'),
             processId: process.getDataValue('id'),
-            total: 0
+            productionRId: productionR.getDataValue('id'),
         });
+        const updatedSupplieLost = quantityR - quantity;
+        await productionR.update({ supplieLost: updatedSupplieLost });
 
         let productionOrdersDetails: any = [];
-        let total = 0
 
         for (const productDetail of Productdetails) {
 
@@ -144,34 +152,28 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             if (!product) {
                 return res.status(404).json({msg: `Product with ID ${productDetail.productId} not found`});
             }
-            if (productDetail.quantity > product.getDataValue('amount')) {
-                return res.status(400).json({msg: `Quantity exceeds available stock for product ID ${productDetail.productId}`});
-            }
+            if (productDetail.quantity > product.getDataValue('stockMax')) {
+                return res.status(400).json({msg: `Quantity exceeds available stockMax for product ID ${productDetail.productId}`});
+            }   
 
-            product.setDataValue('amount', product.getDataValue('amount') - productDetail.quantity);
+            product.setDataValue('amount', product.getDataValue('amount') + productDetail.quantity);
             await product.save();
-            const subtotal = product.getDataValue('unitPrice') * productDetail.quantity;
             productionOrdersDetails = [...productionOrdersDetails, {
                 productionOrdersDetailId: newProductionOrder.getDataValue('id'),
                 productId: productDetail.productId,
                 quantity: productDetail.quantity,
-                value: product.getDataValue('unitPrice'),
-                subtotal: subtotal,
                 productionOrderId: newProductionOrder.getDataValue('id'),
                 processId: processId,
                 supplyId: supplieId,
             }];
         }
+        
 
         console.log(productionOrdersDetails, 'Detal de ventas alla')
 
-        // Crear los registros de detalles de venta en la base de datos
         await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
-        total = productionOrdersDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
 
-        await newProductionOrder.update({total: total});
-
-        res.status(201).json({newProductionOrder, productionOrdersDetails, total});
+        res.status(201).json({newProductionOrder, productionOrdersDetails});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});

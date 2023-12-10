@@ -33,7 +33,7 @@ export const getProductionRequests = async (req: Request, res: Response)=> {
                 {
                     model: suppliesModel,
                     as:'supply',
-                    attributes: ['name']
+                    attributes: ['name','amount']
                 },
                 {
                     model: processesModel,
@@ -88,35 +88,38 @@ export const getProductionRequest = async (req: Request, res: Response)=> {
  */
 
 export const postProductionRequest =async(req:Request, res:Response)=> {
+    const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId}:
+    {requestNumber: string, dateOfDispatch:Date,quantity:number,supplieLost:number,reasonCancellation:string,observations:string,supplieId: number,companyId: number,processId: number}= req.body;
     try {
-        const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId} = req.body;
-        const supplie = await suppliesModel.findByPk(supplieId);
-    if (!supplie) {
+        const process = await processesModel.findByPk(processId);
+    if (!process) {
       return res.status(404).json({
-        msg: `Insumo con ID ${supplieId} no encontrado`,
+        msg: `Proceso con ID ${processId} no encontrado`,
       });
     }
-
-    // Validar que la empresa exista
     const company = await companyModel.findByPk(companyId);
     if (!company) {
       return res.status(404).json({
         msg: `Empresa con ID ${companyId} no encontrada`,
       });
     }
-
-    // Validar que el proceso exista
-    const process = await processesModel.findByPk(processId);
-    if (!process) {
+    const supplie = await suppliesModel.findByPk(supplieId);
+    if (!supplie) {
       return res.status(404).json({
-        msg: `Proceso con ID ${processId} no encontrado`,
+        msg: `Empresa con ID ${supplieId} no encontrada`,
       });
     }
-        const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity,
-        supplieId: supplie.getDataValue('id'),
+    
+    const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity,
         companyId: company.getDataValue('id'),
+        supplieId: supplie.getDataValue('id'),
         processId: process.getDataValue('id')});
-        res.status(200).json({newProductionRequest});
+    
+        await supplie.decrement('amount', { by: (quantity as number) });
+        
+    
+          
+        res.status(201).json({newProductionRequest});
     } catch (error) {
         console.log(error);
 		res.status(500).json({ msg: error });
