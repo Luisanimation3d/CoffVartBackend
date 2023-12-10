@@ -16,11 +16,11 @@ export const suppliesModel = sequelize.define('supplies', {
     },
     amount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        defaultValue: 0
     },
     unitPrice: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        defaultValue: 0
     },
     state: {
         type: DataTypes.BOOLEAN,
