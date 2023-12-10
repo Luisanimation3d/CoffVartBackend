@@ -28,6 +28,10 @@ export const productModel = sequelize.define('product', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    amountSupply: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+    },
     unitPrice: {
         type: DataTypes.FLOAT,
         allowNull: false
