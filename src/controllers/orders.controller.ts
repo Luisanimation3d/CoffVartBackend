@@ -59,20 +59,24 @@ export const getOrders = async (req: Request, res: Response) => {
 };
 
 export const getOrder = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const order = await ordersModel.findByPk(id, {
-        include: [
-            {
-                model: ordersderailsModel,
-                as: 'orderDetails',
-            },
-        ],
-    });
-    if (!order) {
-        return res.status(404).json({ msg: 'order not found' });
+    try{
+        const {id} = req.params;
+        const order = await ordersModel.findByPk(id, {
+            include: [
+                {
+                    model: ordersderailsModel,
+                    as: 'ordersderails',
+                },
+            ],
+        });
+        if (!order) {
+            return res.status(404).json({ msg: 'order not found' });
+        }
+        res.status(200).json({order});
+    } catch(error){
+        console.log(error);
+        res.status(500).json({msg: error})
     }
-    res.status(200).json({ order });
-    return;
 };
 
 export const postOrder = async (req: Request, res: Response) => {
