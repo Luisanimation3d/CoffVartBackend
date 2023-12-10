@@ -123,7 +123,7 @@ export const getShop = async (req: Request, res: Response) => {
     }
 };*/
 export const postShop = async (req: Request, res: Response) => {
-    const { invoice, state, date, description, supplierId, Suppliesdetails }: { invoice: string, state: boolean, date: string, description: string, supplierId: number, Suppliesdetails: Array<{ supplyId: number, quantity: number }> } = req.body;
+    const { invoice, state, date, description, supplierId, Suppliesdetails }: { invoice: string, state: boolean, date: string, description: string, supplierId: number, Suppliesdetails: Array<{ supplyId: number, quantity: number, value: number }> } = req.body;
     console.log(Suppliesdetails, 'Detalles')
 
     try {
@@ -148,18 +148,16 @@ export const postShop = async (req: Request, res: Response) => {
             if (!supply) {
                 return res.status(404).json({ msg: `Supply with ID ${supplyDetail.supplyId} not found` });
             }
-            if (supplyDetail.quantity > supply.getDataValue('amount')) {
-                return res.status(400).json({ msg: `Quantity exceeds available stock for supply ID ${supplyDetail.supplyId}` });
-            }
 
             supply.setDataValue('amount', supply.getDataValue('amount') + supplyDetail.quantity);
+            supply.setDataValue('unitPrice', supplyDetail.value);
             await supply.save();
-            const subtotal = supply.getDataValue('unitPrice') * supplyDetail.quantity;
+            const subtotal = supplyDetail.value * supplyDetail.quantity;
             shopDetails = [...shopDetails, {
                 shopId: newShop.getDataValue('id'),
                 supplyId: supplyDetail.supplyId,
                 quantity: supplyDetail.quantity,
-                value: supply.getDataValue('unitPrice'),
+                value: supplyDetail.value,
                 subtotal: subtotal
             }];
         }
