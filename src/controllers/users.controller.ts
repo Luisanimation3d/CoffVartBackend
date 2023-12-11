@@ -64,7 +64,20 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
-		const user: UserModelType | null = await userModel.findByPk(id);
+		const user: UserModelType | null = await userModel.findByPk(id, {
+            include: [
+                {
+                    model: rolesModel,
+                    as: 'role',
+                    attributes: ['name'],
+                },
+                {
+                    model: coustumersModel,
+                    as: 'coustumer',
+                    attributes: ['name', 'document', 'documentType', 'address', 'phone'],
+                }
+            ]
+        });
 		if (!user) {
 			return res.status(404).json({ msg: 'User not found' });
 		}
