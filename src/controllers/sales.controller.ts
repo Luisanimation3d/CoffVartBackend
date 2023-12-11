@@ -4,6 +4,7 @@ import {salesdetailsModel} from "../models/salesdetails.model";
 import {productModel} from "../models/products.model";
 import {coustumersModel} from "../models/coustomers.model";
 import {optionsPagination} from 'generalTypes';
+import {userModel} from "../models/users.model";
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -124,15 +125,16 @@ export const getSale = async (req: Request, res: Response) => {
     }
 };*/
 export const postSale = async (req: Request, res: Response) => {
-    const { invoice, state, coustumerId, Productdetails }: { invoice: string, state: boolean, coustumerId: number, Productdetails: Array<{ productId: number, quantity: number }> } = req.body;
+    const { invoice, state, user, Productdetails }: { invoice: string, state: boolean, user: string, Productdetails: Array<{ productId: number, quantity: number }> } = req.body;
     console.log(Productdetails, 'Detalles')
 
     try {
+        const userId = await userModel.findOne({ where: { email: user } });
         // Obtener el cliente por su ID
-        const coustumer = await coustumersModel.findByPk(coustumerId);
+        const coustumer = await coustumersModel.findOne({ where: { userId: userId?.getDataValue('id') } });
 
         if (!coustumer) {
-            return res.status(404).json({ msg: `Customer with ID ${coustumerId} not found` });
+            return res.status(404).json({ msg: `Customer with ID ${userId} not found` });
         }
 
         // Crear una nueva venta con el cliente asociado
