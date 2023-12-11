@@ -8,6 +8,7 @@ import {JwtPayloadWithTokenData} from "token";
 import {rolesModel} from "../models/roles.model";
 import {roleDetailsModel} from "../models/roleDetails.model";
 import {permissionsModel} from "../models/permissions.model";
+import {coustumersModel} from "../models/coustomers.model";
 
 interface ExtendRequest extends Request {
     user?: JwtPayloadWithTokenData
@@ -83,7 +84,6 @@ export const logoutController = async (req: Request, res: Response) => {
 }
 
 export const getTokenData = async (req: ExtendRequest, res: Response) => {
-    console.log('ingresa aqui')
     try{
 
         const rolePermission = await rolesModel.findByPk(req.user?.role, {
@@ -100,11 +100,22 @@ export const getTokenData = async (req: ExtendRequest, res: Response) => {
                 },
             ],
         });
+        const userData = await userModel.findByPk(req.user?.id, {
+            attributes: ['name', 'email'],
+            include: [
+                {
+                    model: coustumersModel,
+                    as: 'coustumer',
+                    attributes: ['name', 'document', 'documentType', 'address', 'phone'],
+                }
+            ],
+        })
         console.log(rolePermission)
         const user = {
             name: req.user?.name,
             email: req.user?.email,
             role: rolePermission?.getDataValue('name'),
+            coustomer: userData?.getDataValue('coustumer'),
             permissions: rolePermission?.getDataValue('rol_details').map((element: any) => element.getDataValue('permission').name)
             // permission: rolePermission
         };
