@@ -165,6 +165,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
                 productionOrderId: newProductionOrder.getDataValue('id'),
                 processId: processId,
                 supplyId: supplieId,
+                value: 0,
             }];
         }
         
