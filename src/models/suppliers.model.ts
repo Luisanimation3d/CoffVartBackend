@@ -34,10 +34,6 @@ export const supplierModel = sequelize.define(
 			type: DataTypes.STRING(255),
 			allowNull: false,
 		},
-		unitCost: {
-			type: DataTypes.FLOAT,
-			allowNull: false,
-		},
 		state: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true,
