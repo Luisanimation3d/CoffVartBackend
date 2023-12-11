@@ -127,19 +127,18 @@ export const postUser = async (req: Request, res: Response) => {
 export const putUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     // const { name, lastname, address, phone, email, password, roleId } = req.body;
-    const { name, lastname, address, phone, email, password,  roleId,  documentType, document } = req.body;
+    const { name, lastname, address, phone, email,  roleId,  documentType, document } = req.body;
     try {
         const user: UserModelType | null = await userModel.findByPk(id);
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        const passwordHash = bcrypt.hashSync(password, 10);
-        await user.update({ name, lastname, address, phone, email, password: passwordHash, roleId });
+        await user.update({ name, lastname, address, phone, email, roleId });
         const coustumer = await coustumersModel.findOne({ where: { userId: user.id } });
         if (!coustumer) {
             return res.status(404).json({ msg: 'Coustumer not found' });
         }
-        await coustumer.update({ documentType, document, userId: user.id, phone, address, name: `${name} ${lastname}` });
+        await coustumer.update({ documentType, document, phone, address, name: `${name} ${lastname}` });
         res.status(200).json({ user });
     } catch (error) {
         console.log(error);
