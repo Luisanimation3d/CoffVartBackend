@@ -101,12 +101,12 @@ export const postCompanys =async(req:Request, res:Response)=> {
 export const putCompanys = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { name, nit,  email,address,phone,state } = req.body;
+        const { name,  email,address,phone,state } = req.body;
         const companys = await companyModel.findByPk(id);
             if (!companys) {
                 return res.status(404).json({ msg: 'Company not found' });
             }
-            await companys.update({ name,email,nit,address,phone,state });
+            await companys.update({ name,email,address,phone,state });
             res.status(200).json({ companys });
     } catch (error) {
         console.log(error);
