@@ -91,10 +91,12 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
     const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId}:
     {requestNumber: string, dateOfDispatch:Date,quantity:number,supplieLost:number,reasonCancellation:string,observations:string,supplieId: number,companyId: number,processId: number}= req.body;
     try {
-        const process = await processesModel.findByPk(processId);
+        const finalProcessId = processId || 1;
+
+        const process = await processesModel.findByPk(finalProcessId);
     if (!process) {
       return res.status(404).json({
-        msg: `Proceso con ID ${processId} no encontrado`,
+        msg: `Proceso con ID ${finalProcessId} no encontrado`,
       });
     }
     const company = await companyModel.findByPk(companyId);
