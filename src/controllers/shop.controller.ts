@@ -45,6 +45,11 @@ export const getShops = async (req: Request, res: Response) => {
                         }
                     ],
                 },
+                // {
+                //     model: supplierModel,
+                //     as: 'supplier',
+                //     attributes: ['name'],
+                // },
             ],
         });
         res.status(200).json({shops, options});
@@ -180,17 +185,12 @@ export const postShop = async (req: Request, res: Response) => {
 };
 
 export const deleteShop= async (req: Request, res: Response) => {
-    try{const { id } = req.params;
-    const shops = await shopModel.findByPk(id);
-    if (!shops) {
-        return res.status(404).json({ msg: 'Shop not found' });
-    }
-    await shops.destroy();
-    res.status(200).json({ shops});
-    }catch (error){
-    console.log(error);
-    res.status(500).json({msg:error});
-    }
-}
-
+    const { id } = req.params;
+	const shop = await shopModel.findByPk(id);
+	if (!shop) {
+		return res.status(404).json({ msg: 'Shop not found' });
+	}
+	shop.update({ state: !shop.getDataValue('state') });
+	res.status(200).json({ shop });
+};
 
