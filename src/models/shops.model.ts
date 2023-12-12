@@ -49,3 +49,4 @@ shopdetailsModel.belongsTo(shopModel, {
 	foreignKey: 'shopId',
 	targetKey: 'id',
 });
+

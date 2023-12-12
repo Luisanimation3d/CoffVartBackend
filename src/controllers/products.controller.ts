@@ -64,15 +64,11 @@ export const putProducts = async (req: Request, res: Response) => {
 }
 
 export const deleteProducts= async (req: Request, res: Response) => {
-    try{const { id } = req.params;
-    const products = await productModel.findByPk(id);
-    if (!products) {
-        return res.status(404).json({ msg: 'Product not found' });
-    }
-    await products.destroy();
-    res.status(200).json({ products});
-    }catch (error){
-    console.log(error);
-    res.status(500).json({msg:error});
-    }
-}
+    const { id } = req.params;
+	const product = await productModel.findByPk(id);
+	if (!product) {
+		return res.status(404).json({ msg: 'Product not found' });
+	}
+	product.update({ state: !product.getDataValue('state') });
+	res.status(200).json({ product });
+};
