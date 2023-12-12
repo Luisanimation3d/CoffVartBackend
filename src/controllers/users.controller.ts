@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import bcrypt from 'bcrypt';
-import { userModel } from '../models/users.model';
-import { UserModelType } from 'user';
-import { optionsPagination } from 'generalTypes';
+import {userModel} from '../models/users.model';
+import {UserModelType} from 'user';
+import {optionsPagination} from 'generalTypes';
 import {coustumersModel} from "../models/coustomers.model";
 import {rolesModel} from "../models/roles.model";
 
@@ -17,15 +17,15 @@ import {rolesModel} from "../models/roles.model";
  * as setting the status code, headers, and sending the response body.
  */
 export const getUsers = async (req: Request, res: Response) => {
-	try {
-        const { page, limit, order } = req.query;
-		const options: optionsPagination = {
-			page: parseInt(page as string, 10) || 1,
-			limit: parseInt(limit as string, 10) || 10,
-			paginate: parseInt(limit as string, 10) || 10,
-			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
-		};
-		const users = await userModel.findAndCountAll({
+    try {
+        const {page, limit, order} = req.query;
+        const options: optionsPagination = {
+            page: parseInt(page as string, 10) || 1,
+            limit: parseInt(limit as string, 10) || 10,
+            paginate: parseInt(limit as string, 10) || 10,
+            order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+        };
+        const users = await userModel.findAndCountAll({
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
@@ -42,11 +42,11 @@ export const getUsers = async (req: Request, res: Response) => {
                 }
             ]
         });
-		res.status(200).json({ users, options });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+        res.status(200).json({users, options});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -62,9 +62,9 @@ export const getUsers = async (req: Request, res: Response) => {
  * message if there is an error or if the user is not found.
  */
 export const getUser = async (req: Request, res: Response) => {
-	try {
-		const { id } = req.params;
-		const user: UserModelType | null = await userModel.findByPk(id, {
+    try {
+        const {id} = req.params;
+        const user: UserModelType | null = await userModel.findByPk(id, {
             include: [
                 {
                     model: rolesModel,
@@ -78,14 +78,14 @@ export const getUser = async (req: Request, res: Response) => {
                 }
             ]
         });
-		if (!user) {
-			return res.status(404).json({ msg: 'User not found' });
-		}
-		res.status(200).json({ user });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+        if (!user) {
+            return res.status(404).json({msg: 'User not found'});
+        }
+        res.status(200).json({user});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -99,16 +99,23 @@ export const getUser = async (req: Request, res: Response) => {
  * as setting the status code, headers, and sending the response body.
  */
 export const postUser = async (req: Request, res: Response) => {
-    const { name, lastname, address, phone, email, password, roleId, documentType, document } = req.body;
-	try {
+    const {name, lastname, address, phone, email, password, roleId, documentType, document} = req.body;
+    try {
         const passwordHash = bcrypt.hashSync(password, 10);
-		const newUser = await userModel.create({ name, lastname, address, phone, email, password: passwordHash, roleId });
-        const newCoustumer = await coustumersModel.create({ documentType, document, userId: newUser.id, phone, address, name: `${name} ${lastname}` });
-		res.status(200).json({ newUser, newCoustumer });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+        const newUser = await userModel.create({name, lastname, address, phone, email, password: passwordHash, roleId});
+        const newCoustumer = await coustumersModel.create({
+            documentType,
+            document,
+            userId: newUser.id,
+            phone,
+            address,
+            name: `${name} ${lastname}`
+        });
+        res.status(200).json({newUser, newCoustumer});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -125,24 +132,24 @@ export const postUser = async (req: Request, res: Response) => {
  * JSON response containing the error message.
  */
 export const putUser = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const {id} = req.params;
     // const { name, lastname, address, phone, email, password, roleId } = req.body;
-    const { name, lastname, address, phone, email,  roleId,  documentType, document } = req.body;
+    const {name, lastname, address, phone, email, roleId, documentType, document} = req.body;
     try {
         const user: UserModelType | null = await userModel.findByPk(id);
         if (!user) {
-            return res.status(404).json({ msg: 'User not found' });
+            return res.status(404).json({msg: 'User not found'});
         }
-        await user.update({ name, lastname, address, phone, email, roleId });
-        const coustumer = await coustumersModel.findOne({ where: { userId: user.id } });
+        await user.update({name, lastname, address, phone, email, roleId});
+        const coustumer = await coustumersModel.findOne({where: {userId: user.id}});
         if (!coustumer) {
-            return res.status(404).json({ msg: 'Coustumer not found' });
+            return res.status(404).json({msg: 'Coustumer not found'});
         }
-        await coustumer.update({ documentType, document, phone, address, name: `${name} ${lastname}` });
-        res.status(200).json({ user });
+        await coustumer.update({documentType, document, phone, address, name: `${name} ${lastname}`});
+        res.status(200).json({user});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
 }
 
@@ -161,16 +168,38 @@ export const putUser = async (req: Request, res: Response) => {
  * response containing the error message.
  */
 export const deleteUser = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const {id} = req.params;
     try {
         const user: UserModelType | null = await userModel.findByPk(id);
         if (!user) {
-            return res.status(404).json({ msg: 'User not found' });
+            return res.status(404).json({msg: 'User not found'});
         }
-        await user.update({ state: !user.state });
-        res.status(200).json({ user });
+        await user.update({state: !user.state});
+        res.status(200).json({user});
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
+    }
+}
+
+export const validateUserAlreadyExists = async (req: Request, res: Response) => {
+    const {email = '', document = ''} = req.query;
+    try {
+        if (email) {
+            const user: UserModelType | null = await userModel.findOne({where: {email}});
+            if (user) {
+                return res.status(400).json({email: 'User already exists'});
+            }
+        }
+        if (document) {
+            const coustumer = await coustumersModel.findOne({where: {document}});
+            if (coustumer) {
+                return res.status(400).json({document: 'Coustumer already exists'});
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
     }
 }

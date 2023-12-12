@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getUsers, getUser, postUser, putUser, deleteUser } from "../controllers/users.controller";
+import { getUsers, getUser, postUser, putUser, deleteUser, validateUserAlreadyExists } from "../controllers/users.controller";
 
-import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
-import { GetUsersMiddleware, PostUsersMiddleware } from "../middlewares/users.middlewares";
+// import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
+// import { GetUsersMiddleware, PostUsersMiddleware } from "../middlewares/users.middlewares";
 
 const router = Router();
 
@@ -14,5 +14,6 @@ router.get('/:id', getUser);
 router.post('/', postUser);
 router.put('/:id', putUser);
 router.delete('/:id', deleteUser);
+router.get('/validate', validateUserAlreadyExists);
 
 export default router;
