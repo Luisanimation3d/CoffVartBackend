@@ -28,10 +28,10 @@ export const getCompanys = async (req: Request, res: Response) => {
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
-		res.status(200).json({ companys, options });
+		return res.status(200).json({ companys, options });
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ msg: error });
+		return res.status(500).json({ msg: error });
 	}
 };
 
@@ -54,7 +54,7 @@ export const getCompany = async (req: Request, res: Response)=> {
         if (!company){
             return res.status(404).json({msg:'Company NOT FOUND'})
         }
-
+        return res.status(200).json({company})
     }catch (error){
         console.log(error);
         res.status(500).json({msg:error});
