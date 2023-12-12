@@ -141,3 +141,18 @@ export const putOrders = async (req: any, res: any, next: any) => {
         res.status(500).json({ msg: error });
     }
 };
+
+
+export const deleteOrders = async (req: any, res: any, next: any) => {
+    try{
+    const { id } = req.params;
+    const orders = await ordersModel.findByPk(id);
+        if (!orders) {
+            return res.status(404).json({ msg: 'orders not found' });
+        }
+        await orders.destroy();
+        res.status(200).json({ msg: 'orders deleted' });
+    } catch (error) {
+        res.status(500).json({ msg: error });
+    }
+}
