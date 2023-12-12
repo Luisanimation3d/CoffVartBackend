@@ -128,7 +128,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         }
         const productionR = await productionRequestModel.findByPk(productionRId);
         if (!productionR) {
-            return res.status(404).json({msg: `Proceso con ID ${productionRId} no encontrado`});
+            return res.status(404).json({msg: `Production con ID ${productionRId} no encontrado`});
         }
         const quantityR = productionR.getDataValue('quantity');
 

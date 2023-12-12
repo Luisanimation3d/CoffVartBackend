@@ -4,6 +4,7 @@ import { suppliesModel } from "./supplies.model";
 import { productModel } from "./products.model";
 import { processesModel } from "./processes.model";
 import { productionOrdersDetailsModel } from "./productionOrdersDetails.model";
+import { productionRequestModel } from "./productionRequests.model";
 
 export const productionOrderModel = sequelize.define('productionOrders',{
     id: {
@@ -54,3 +55,13 @@ productionOrdersDetailsModel.belongsTo(productionOrderModel, {
 	foreignKey: 'productionOrderId',
 	targetKey: 'id',
 });
+productionRequestModel.hasOne(productionOrderModel,{
+    foreignKey: 'productionRId',
+    sourceKey: 'id'
+});
+
+productionOrderModel.belongsTo(productionRequestModel,{
+    foreignKey: 'productionRId',
+    targetKey: 'id'
+});
+

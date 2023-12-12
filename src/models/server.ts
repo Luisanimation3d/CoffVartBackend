@@ -109,7 +109,7 @@ export class Server {
 
 	async dbConnection() {
 		try {
-			await sequelize.sync({ force: false });
+			await sequelize.sync({ force: true });
 			console.log('db connection success');
 		} catch (err) {
 			console.log('db connection error: ' + err);
