@@ -111,16 +111,25 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
         msg: `Empresa con ID ${supplieId} no encontrada`,
       });
     }
+    const currentAmount = supplie.getDataValue('amount');
+
+    if (currentAmount < quantity){
+      return res.status(400).json({error: 'La cantidad de insumo supera el stock'})
+    }
+
+    const newAmount = currentAmount - quantity;
+
+    if(newAmount < 0){
+      return res.status(400).json({ error: 'La cantidad de insumos no puede ser menor que 0' });
+    }
+    await supplie.decrement('amount', { by: (quantity as number) });
     
     const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity,
         companyId: company.getDataValue('id'),
         supplieId: supplie.getDataValue('id'),
-        processId: process.getDataValue('id')});
-    
-        await supplie.decrement('amount', { by: (quantity as number) });
-        
-    
-          
+        processId: process.getDataValue('id')
+      });
+
         res.status(201).json({newProductionRequest});
     } catch (error) {
         console.log(error);
@@ -145,13 +154,24 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
 export const putProductionRequest = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { processId } = req.body;
+        const { processId, receivedQuantity } = req.body;
         const ProductionRequests = await productionRequestModel.findByPk(id);
         if (!ProductionRequests) {
           return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
         
-        await ProductionRequests.update ({processId});
+        const procesoRecibidoId = 1; //actualizar cuando esté ya definido el id en la base de datos
+        if (processId === procesoRecibidoId){
+          const supplie = await suppliesModel.findByPk(ProductionRequests.getDataValue('supplieId'));
+          if (supplie){
+            await supplie.increment('amount',{by:receivedQuantity});
+          }
+        }
+        
+        const sentQuantity= ProductionRequests.getDataValue('quantity');
+        const supplieLost = sentQuantity - receivedQuantity;
+
+        await ProductionRequests.update ({processId,supplieLost});
         res.status(200).json({ ProductionRequests });
       } catch (error) {
         console.log(error);
