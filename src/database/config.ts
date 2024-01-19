@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 export const sequelize = new Sequelize(
-	'postgres://coffvart:8y7MZktqFfjm1SXx9HLbUxyat8VYkZQq@dpg-ckkkbnbj89us7386mjk0-a.ohio-postgres.render.com/coffvart',
+	'postgres://coffvart_p698_user:y8fOwolX3XYJCDDgdoo1Vzg5Ui5LxhjA@dpg-cmkpkj6n7f5s73bajct0-a.oregon-postgres.render.com/coffvart_p698',
 	{
 		dialect: 'postgres',
 		protocol: 'postgres',
