@@ -159,8 +159,13 @@ export const putProductionRequest = async (req: Request, res: Response) => {
         if (!ProductionRequests) {
           return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        
-        const procesoRecibidoId = 1; //actualizar cuando esté ya definido el id en la base de datos
+        const supplyIdToUpdate = 2; 
+        const supplyToUpdate = await suppliesModel.findByPk(supplyIdToUpdate);
+        if (!supplyToUpdate) {
+            return res.status(404).json({ msg: 'Supply not found' });
+        }
+          await supplyToUpdate.increment('amount',{by: receivedQuantity})
+        const procesoRecibidoId = 3; 
         if (processId === procesoRecibidoId){
           const supplie = await suppliesModel.findByPk(ProductionRequests.getDataValue('supplieId'));
           if (supplie){
