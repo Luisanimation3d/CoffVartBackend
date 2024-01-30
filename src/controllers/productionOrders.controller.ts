@@ -111,15 +111,13 @@ export const getProductionOrder = async (req: Request, res: Response) => {
  */
 
 export const postProductionOrder = async (req: Request, res: Response) => {
-    const {orderNumber, quantity, reasonCancellation, supplieId, processId,productionRId}:
+    const {orderNumber, quantity, reasonCancellation, supplieId, processId}:
         {
             orderNumber: string,
             quantity: number,
             reasonCancellation: string,
             supplieId: number,
             processId: number,
-            productionRId: number,
-            
         } = req.body;
 
     try {
