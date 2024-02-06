@@ -108,7 +108,7 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
     const supplie = await suppliesModel.findByPk(supplieId);
     if (!supplie) {
       return res.status(404).json({
-        msg: `Empresa con ID ${supplieId} no encontrada`,
+        msg: `Insumo con ID ${supplieId} no encontrada`,
       });
     }
     const currentAmount = supplie.getDataValue('amount');
@@ -154,17 +154,20 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
 export const putProductionRequest = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { processId, receivedQuantity } = req.body;
+        const { processId } = req.body;
+        const receivedQuantity = req.body.receivedQuantity || 0;
         const ProductionRequests = await productionRequestModel.findByPk(id);
         if (!ProductionRequests) {
           return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        const supplyIdToUpdate = 2; 
-        const supplyToUpdate = await suppliesModel.findByPk(supplyIdToUpdate);
+   
+        const supplyToUpdate = await suppliesModel.findByPk(2);
         if (!supplyToUpdate) {
             return res.status(404).json({ msg: 'Supply not found' });
         }
+        if (receivedQuantity !== undefined) {
           await supplyToUpdate.increment('amount',{by: receivedQuantity})
+        }
         const procesoRecibidoId = 3; 
         if (processId === procesoRecibidoId){
           const supplie = await suppliesModel.findByPk(ProductionRequests.getDataValue('supplieId'));

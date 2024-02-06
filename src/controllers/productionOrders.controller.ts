@@ -51,10 +51,6 @@ export const getProductionOrders = async (req: Request, res: Response) => {
                     attributes: ['id', 'name']
                 },
                 {
-                    model: productionRequestModel,
-                    attributes: ['id','requestNumber']
-                },
-                {
                     model:suppliesModel,
                     attributes: ['id','name']
                 }
@@ -127,15 +123,21 @@ export const postProductionOrder = async (req: Request, res: Response) => {
                 msg: `Insumo con ID ${supplieId} no encontrado`,
             });
         }
+        const currentAmount = supplie.getDataValue('amount');
+        if (currentAmount < quantity){
+            return res.status(400).json({error: 'La cantidad de insumo supera el stock'})
+          }
+          const newAmount = currentAmount - quantity;
+
+        if(newAmount < 0){
+        return res.status(400).json({ error: 'La cantidad de insumos no puede ser menor que 0' });
+     }
+            await supplie.decrement('amount', { by: (quantity as number) });
         const process = await processesModel.findByPk(processId);
         if (!process) {
             return res.status(404).json({msg: `Proceso con ID ${processId} no encontrado`});
         }
-        const productionR = await productionRequestModel.findByPk(productionRId);
-        if (!productionR) {
-            return res.status(404).json({msg: `Production con ID ${productionRId} no encontrado`});
-        }
-        const quantityR = productionR.getDataValue('quantity');
+        
 
         const newProductionOrder = await productionOrderModel.create({
             orderNumber,
@@ -143,10 +145,9 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             reasonCancellation,
             supplieId: supplie.getDataValue('id'),
             processId: process.getDataValue('id'),
-            productionRId: productionR.getDataValue('id'),
+            
         });
-        const updatedSupplieLost = quantityR - quantity;
-        await productionR.update({ supplieLost: updatedSupplieLost });
+        
         res.status(201).json({newProductionOrder});
     } catch (error) {
         console.log(error);
