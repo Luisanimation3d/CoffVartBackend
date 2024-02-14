@@ -88,8 +88,8 @@ export const getProductionRequest = async (req: Request, res: Response)=> {
  */
 
 export const postProductionRequest =async(req:Request, res:Response)=> {
-    const {requestNumber, dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId}:
-    {requestNumber: string, dateOfDispatch:Date,quantity:number,supplieLost:number,reasonCancellation:string,observations:string,supplieId: number,companyId: number,processId: number}= req.body;
+    const {dateOfDispatch,quantity,supplieLost,reasonCancellation,observations,supplieId,companyId,processId}:
+    { dateOfDispatch:Date,quantity:number,supplieLost:number,reasonCancellation:string,observations:string,supplieId: number,companyId: number,processId: number}= req.body;
     try {
         const finalProcessId = processId || 1;
 
@@ -124,7 +124,7 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
     }
     await supplie.decrement('amount', { by: (quantity as number) });
     
-    const newProductionRequest = await productionRequestModel.create({requestNumber, dateOfDispatch,quantity,
+    const newProductionRequest = await productionRequestModel.create({ dateOfDispatch,quantity,
         companyId: company.getDataValue('id'),
         supplieId: supplie.getDataValue('id'),
         processId: process.getDataValue('id')
