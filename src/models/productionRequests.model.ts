@@ -10,10 +10,6 @@ export const productionRequestModel = sequelize.define('productionRequests',{
         autoIncrement: true,
         primaryKey: true
     },
-    requestNumber: {
-        type: DataTypes.STRING(500),
-        allowNull: false
-    },
     dateOfDispatch: {
         type: DataTypes.DATE,
         allowNull: false

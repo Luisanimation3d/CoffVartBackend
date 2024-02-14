@@ -48,7 +48,8 @@ export const getProductionOrders = async (req: Request, res: Response) => {
                     ],
                 }, {
                     model: processesModel,
-                    attributes: ['id', 'name']
+                    as: 'process',
+                    attributes: ['name']
                 },
                 {
                     model:suppliesModel,
@@ -107,9 +108,8 @@ export const getProductionOrder = async (req: Request, res: Response) => {
  */
 
 export const postProductionOrder = async (req: Request, res: Response) => {
-    const {orderNumber, quantity, reasonCancellation, supplieId, processId}:
+    const { quantity, reasonCancellation, supplieId, processId}:
         {
-            orderNumber: string,
             quantity: number,
             reasonCancellation: string,
             supplieId: number,
@@ -140,7 +140,6 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         
 
         const newProductionOrder = await productionOrderModel.create({
-            orderNumber,
             quantity,
             reasonCancellation,
             supplieId: supplie.getDataValue('id'),
@@ -237,6 +236,7 @@ export const putProductionOrder = async (req: Request, res: Response) => {
             return res.status(404).json({msg: 'ProductionOrder not found'});
         }
         await productionOrders.update({processId});
+        console.log(processId,'aquí está el proceso................................................')
         res.status(200).json({productionOrders});
     } catch (error) {
         console.log(error);

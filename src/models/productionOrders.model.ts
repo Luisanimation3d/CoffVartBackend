@@ -11,10 +11,6 @@ export const productionOrderModel = sequelize.define('productionOrders',{
         autoIncrement: true,
         primaryKey: true
     },
-    orderNumber: {
-        type: DataTypes.STRING(500),
-        allowNull: false
-    },
     quantity: {
         type: DataTypes.FLOAT(10, 2),
         allowNull: false
