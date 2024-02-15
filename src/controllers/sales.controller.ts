@@ -182,6 +182,22 @@ export const postSale = async (req: Request, res: Response) => {
     }
 };
 
+export const putSales= async (req: Request, res: Response) => {
+    try{
+    const { id } = req.params;
+    const { state } = req.body;
+    const sales = await salesModel.findByPk(id);
+    if (!sales) {
+        return res.status(404).json({ msg: 'sale not found' });
+    }
+    await sales.update({ state });
+    res.status(200).json({ sales });
+}catch (error){
+    console.log(error);
+    res.status(500).json({msg:error});
+}
+}
+
 export const deleteSales= async (req: Request, res: Response) => {
     try{const { id } = req.params;
     const sales = await salesModel.findByPk(id);
