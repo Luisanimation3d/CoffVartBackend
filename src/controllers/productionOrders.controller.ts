@@ -260,12 +260,12 @@ export const putProductionOrder = async (req: Request, res: Response) => {
 export const deleteProductionOrder = async (req: Request, res: Response) => {
     try {
         const {id} = req.params;
-        const productionOrders = await productionOrderModel.findByPk(id);
-        if (!productionOrders) {
+        const productionOrder = await productionOrderModel.findByPk(id);
+        if (!productionOrder) {
             return res.status(404).json({msg: 'ProductionOrder not found'});
         }
-        await productionOrders.destroy();
-        res.status(200).json({productionOrders});
+        await productionOrder.update({state: !productionOrder.getDataValue('state')});
+        res.status(200).json({productionOrder});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});

@@ -124,12 +124,12 @@ export const putSuppliers = async (req: Request, res: Response) => {
 export const deleteSuppliers= async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const suppliers = await supplierModel.findByPk(id);
-        if (!suppliers) {
+        const supplier = await supplierModel.findByPk(id);
+        if (!supplier) {
             return res.status(404).json({ msg: 'Supplier not found' });
         }
-        await suppliers.destroy();
-        res.status(200).json({ suppliers});
+        await supplier.update({state: !supplier.getDataValue('state')});
+        res.status(200).json({ supplier});
 
     } catch (error) {
         console.log(error);
