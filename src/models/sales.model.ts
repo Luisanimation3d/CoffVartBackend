@@ -17,8 +17,12 @@ export const salesModel = sequelize.define('sales', {
         allowNull: false
     },
     state: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isIn: [['pendiente', 'enviado', 'entregado']],
+        },
+        
     },
 },
     {
