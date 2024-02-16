@@ -202,12 +202,12 @@ export const putProductionRequest = async (req: Request, res: Response) => {
 export const deleteProductionRequest= async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const ProductionRequests = await productionRequestModel.findByPk(id);
-        if (!ProductionRequests) {
+        const ProductionRequest = await productionRequestModel.findByPk(id);
+        if (!ProductionRequest) {
             return res.status(404).json({ msg: 'ProductionRequest not found' });
         }
-        await ProductionRequests.destroy();
-        res.status(200).json({ ProductionRequests });
+        await ProductionRequest.update({state: !ProductionRequest.getDataValue('state')});
+        res.status(200).json({ ProductionRequest });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });

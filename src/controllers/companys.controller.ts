@@ -132,12 +132,12 @@ export const putCompanys = async (req: Request, res: Response) => {
 export const deleteCompanys= async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const companys = await companyModel.findByPk(id);
-            if (!companys) {
+        const company = await companyModel.findByPk(id);
+            if (!company) {
                 return res.status(404).json({ msg: 'Company not found' });
             }
-            await companys.destroy();
-            res.status(200).json({ companys });
+            await company.update({state: !company.getDataValue('state')});
+            res.status(200).json({ company });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
