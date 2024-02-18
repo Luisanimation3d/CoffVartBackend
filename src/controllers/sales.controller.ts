@@ -72,6 +72,39 @@ export const getSale = async (req: Request, res: Response) => {
     res.status(200).json({sale});
 };
 
+export const getCoustumerSale= async (req: Request, res: Response) => {
+    const {user} = req.params;
+    const coustomerId= await userModel.findOne({where: {id: user}});
+    try {
+        const sales= await salesModel.findAll({
+            where: {customerId: coustomerId},
+            include: [
+                {
+                    model: salesdetailsModel,
+                    as: 'saleDetails',
+                    include: [
+                        {
+                            model: productModel,
+                            attributes: ['id', 'name'],
+                        },
+                    ],
+                },
+                {
+                    model: coustumersModel,
+                    as: 'coustumer',
+                    attributes: [ 'id', 'name'],
+                },
+              
+            ],
+        });
+        res.status(200).json({sales});
+        
+    } catch (error) {
+        res.status(500).json({error});
+    }
+
+}
+
 /*export const postSale = async (req: Request, res: Response) => {
     const { invoice, state, customer, products, quantities, total } = req.body;
 
