@@ -5,6 +5,12 @@ import {productModel} from "../models/products.model";
 import {coustumersModel} from "../models/coustomers.model";
 import {optionsPagination} from 'generalTypes';
 import {userModel} from "../models/users.model";
+import { JwtPayloadWithTokenData } from "token";
+
+
+interface ExtendRequest extends Request {
+    user?: JwtPayloadWithTokenData 
+}
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -72,19 +78,18 @@ export const getSale = async (req: Request, res: Response) => {
     res.status(200).json({sale});
 };
 
-export const getCoustumerSale= async (req: Request, res: Response) => {
-    const {user} = req.params;
-    const coustomerId = await coustumersModel.findOne({
-        where: { userId: user },
-        include: [{ model: userModel, as: 'user', attributes: ['id', 'name'] }],
+export const getCoustumerSale= async (req: ExtendRequest, res: Response) => {
+    const user = req.user?.id;
+    const coustomerId = await userModel.findOne({
+        where: { id: user },
+        include: [{ model: coustumersModel, attributes: ['id', 'name'] }],
     });
-    console.log(coustomerId);
     if (!coustomerId) {
         return res.status(404).json({ error: 'Customer not found' });
-      }
+    }
     try {
         const sales= await salesModel.findAll({
-            where: {customerId: coustomerId?.getDataValue('id')},
+            where: {customerId: coustomerId?.coustumer?.id},
             include: [
                 {
                     model: salesdetailsModel,
