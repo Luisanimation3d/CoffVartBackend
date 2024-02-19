@@ -88,7 +88,6 @@ export const getCoustumerSale= async (req: Request, res: Response) => {
             include: [
                 {
                     model: salesdetailsModel,
-                    as: 'saleDetails',
                     include: [
                         {
                             model: productModel,
@@ -101,16 +100,18 @@ export const getCoustumerSale= async (req: Request, res: Response) => {
                     as: 'coustumer',
                     attributes: [ 'id', 'name'],
                 },
+
+              
             ],
         });
         res.status(200).json({sales});
         
     } catch (error) {
-        res.status(500).json({error});
+        console.log('Eager Loading Error:', error);
+        res.status(500).json({error: 'Error during eager loading'});
     }
 
 }
-
 /*export const postSale = async (req: Request, res: Response) => {
     const { invoice, state, customer, products, quantities, total } = req.body;
 
