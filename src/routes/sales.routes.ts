@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', /*extractUserMiddlewares*/ /*GetSalesMiddleware*/ getSales);
 router.get('/:id', getSale);
-router.get('/customer/:user', getCoustumerSale);
+router.get('/customer/:user', extractUserMiddlewares, getCoustumerSale);
 router.put('/:id', putSales);
 router.post('/',  /*extractUserMiddlewares*/  /*PostSalesMiddleware*/ /*validateRoutePost,*/ postSale);
 router.delete('/:id', deleteSales)
