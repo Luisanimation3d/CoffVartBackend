@@ -74,10 +74,14 @@ export const getSale = async (req: Request, res: Response) => {
 
 export const getCoustumerSale= async (req: Request, res: Response) => {
     const {user} = req.params;
-    const coustomerId= await userModel.findOne({where: {id: user}});
+    const coustomerId = await userModel.findOne({
+        where: { id: user },
+        include: [{ model: coustumersModel, as: 'coustumer', attributes: ['id', 'name'] }],
+    });
+    console.log(coustomerId);
     try {
         const sales= await salesModel.findAll({
-            where: {customerId: coustomerId},
+            where: {customerId: coustomerId.customer.id},
             include: [
                 {
                     model: salesdetailsModel,
@@ -94,6 +98,7 @@ export const getCoustumerSale= async (req: Request, res: Response) => {
                     as: 'coustumer',
                     attributes: [ 'id', 'name'],
                 },
+
               
             ],
         });
