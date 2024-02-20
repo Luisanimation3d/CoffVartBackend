@@ -140,8 +140,9 @@ export const putUser = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).json({msg: 'User not found'});
         }
+        console.log(user)
         await user.update({name, lastname, address, phone, email, roleId});
-        const coustumer = await coustumersModel.findOne({where: {userId: user.id}});
+        const coustumer = await userModel.findOne({where: {userId: user.id}});
         if (!coustumer) {
             return res.status(404).json({msg: 'Coustumer not found'});
         }
