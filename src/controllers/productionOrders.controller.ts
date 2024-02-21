@@ -155,27 +155,27 @@ export const postProductionOrder = async (req: Request, res: Response) => {
 };
 
 export const postProductionOrderDetail = async ( req: Request, res: Response )=> {
-    const {Productdetails,productionOrderId,supplieId}:
+    const {Productdetails,productionOrderId}:
         {   
             productionOrderId: number,
-            supplieId: number,
             Productdetails: Array<{ productId: number, quantity: number }>
         } = req.body;
     console.log(Productdetails, 'Detalles')
 
     try {
-        const supplie = await suppliesModel.findByPk(supplieId);
-        if (!supplie) {
-            return res.status(404).json({
-                msg: `Insumo con ID ${supplieId} no encontrado`,
-            });
-        }
+        
         const productionOrder = await productionOrderModel.findByPk(productionOrderId);
         if (!productionOrder) {
             return res.status(404).json({
                 msg: `ProductionOrder con ID ${productionOrderId} no encontrado`,
             });
         }
+
+        const newEmpaquetado = await productionOrdersDetailsModel.create({
+            productionOrderId: productionOrder.getDataValue('id'),
+            productId: Productdetails[0].productId,
+            quantity: Productdetails[0].quantity,
+        });
 
         let productionOrdersDetails: any = [];
 
@@ -188,21 +188,22 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
             }
             if (productDetail.quantity > product.getDataValue('stockMax')) {
                 return res.status(400).json({msg: `Quantity exceeds available stockMax for product ID ${productDetail.productId}`});
-            }   
-
+            }  
+            const currentQuantity = productionOrder.getDataValue('quantity');
+                const updatedQuantity = currentQuantity - productDetail.quantity;
+                await productionOrder.update({quantity: updatedQuantity }); 
             product.setDataValue('amount', product.getDataValue('amount') + productDetail.quantity);
+            
             await product.save();
             productionOrdersDetails = [...productionOrdersDetails, {
                 productionOrderId: productionOrder.getDataValue('id'),
                 productId: productDetail.productId,
                 quantity: productDetail.quantity,
-                supplyId: supplieId,
-                value: 0,
             }];
         }
         
 
-        console.log(productionOrdersDetails, 'Detal de ventas alla')
+        console.log(productionOrdersDetails, 'Detal de empaquetado alla')
 
         await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
 
@@ -230,13 +231,24 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
 export const putProductionOrder = async (req: Request, res: Response) => {
     try {
         const {id} = req.params;
-        const {processId} = req.body;
+        const {processId,products} = req.body;
         const productionOrders = await productionOrderModel.findByPk(id);
         if (!productionOrders) {
             return res.status(404).json({msg: 'ProductionOrder not found'});
         }
         await productionOrders.update({processId});
         console.log(processId,'aquí está el proceso................................................')
+        for (const productData of products){
+            const product= await productModel.findByPk(productData.productId);
+                if (!product){
+                    return res.status(404).json({ msg:`Producto con ID ${productData.productId} no encontrado`  })
+                }
+                if (productData.newQuantity !== undefined){
+                    await product.update({
+                        amount:productData.newQuantity
+                    })
+                }
+        }
         res.status(200).json({productionOrders});
     } catch (error) {
         console.log(error);
