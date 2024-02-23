@@ -231,24 +231,14 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
 export const putProductionOrder = async (req: Request, res: Response) => {
     try {
         const {id} = req.params;
-        const {processId,products} = req.body;
+        const {processId} = req.body;
         const productionOrders = await productionOrderModel.findByPk(id);
         if (!productionOrders) {
             return res.status(404).json({msg: 'ProductionOrder not found'});
         }
         await productionOrders.update({processId});
         console.log(processId,'aquí está el proceso................................................')
-        for (const productData of products){
-            const product= await productModel.findByPk(productData.productId);
-                if (!product){
-                    return res.status(404).json({ msg:`Producto con ID ${productData.productId} no encontrado`  })
-                }
-                if (productData.newQuantity !== undefined){
-                    await product.update({
-                        amount:productData.newQuantity
-                    })
-                }
-        }
+        
         res.status(200).json({productionOrders});
     } catch (error) {
         console.log(error);
