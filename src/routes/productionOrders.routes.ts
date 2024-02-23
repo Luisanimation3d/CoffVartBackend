@@ -11,6 +11,6 @@ router.get('/:id',/*extractUserMiddlewares,validateRouteGet,*/getProductionOrder
 router.post("/",/*extractUserMiddlewares,validateRoutePost,*/postProductionOrder);
 router.put("/:id",/*extractUserMiddlewares,validateRoutePut,*/putProductionOrder);
 router.delete("/:id",/*extractUserMiddlewares,validateRouteDelete,*/deleteProductionOrder);
-router.post("/",postProductionOrderDetail);
+router.post("/detail",postProductionOrderDetail);
 
 export default router;
