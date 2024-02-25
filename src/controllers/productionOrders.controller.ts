@@ -115,7 +115,6 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             supplieId: number,
             processId: number,
         } = req.body;
-
     try {
         const supplie = await suppliesModel.findByPk(supplieId);
         if (!supplie) {
@@ -158,9 +157,13 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
     const {Productdetails,productionOrderId}:
         {   
             productionOrderId: number,
-            Productdetails: Array<{ productId: number, quantity: number }>
+            // Productdetails: Array<{ productId: number, quantity: number }>
+            Productdetails: any[]
         } = req.body;
-    console.log(Productdetails, 'Detalles')
+
+    console.log(Productdetails[0].Productdetails.quantity, 'Detalles')
+    console.log(productionOrderId, 'ID' );
+
 
     try {
         
@@ -173,8 +176,8 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
 
         const newEmpaquetado = await productionOrdersDetailsModel.create({
             productionOrderId: productionOrder.getDataValue('id'),
-            productId: Productdetails[0].productId,
-            quantity: Productdetails[0].quantity,
+            productId: Productdetails[0].Productdetails.productId,
+            quantity: Productdetails[0].Productdetails.quantity,
         });
 
         let productionOrdersDetails: any = [];
@@ -182,7 +185,7 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
         for (const productDetail of Productdetails) {
 
             console.log(productDetail, 'Porduct Detail Aqui')
-            const product = await productModel.findByPk(productDetail.productId);
+            const product = await productModel.findByPk(productDetail.Productdetails.productId);
             if (!product) {
                 return res.status(404).json({msg: `Product with ID ${productDetail.productId} not found`});
             }
@@ -190,15 +193,16 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
                 return res.status(400).json({msg: `Quantity exceeds available stockMax for product ID ${productDetail.productId}`});
             }  
             const currentQuantity = productionOrder.getDataValue('quantity');
-                const updatedQuantity = currentQuantity - productDetail.quantity;
+                const updatedQuantity = currentQuantity - productDetail.Productdetails.quantity;
                 await productionOrder.update({quantity: updatedQuantity }); 
-            product.setDataValue('amount', product.getDataValue('amount') + productDetail.quantity);
+            product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
             
             await product.save();
             productionOrdersDetails = [...productionOrdersDetails, {
+                Id: newEmpaquetado.getDataValue('id'),
                 productionOrderId: productionOrder.getDataValue('id'),
-                productId: productDetail.productId,
-                quantity: productDetail.quantity,
+                productId: productDetail.Productdetails.productId,
+                quantity: productDetail.Productdetails.quantity,
             }];
         }
         
