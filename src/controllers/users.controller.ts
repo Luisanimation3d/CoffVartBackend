@@ -6,6 +6,9 @@ import {optionsPagination} from 'generalTypes';
 import {coustumersModel} from "../models/coustomers.model";
 import {rolesModel} from "../models/roles.model";
 
+import fs from 'fs';
+import path from "path";
+
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
  * pagination options and returns the users and pagination options in the response.
@@ -204,4 +207,48 @@ export const validateUserAlreadyExists = async (req: Request, res: Response) => 
         console.log(error);
         res.status(500).json({msg: error});
     }
+}
+
+export const uploadImage = async (req: Request, res: Response) => {
+    try {
+
+        if(!req.file){
+            return res.status(400).json({msg: 'No se ha subido ninguna imagen'});
+        }
+
+        let fileName: string[] = req.file.originalname.split('\.');
+
+        const ext = fileName[fileName.length - 1];
+
+        const validExtensions = ['png', 'jpg', 'jpeg'];
+
+        if(!validExtensions.includes(ext)){
+            fs.unlink(req.file?.path as string, err => {
+               console.log(err)
+            });
+
+            return res.status(400).json({msg: 'La extensión del archivo no es válida'});
+        }
+
+        return res.status(200).json({msg: 'Archivo subido correctamente', image: req.file?.filename});
+
+    }catch (e) {
+        console.log(e);
+        res.status(500).json({msg: e});
+    }
+}
+
+export const getImage = async (req: Request, res: Response) => {
+    const {image} = req.params;
+    const pathImage = `./src/uploads/users/${image}`;
+
+    fs.access(pathImage, err => {
+
+        if(err) {
+            return res.sendFile(path.resolve('./src/uploads/users/no-image.jpg'));
+        }
+
+        return res.sendFile(path.resolve(pathImage));
+
+    })
 }
