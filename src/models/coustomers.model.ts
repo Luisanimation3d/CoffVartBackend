@@ -20,19 +20,12 @@ export const coustumersModel = sequelize.define('coustumers', {
         type: DataTypes.STRING(2),
         allowNull: false,
         validate: {
-            isIn: [['CC', 'TI']]
+            isIn: [['CC', 'CE', 'PAS']]
         }
     },
     document: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        validate: {
-            isNotTooLong(value: number) {
-                if (value.toString().length > 10) {
-                    throw new Error('Document number must have no more than 10 digits');
-                }
-            }
-        }
     },
     phone: {
         type: DataTypes.STRING(15),
