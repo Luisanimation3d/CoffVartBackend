@@ -104,15 +104,26 @@ export const getUser = async (req: Request, res: Response) => {
 export const postUser = async (req: Request, res: Response) => {
     const {name, lastname, address, phone, email, password, roleId, documentType, document} = req.body;
     try {
+        const existsEmail= await userModel.findOne( { where: {email} }); 
+        if (existsEmail){
+            return res.status(400).json({msg: `Este correo ya esta registrado`})
+        }
+        const existDocument= await coustumersModel.findOne( { where: {document} });
+        if(existDocument){
+            return res.status(400).json({msg: `Este documento ya esta registrado`})
+        }
+
         const passwordHash = bcrypt.hashSync(password, 10);
         const newUser = await userModel.create({name, lastname, address, phone, email, password: passwordHash, roleId});
+        const cleanedName = name.trim();
+        const cleanedLastname = lastname.trim();
         const newCoustumer = await coustumersModel.create({
             documentType,
             document,
             userId: newUser.id,
             phone,
             address,
-            name: `${name} ${lastname}`
+            name: `${cleanedName} ${cleanedLastname}`
         });
         res.status(200).json({newUser, newCoustumer});
     } catch (error) {
