@@ -52,3 +52,41 @@ npm run start
 // Este comando ejecuta tsc con el --watch para vigilar el archivo y compilarlo despues de cada cambio y al mismo tiempo ejecuta el node --watch dist/index.js para vigilar también los cambios del servidor en js
 npm run dev
 ``` 
+> ## globalValidations.middlewares.ts
+Estas validaciónes son para implementar en cada uno de los middleware que lo requieran, están estandarizadas para ser usadas en cualquier controlador.
+
+## Implementación
+Para su implementación deberan ir a sus respectivos controladores y hacer lo siguiente:
+```tsx
+export const validateRoutePost = async (req:any, res: any, next: any) => {
+    const {name, nit, email, address, phone } = req.body;
+    
+     
+
+//para validar que un campo no pueda tener espacios  
+let errores = validarSinEspacios({nit, email, phone});//cambiar por los campos que desean validar
+  if (Object.keys(errores).length > 0) {
+        res.status(400).json(errores);
+        return;
+    } 
+//para validar que un campo no pueda tener solo espacios
+let erroresSpace = validarSoloEspacios({name, nit, email, address, phone});
+  if (Object.keys(erroresSpace).length > 0) {
+        res.status(400).json(erroresSpace);
+        return;
+    }
+//para validar que un campo solo permita numeros
+let erroresNumbers = validarSoloNumeros({nit, phone});
+  if (Object.keys(erroresNumbers).length > 0) {
+        res.status(400).json(erroresNumbers);
+        return;
+    }
+//para validar que un campo solo permita letras
+let erroresLetter = validarSoloLetras({name});
+    if (Object.keys(erroresLetter).length > 0) {
+        res.status(400).json(erroresLetter);
+        return;
+    }
+    
+    ... 
+}

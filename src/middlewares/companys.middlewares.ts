@@ -1,4 +1,6 @@
 import { companyModel } from "../models/companys.model";    
+import { emailValidation } from "./login.middlewares";
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras, validarSoloNumeros } from "./globalValidations.middlewares";
 
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
@@ -19,7 +21,7 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const companyFound = await companyModel.findByPk(id);
     if(!companyFound){
-        res.status(400).json({ error: 'company not found'});
+        res.status(400).json({ error: 'Compañía no encontrada'});
         return;
     }
     next();
@@ -39,37 +41,78 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
  * function.
  * @returns nothing.
  */
+//hazme una constate llamada NITvalidation que permita solo numeros, con longitud maxima de 14 y un solo guión
 
+export const NITvalidation = /^\d{5,10}-\d$/;
+export const phoneLongValidation = /^[0-9]{10}$/; 
 export const validateRoutePost = async (req:any, res: any, next: any) => {
     const {name, nit, email, address, phone } = req.body;
+    
+  let errores = validarSinEspacios({nit, email, phone});
+  if (Object.keys(errores).length > 0) {
+        res.status(400).json(errores);
+        return;
+    } 
+  let erroresSpace = validarSoloEspacios({name, nit, email, address, phone});
+  if (Object.keys(erroresSpace).length > 0) {
+        res.status(400).json(erroresSpace);
+        return;
+    }
+  let erroresNumbers = validarSoloNumeros({nit, phone});
+  if (Object.keys(erroresNumbers).length > 0) {
+        res.status(400).json(erroresNumbers);
+        return;
+    }
+  let erroresLetter = validarSoloLetras({name});
+    if (Object.keys(erroresLetter).length > 0) {
+        res.status(400).json(erroresLetter);
+        return;
+    }
+    
+    
     if (!name){
-        res.status(400).json({ error: 'name is required'});
+        res.status(400).json({ error: 'El nombre es requerido'});
         return;
     }
     if (!nit){
-        res.status(400).json({ error: 'nit is required'});
+        res.status(400).json({ error: 'El NIT es requerido'});
         return;
+    }
+    if (nit){
+        if(NITvalidation.test(nit) === false){
+            res.status(400).json({ error: 'El NIT no es valido ejemplo:00000000-0' });
+            return;
+        }
     }
     if (nit){
         const companyFound = await companyModel.findOne({where: {nit}});
         if( companyFound){
-            res.status(400).json({ error: 'nit already exists'});
+            res.status(400).json({ error: 'El NIT ya existe'});
             return;
         }
         
     }
     if (!email){
-        res.status(400).json({ error: 'email is required'});
+        res.status(400).json({ error: 'El correo es requerido'});
+        return;
+    }
+    if(emailValidation.test(email) === false){
+        res.status(400).json({ error: 'El correo no es valido' });
         return;
     }
     if (!address){
-        res.status(400).json({ error: 'address is required'});
+        res.status(400).json({ error: 'La dirección es requerida'});
         return;
     }
     if (!phone){
-        res.status(400).json({ error: 'phone is required'});
+        res.status(400).json({ error: 'El teléfono es requerido'});
         return;
     }
+    if(phoneLongValidation.test(phone) === false){
+        res.status(400).json({ error: 'El teléfono no es valido' });
+        return;
+    }
+
     next();
 } 
 
@@ -88,34 +131,73 @@ export const validateRoutePost = async (req:any, res: any, next: any) => {
  * @returns nothing.
  */
 
+
+
 export const validateRoutePut = async (req: any, res: any, next: any) => {
+    
     const { name, nit, email, address, phone } = req.body;
+    let errores = validarSinEspacios({nit, email, phone});
+  if (Object.keys(errores).length > 0) {
+        res.status(400).json(errores);
+        return;
+    } 
+  let erroresSpace = validarSoloEspacios({name, nit, email, address, phone});
+  if (Object.keys(erroresSpace).length > 0) {
+        res.status(400).json(erroresSpace);
+        return;
+    }
+  let erroresNumbers = validarSoloNumeros({nit, phone});
+  if (Object.keys(erroresNumbers).length > 0) {
+        res.status(400).json(erroresNumbers);
+        return;
+    }
+  let erroresLetter = validarSoloLetras({name});
+    if (Object.keys(erroresLetter).length > 0) {
+        res.status(400).json(erroresLetter);
+        return;
+    }
+    
     if (!name){
-        res.status(400).json({ error: 'name is required'});
+        res.status(400).json({ error: 'El nombre es requerido'});
         return;
     }
     if (!nit){
-        res.status(400).json({ error: 'nit is required'});
+        res.status(400).json({ error: 'El NIT es requerido'});
         return;
+    }
+    
+    if (nit){
+        if(NITvalidation.test(nit) === false){
+            res.status(400).json({ error: 'El NIT no es valido ejemplo:00000000-0' });
+            return;
+        }
     }
     if (nit){
         const companyFound = await companyModel.findOne({where: {nit}});
         if( companyFound){
-            res.status(400).json({ error: 'nit already exists'});
+            res.status(400).json({ error: 'El NIT ya existe'});
             return;
         }
         
     }
     if (!email){
-        res.status(400).json({ error: 'email is required'});
+        res.status(400).json({ error: 'El correo es requerido'});
+        return;
+    }
+    if (emailValidation.test(email) === false){
+        res.status(400).json({ error: 'El correo no es valido'});
         return;
     }
     if (!address){
-        res.status(400).json({ error: 'address is required'});
+        res.status(400).json({ error: 'La dirección es requerida'});
         return;
     }
     if (!phone){
-        res.status(400).json({ error: 'phone is required'});
+        res.status(400).json({ error: 'El teléfono es requerido'});
+        return;
+    }
+    if (phoneLongValidation.test(phone) === false){
+        res.status(400).json({ error: 'El teléfono no es valido' });
         return;
     }
     next();
