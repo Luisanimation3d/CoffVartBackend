@@ -1,4 +1,6 @@
 import { supplierModel } from "../models/suppliers.model";
+import { NITvalidation, phoneLongValidation } from "./companys.middlewares";
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras, validarSoloNumeros } from "./globalValidations.middlewares";
 
 /**
  * The function validates if a permission exists before proceeding to the next middleware.
@@ -19,7 +21,7 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const supplierFound = await supplierModel.findByPk(id);
     if (!supplierFound) {
-        res.status(400).json({ error: 'supplier not found' });
+        res.status(400).json({ error: 'Proveedor no encontrado' });
         return;
     }
     next();
@@ -40,41 +42,65 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePost = async (req: any, res: any, next: any) => {
-    const { name, nit, coffeType, address, phone, quality, unitCost } = req.body;
+    const { name, nit, coffeType, address, phone, quality } = req.body;
+    let errores = validarSinEspacios({nit, phone});
+    if (Object.keys(errores).length > 0) {
+        res.status(400).json(errores);
+        return;
+    }
+    let erroresSpace = validarSoloEspacios({name, nit, coffeType, address, phone, quality});
+    if (Object.keys(erroresSpace).length > 0) {
+        res.status(400).json(erroresSpace);
+        return;
+    }
+    let erroresNumbers = validarSoloNumeros({nit, phone});
+    if (Object.keys(erroresNumbers).length > 0) {
+        res.status(400).json(erroresNumbers);
+        return;
+    }
+    let erroresLetter = validarSoloLetras({ coffeType, quality});
+    if (Object.keys(erroresLetter).length > 0) {
+        res.status(400).json(erroresLetter);
+        return;
+    }
     if (!name) {
-        res.status(400).json({ error: 'name is required' });
+        res.status(400).json({ error: 'El nombre es requerido' });
         return;
     }
     if (!nit) {
-        res.status(400).json({ error: 'nit is required' });
+        res.status(400).json({ error: 'El NIT es requerido' });
         return;
     }
     if (nit) {
         const supplierFound = await supplierModel.findOne({ where: { name } });
         if (supplierFound) {
-            res.status(400).json({ error: 'name already exists' });
+            res.status(400).json({ error: 'El NIT ya está registrado' });
             return;
         }
     }
+    if (NITvalidation.test(nit) === false) {
+        res.status(400).json({ error: 'El NIT no es valido example:00000000-0' });
+        return;
+    }
 
     if(!coffeType){
-        res.status(400).json({ error: 'coffeType is required' });
+        res.status(400).json({ error: 'El tipo de café es requerido' });
         return;
     }
     if (!address) {
-        res.status(400).json({ error: 'address is required' });
+        res.status(400).json({ error: 'La dirección es requerida' });
         return;
     }
     if (!phone) {
-        res.status(400).json({ error: 'phone is required' });
+        res.status(400).json({ error: 'El teléfono es requerido' });
         return;
     }
     if (!quality) {
-        res.status(400).json({ error: 'quality is required' });
+        res.status(400).json({ error: 'La calidad es requerida' });
         return;
     }
-    if (!unitCost) {
-        res.status(400).json({ error: 'unitCost is required' });
+    if(phoneLongValidation.test(phone) === false){
+        res.status(400).json({ error: 'El teléfono no es valido' });
         return;
     }
     next();
@@ -97,43 +123,68 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePut = async (req: any, res: any, next: any) => {
-    const { name, nit, coffeType, address, phone, quality, unitCost } = req.body;
+    const { name, nit, coffeType, address, phone, quality} = req.body;
+    let errores = validarSinEspacios({nit, phone});
+    if (Object.keys(errores).length > 0) {
+        res.status(400).json(errores);
+        return;
+    }
+    let erroresSpace = validarSoloEspacios({name, nit, coffeType, address, phone, quality});
+    if (Object.keys(erroresSpace).length > 0) {
+        res.status(400).json(erroresSpace);
+        return;
+    }
+    let erroresNumbers = validarSoloNumeros({nit, phone});
+    if (Object.keys(erroresNumbers).length > 0) {
+        res.status(400).json(erroresNumbers);
+        return;
+    }
+    let erroresLetter = validarSoloLetras({coffeType, quality});
+    if (Object.keys(erroresLetter).length > 0) {
+        res.status(400).json(erroresLetter);
+        return;
+    }
     if (!name) {
-        res.status(400).json({ error: 'name is required' });
+        res.status(400).json({ error: 'El nombre es requerido' });
         return;
     }
     if (!nit) {
-        res.status(400).json({ error: 'nit is required' });
+        res.status(400).json({ error: 'El NIT es requerido' });
         return;
     }
     if (nit) {
         const supplierFound = await supplierModel.findOne({ where: { name } });
         if (supplierFound) {
-            res.status(400).json({ error: 'name already exists' });
+            res.status(400).json({ error: 'El NIT ya está registrado' });
             return;
         }
     }
+    if (NITvalidation.test(nit) === false) {
+        res.status(400).json({ error: 'El NIT no es valido example:00000000-0' });
+        return;
+    }
 
     if(!coffeType){
-        res.status(400).json({ error: 'coffeType is required' });
+        res.status(400).json({ error: 'El tipo de café es requerido' });
         return;
     }
     if (!address) {
-        res.status(400).json({ error: 'address is required' });
+        res.status(400).json({ error: 'La dirección es requerida' });
         return;
     }
     if (!phone) {
-        res.status(400).json({ error: 'phone is required' });
+        res.status(400).json({ error: 'El teléfono es requerido' });
+        return;
+    }
+    if(phoneLongValidation.test(phone) === false){
+        res.status(400).json({ error: 'El teléfono no es valido' });
         return;
     }
     if (!quality) {
-        res.status(400).json({ error: 'quality is required' });
+        res.status(400).json({ error: 'La calidad es requerida' });
         return;
     }
-    if (!unitCost) {
-        res.status(400).json({ error: 'unitCost is required' });
-        return;
-    }
+    
     next();
 };
 
@@ -158,7 +209,7 @@ export const validateRouteDelete = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const supplierFound = await supplierModel.findByPk(id);
     if (!supplierFound) {
-        res.status(400).json({ error: 'supplier not found' });
+        res.status(400).json({ error: 'Proveedor no encontrado' });
         return;
     }
     next();

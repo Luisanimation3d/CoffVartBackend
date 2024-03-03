@@ -1,4 +1,5 @@
 import { productionOrderModel } from "../models/productionOrders.model";
+import { validarNoNegativos, validarSoloNumeros } from "./globalValidations.middlewares";
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
  * @param {any} req - The `req` parameter represents the HTTP request object, which contains
@@ -38,15 +39,19 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePost = async (req: any, res: any, next: any) => {
-    const {orderNumber, quantity } = req.body;
-
-    if (!orderNumber) {
-        res.status(400).json({ error: 'expirationDate  is required' });
+    const {quantity } = req.body;
+    let erroresNumbers = validarSoloNumeros(quantity);
+    if(Object.keys(erroresNumbers).length > 0){
+        res.status(400).json(erroresNumbers);
         return;
     }
-
+    let erroresNegativos = validarNoNegativos(quantity);
+    if(Object.keys(erroresNegativos).length > 0){
+        res.status(400).json(erroresNegativos);
+        return;
+    }
     if(!quantity){
-        res.status(400).json({ error: 'process is required' });
+        res.status(400).json({ error: 'La cantidad es requerida' });
         return;
     }
 
@@ -67,15 +72,20 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
  * @returns nothing.
  */
 export const validateRoutePut = async (req: any, res: any, next: any) => {
-    const {orderNumber, quantity} = req.body;
+    const { quantity} = req.body;
 
-    if (!orderNumber) {
-        res.status(400).json({ error: 'expirationDate  is required' });
+    let erroresNumbers = validarSoloNumeros(quantity);
+    if(Object.keys(erroresNumbers).length > 0){
+        res.status(400).json(erroresNumbers);
         return;
     }
-
+    let erroresNegativos = validarNoNegativos(quantity);
+    if(Object.keys(erroresNegativos).length > 0){
+        res.status(400).json(erroresNegativos);
+        return;
+    }
     if(!quantity){
-        res.status(400).json({ error: 'process is required' });
+        res.status(400).json({ error: 'La cantidad es requerida' });
         return;
     }
     next();
