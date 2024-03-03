@@ -114,7 +114,7 @@ export const postUser = async (req: Request, res: Response) => {
             address,
             name: `${name} ${lastname}`
         });
-        res.status(200).json({newUser, newCoustumer});
+        res.status(200).json({newUser, newCoustumer, message: 'Usuario creado correctamente'});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
@@ -151,7 +151,7 @@ export const putUser = async (req: Request, res: Response) => {
             return res.status(404).json({msg: 'Coustumer not found'});
         }
         await coustumer.update({documentType, document, phone, address, name: `${name} ${lastname}`});
-        res.status(200).json({user});
+        res.status(200).json({user, message: "Usuario actualizado correctamente"});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
