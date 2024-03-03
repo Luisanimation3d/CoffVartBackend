@@ -63,12 +63,12 @@ export const getSales = async (req: Request, res: Response) => {
 };
 
 export const getSale = async (req: Request, res: Response) => {
+    try {
     const {id} = req.params;
     const sale = await salesModel.findByPk(id, {
         include: [
             {
                 model: salesdetailsModel,
-                as: 'saleDetails',
             },
         ],
     });
@@ -76,6 +76,10 @@ export const getSale = async (req: Request, res: Response) => {
         return res.status(404).json({msg: 'sale not found'});
     }
     res.status(200).json({sale});
+} catch (error) {
+    console.log(error);
+    res.status(500).json({msg: error});
+ }
 };
 
 export const getCoustumerSale= async (req: ExtendRequest, res: Response) => {
