@@ -41,7 +41,7 @@ export const getProduct = async (req: Request, res: Response) => {
 export const postProducts =async(req:Request, res:Response)=> {
     try{const {name, amount, stockMin, stockMax, amountSupply, unitPrice, state, description} = req.body;
     const newProducts = await productModel.create({name, amount, stockMin, stockMax, amountSupply, unitPrice, state, description});
-    res.status(200).json({newProducts});
+    res.status(200).json({newProducts, message: 'Producto creado correctamente'});
     }catch (error){
         console.log(error);
         res.status(500).json({msg:error});
@@ -56,7 +56,7 @@ export const putProducts = async (req: Request, res: Response) => {
         return res.status(404).json({ msg: 'Product not found' });
     }
     await products.update({ name, amount, stockMin, stockMax, unitPrice, amountSupply, state, description });
-    res.status(200).json({ products });
+    res.status(200).json({ products, message: 'Producto actualizado correctamente' });
     }catch (error){
     console.log(error);
     res.status(500).json({msg:error});

@@ -4,6 +4,8 @@ import { permissionsModel } from '../models/permissions.model';
 import { roleDetailsModel } from '../models/roleDetails.model';
 import { rolesModel } from '../models/roles.model';
 import { JwtPayloadWithTokenData } from 'token';
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras, validarSoloNumeros } from "./globalValidations.middlewares";
+
 
 interface ExtendRequest extends Request {
     user?: JwtPayloadWithTokenData 
@@ -19,8 +21,32 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
     next();
 }
 
+export const unitPricevalidation = /^\d{5,10}-\d$/;
 export const validateRoutePost = async (req: any, res: any, next: any) => {
     const { name, amount, stockMin,stockMax,unitPrice,description } = req.body;
+
+    let errores = validarSinEspacios({name, description, stockMin, stockMax});
+    if (Object.keys(errores).length > 0) {
+          res.status(400).json(errores);
+          return;
+      } 
+    let erroresSpace = validarSoloEspacios({name, description, stockMin, stockMax});
+    if (Object.keys(erroresSpace).length > 0) {
+          res.status(400).json(erroresSpace);
+          return;
+      }
+    let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
+    if (Object.keys(erroresNumbers).length > 0) {
+          res.status(400).json(erroresNumbers);
+          return;
+      }
+    let erroresLetter = validarSoloLetras({name});
+      if (Object.keys(erroresLetter).length > 0) {
+          res.status(400).json(erroresLetter);
+          return;
+      }
+      
+
     if (!name) {
         res.status(400).json({ error: 'name is required' });
         return;
@@ -73,6 +99,28 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
 
 export const validateRoutePut = async (req: any, res: any, next: any) => {
     const { name, amount, stockMin,stockMax,unitPrice,description } = req.body;
+
+    let errores = validarSinEspacios({name, description, stockMin, stockMax});
+    if (Object.keys(errores).length > 0) {
+          res.status(400).json(errores);
+          return;
+      } 
+    let erroresSpace = validarSoloEspacios({name, description, stockMin, stockMax});
+    if (Object.keys(erroresSpace).length > 0) {
+          res.status(400).json(erroresSpace);
+          return;
+      }
+    let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
+    if (Object.keys(erroresNumbers).length > 0) {
+          res.status(400).json(erroresNumbers);
+          return;
+      }
+    let erroresLetter = validarSoloLetras({name});
+      if (Object.keys(erroresLetter).length > 0) {
+          res.status(400).json(erroresLetter);
+          return;
+      }
+
     if (!name) {
         res.status(400).json({ error: 'name is required' });
         return;

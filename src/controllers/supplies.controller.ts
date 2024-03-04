@@ -44,7 +44,7 @@ export const getSupply = async (req: Request, res: Response) => {
 export const postSupplies =async(req:Request, res:Response)=> {
    try{ const {name, amount, unitPrice, state, supplier,description} = req.body;
     const newSupplies = await suppliesModel.create({name,amount, unitPrice, state, supplier,description});
-    res.status(200).json({newSupplies});
+    res.status(200).json({newSupplies, message: 'Insumo creado correctamente'});
     }catch (error){
         console.log(error);
         res.status(500).json({msg:error});
@@ -59,7 +59,7 @@ export const putSupplies = async (req: Request, res: Response) => {
         return res.status(404).json({ msg: 'Supplies not found' });
     }
     await supplies.update({ name, amount, unitPrice, state, supplier,description });
-    res.status(200).json({ supplies });
+    res.status(200).json({ supplies, message: 'Insumo actualizado correctamente'});
     }catch (error){
         console.log(error);
         res.status(500).json({msg:error});

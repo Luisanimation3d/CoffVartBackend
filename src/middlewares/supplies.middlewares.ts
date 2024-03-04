@@ -4,6 +4,8 @@ import { permissionsModel } from '../models/permissions.model';
 import { roleDetailsModel } from '../models/roleDetails.model';
 import { rolesModel } from '../models/roles.model';
 import { JwtPayloadWithTokenData } from 'token';
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras } from "./globalValidations.middlewares";
+
 
 
 interface ExtendRequest extends Request {
@@ -26,6 +28,23 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
 
 export const validateRoutePost = async (req: any, res: any, next: any) => {
     const { name, amount, unitPrice,description } = req.body;
+
+    let errores = validarSinEspacios({name, description});
+    if (Object.keys(errores).length > 0) {
+          res.status(400).json(errores);
+          return;
+      } 
+    let erroresSpace = validarSoloEspacios({name, description});
+    if (Object.keys(erroresSpace).length > 0) {
+          res.status(400).json(erroresSpace);
+          return;
+      }
+    let erroresLetter = validarSoloLetras({name});
+      if (Object.keys(erroresLetter).length > 0) {
+          res.status(400).json(erroresLetter);
+          return;
+      }
+
     if (!name) {
         res.status(400).json({ error: 'name is required' });
         return;
@@ -63,6 +82,23 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
 
 export const validateRoutePut = async (req: any, res: any, next: any) => {
     const { name, amount, unitPrice,description } = req.body;
+
+    let errores = validarSinEspacios({name, description});
+    if (Object.keys(errores).length > 0) {
+          res.status(400).json(errores);
+          return;
+      } 
+    let erroresSpace = validarSoloEspacios({name, description});
+    if (Object.keys(erroresSpace).length > 0) {
+          res.status(400).json(erroresSpace);
+          return;
+      }
+    let erroresLetter = validarSoloLetras({name});
+      if (Object.keys(erroresLetter).length > 0) {
+          res.status(400).json(erroresLetter);
+          return;
+      }
+
     if (!name) {
         res.status(400).json({ error: 'name is required' });
         return;

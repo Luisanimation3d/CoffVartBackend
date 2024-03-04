@@ -177,7 +177,7 @@ export const postShop = async (req: Request, res: Response) => {
 
         await newShop.update({ total: total });
 
-        res.status(201).json({newShop, shopDetails, total});
+        res.status(201).json({newShop, shopDetails, total, message: 'Compra creada correctamente'});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
