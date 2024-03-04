@@ -240,7 +240,7 @@ export const putSales= async (req: Request, res: Response) => {
         return res.status(404).json({ msg: 'sale not found' });
     }
     await sales.update({ state });
-    res.status(200).json({ sales });
+    res.status(200).json({ sales, message:'Estado cambiado correctamente' });
 }catch (error){
     console.log(error);
     res.status(500).json({msg:error});
