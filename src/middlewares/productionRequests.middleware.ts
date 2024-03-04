@@ -1,4 +1,5 @@
 import { productionRequestModel } from "../models/productionRequests.model";
+import { validarNoNegativos, validarSoloNumeros } from "./globalValidations.middlewares";
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
  * @param {any} req - The `req` parameter represents the HTTP request object, which contains
@@ -17,7 +18,7 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const productionRequestFound = await productionRequestModel.findByPk(id);
     if(!productionRequestFound){
-        res.status(400).json({ error: 'productionRequest not found'});
+        res.status(400).json({ error: 'Solictud de produccion no encontrada'});
         return;
     }
     next();
@@ -38,19 +39,24 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePost = async (req: any, res: any, next: any) => {
-    const {requestNumber, dateOfDispatch,quantity } = req.body;
+    const { dateOfDispatch,quantity } = req.body;
 
-    if (!requestNumber) {
-        res.status(400).json({ error: 'expirationDate  is required' });
+    let erroresNumbers = validarSoloNumeros(quantity);
+    if(Object.keys(erroresNumbers).length > 0){
+        res.status(400).json(erroresNumbers);
         return;
     }
-
+    let erroresNegativos = validarNoNegativos(quantity);
+    if(Object.keys(erroresNegativos).length > 0){
+        res.status(400).json(erroresNegativos);
+        return;
+    }
     if(!dateOfDispatch){
-        res.status(400).json({ error: 'process is required' });
+        res.status(400).json({ error: 'La fecha de envio es requerida' });
         return;
     }
     if (!quantity) {
-        res.status(400).json({ error: 'initial Weight is required' });
+        res.status(400).json({ error: 'La cantidad es requerida' });
         return;
     }
     
@@ -71,19 +77,24 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
  * @returns nothing.
  */
 export const validateRoutePut = async (req: any, res: any, next: any) => {
-    const {requestNumber, dateOfDispatch,quantity } = req.body;
+    const { dateOfDispatch,quantity } = req.body;
 
-    if (!requestNumber) {
-        res.status(400).json({ error: 'expirationDate  is required' });
+    let erroresNumbers = validarSoloNumeros(quantity);
+    if(Object.keys(erroresNumbers).length > 0){
+        res.status(400).json(erroresNumbers);
         return;
     }
-
+    let erroresNegativos = validarNoNegativos(quantity);
+    if(Object.keys(erroresNegativos).length > 0){
+        res.status(400).json(erroresNegativos);
+        return;
+    }
     if(!dateOfDispatch){
-        res.status(400).json({ error: 'process is required' });
+        res.status(400).json({ error: 'La fecha de envio es requerida' });
         return;
     }
     if (!quantity) {
-        res.status(400).json({ error: 'initial Weight is required' });
+        res.status(400).json({ error: 'La cantidad es requerida' });
         return;
     }
     

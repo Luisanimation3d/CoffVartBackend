@@ -41,4 +41,13 @@ export function validarSoloLetras (args: {[key: string]: string | number}) {
     });
     return erroresLetter;
   }
-    
+
+export function validarNoNegativos(args: {[key: string]: number}) {
+    let erroresNegativos: {[key: string]: string} = {};
+    Object.entries(args).forEach(([key, value]) => {
+      if (value < 0) {
+        erroresNegativos[key] = 'El campo no puede contener un número negativo';
+      }
+    });
+    return erroresNegativos;
+  }

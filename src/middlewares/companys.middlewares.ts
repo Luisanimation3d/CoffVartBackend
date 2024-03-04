@@ -224,7 +224,7 @@ export const validateRouteDelete = async (req: any, res: any, next: any) => {
     const { id } = req.params;
     const companyFound = await companyModel.findByPk(id);
     if (!companyFound) {
-        res.status(400).json({ error: 'company not found' });
+        res.status(400).json({ error: 'Compañía no encontrada' });
         return;
     }
     next();
