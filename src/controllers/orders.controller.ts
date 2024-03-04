@@ -120,7 +120,7 @@ export const postOrder = async (req: Request, res: Response) => {
         total = orderDetails.reduce((acc: number, detail: { subtotal: number }) => acc + detail.subtotal, 0);
         await newOrder.update({total: total});
 
-        res.status(201).json({newOrder, orderDetails, total});
+        res.status(201).json({newOrder, orderDetails, total, message: 'Pedido creado correctamente'});
     } catch(error){
         console.log(error);
         res.status(500).json({msg: error})
@@ -136,7 +136,7 @@ export const putOrders = async (req: any, res: any, next: any) => {
             return res.status(404).json({ msg: 'orders not found' });
         }
         await orders.update({  state });
-        res.status(200).json({ orders });
+        res.status(200).json({ orders, message: 'Estado cambiado correctamente'});
     } catch (error) {
         res.status(500).json({ msg: error });
     }
@@ -151,7 +151,7 @@ export const deleteOrders = async (req: any, res: any, next: any) => {
             return res.status(404).json({ msg: 'orders not found' });
         }
         await orders.destroy();
-        res.status(200).json({ msg: 'orders deleted' });
+        res.status(200).json({ message: 'Pedido eliminado correctamente' });
     } catch (error) {
         res.status(500).json({ msg: error });
     }
