@@ -116,6 +116,14 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             processId: number,
         } = req.body;
     try {
+        const finalProcessId = processId || 4;
+
+        const process = await processesModel.findByPk(finalProcessId);
+    if (!process) {
+      return res.status(404).json({
+        msg: `Proceso con ID ${finalProcessId} no encontrado`,
+      });
+    }
         const supplie = await suppliesModel.findByPk(supplieId);
         if (!supplie) {
             return res.status(404).json({
@@ -132,10 +140,6 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         return res.status(400).json({ error: 'La cantidad de insumos no puede ser menor que 0' });
      }
             await supplie.decrement('amount', { by: (quantity as number) });
-        const process = await processesModel.findByPk(processId);
-        if (!process) {
-            return res.status(404).json({msg: `Proceso con ID ${processId} no encontrado`});
-        }
         
 
         const newProductionOrder = await productionOrderModel.create({
@@ -152,6 +156,8 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         res.status(500).json({msg: error});
     }
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 export const postProductionOrderDetail = async ( req: Request, res: Response )=> {
     const {Productdetails,productionOrderId}:
