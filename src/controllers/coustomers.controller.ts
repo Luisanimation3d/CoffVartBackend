@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { coustumersModel } from "../models/coustomers.model";
 import { optionsPagination } from "generalTypes";
+import {userModel} from "../models/users.model";
 
 export const getCoustumers = async (req: Request, res: Response) => {
     try {
@@ -15,6 +16,10 @@ export const getCoustumers = async (req: Request, res: Response) => {
             limit: options.limit,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
+            include: [{
+                model: userModel,
+                attributes: ['lastname', 'email'],
+            }],
         });
         res.status(200).json({ coustumers, options });
         

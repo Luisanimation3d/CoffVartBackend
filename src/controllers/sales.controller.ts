@@ -51,7 +51,7 @@ export const getSales = async (req: Request, res: Response) => {
                 {
                     model: coustumersModel,
                     as: 'coustumer',
-                    attributes: [ 'id', 'name'],
+                    attributes: [ 'id', 'name', 'address', 'phone', 'document', 'documentType'],
                 }
             ],
         });
@@ -107,7 +107,7 @@ export const getCoustumerSale= async (req: ExtendRequest, res: Response) => {
                 {
                     model: coustumersModel,
                     as: 'coustumer',
-                    attributes: [ 'id', 'name'],
+                    attributes: [ 'id', 'name', 'address', 'document', 'phone', 'documentType'],
                 },
 
               
