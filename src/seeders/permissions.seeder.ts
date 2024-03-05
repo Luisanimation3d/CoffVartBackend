@@ -1,17 +1,17 @@
 import { permissionsModel } from '../models/permissions.model';
-import { permissions } from '../utiles/permissions';
+import { permissions } from '../utils/permissions';
 
-async function permissionSeeder () {
+export function permissionSeeder () {
     try {
-        permissions.forEach(async (element) => {
-            await permissionsModel.create({
+        permissions.forEach((element) => {
+            permissionsModel.create({
                 name: element.name,
                 description: element.description
             })
         });
+        return true;
     }catch (e) {
         console.log(e);
+        return false
     } 
 }
-
-permissionSeeder()
