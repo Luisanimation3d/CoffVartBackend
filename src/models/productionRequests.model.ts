@@ -16,7 +16,8 @@ export const productionRequestModel = sequelize.define('productionRequests',{
     },
     quantity: {
         type: DataTypes.FLOAT(10, 2),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0,
     },
     supplieLost:{
         type: DataTypes.FLOAT(10,2),

@@ -4,7 +4,7 @@ import { permissionsModel } from '../models/permissions.model';
 import { roleDetailsModel } from '../models/roleDetails.model';
 import { rolesModel } from '../models/roles.model';
 import { JwtPayloadWithTokenData } from 'token';
-import { validarSinEspacios, validarSoloEspacios, validarSoloLetras, validarSoloNumeros } from "./globalValidations.middlewares";
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras} from "./globalValidations.middlewares";
 
 
 interface ExtendRequest extends Request {
@@ -35,11 +35,11 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
           res.status(400).json(erroresSpace);
           return;
       }
-    let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
+   /* let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
     if (Object.keys(erroresNumbers).length > 0) {
           res.status(400).json(erroresNumbers);
           return;
-      }
+      }*/
     let erroresLetter = validarSoloLetras({name});
       if (Object.keys(erroresLetter).length > 0) {
           res.status(400).json(erroresLetter);
@@ -110,11 +110,11 @@ export const validateRoutePut = async (req: any, res: any, next: any) => {
           res.status(400).json(erroresSpace);
           return;
       }
-    let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
+   /* let erroresNumbers = validarSoloNumeros({unitPrice, stockMin, stockMax, amount});
     if (Object.keys(erroresNumbers).length > 0) {
           res.status(400).json(erroresNumbers);
           return;
-      }
+      }*/
     let erroresLetter = validarSoloLetras({name});
       if (Object.keys(erroresLetter).length > 0) {
           res.status(400).json(erroresLetter);

@@ -13,7 +13,8 @@ export const productionOrderModel = sequelize.define('productionOrders',{
     },
     quantity: {
         type: DataTypes.FLOAT(10, 2),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0,
     },
     reasonCancellation: {
         type: DataTypes.STRING(500),
