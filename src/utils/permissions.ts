@@ -1,31 +1,35 @@
 export const permissions: {name: string, description: string}[] = [
     {
-        name: 'usuarios get',
+        name: 'get usuarios',
         description: 'Get usuarios'
     },
     {
-        name: 'usuarios post',
+        name: 'post usuarios',
         description: 'Post usuarios'
     },
     {
-        name: 'usuarios put',
+        name: 'put usuarios',
         description: 'Put usuarios'
     },
     {
-        name: 'usuarios delete',
+        name: 'delete usuarios',
         description: 'Delete usuarios'
     },
     {
-        name: 'roles get',
+        name: 'get roles',
         description: 'Get roles'
     },
     {
-        name: 'roles post',
+        name: 'post roles',
         description: 'Post roles'
     },
     {
-        name: 'roles put',
+        name: 'put roles',
         description: 'Put roles'
+    },
+    {
+        name: 'delete roles',
+        description: 'Delete roles'
     },
     {
         name: 'get proveedores',
