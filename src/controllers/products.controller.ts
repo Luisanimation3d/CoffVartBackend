@@ -2,6 +2,8 @@ import { Response, Request } from "express";
 import { productModel } from "../models/products.model";
 import { optionsPagination } from '../types/generalTypes';
 
+import fs from 'fs';
+import path from "path";
 
 export const getProducts = async (req: Request, res: Response) => {
 	try {
@@ -72,3 +74,47 @@ export const deleteProducts= async (req: Request, res: Response) => {
 	product.update({ state: !product.getDataValue('state') });
 	res.status(200).json({ product });
 };
+
+export const uploadImage = async (req: Request, res: Response) => {
+    try {
+
+        if(!req.file){
+            return res.status(400).json({msg: 'No se ha subido ninguna imagen'});
+        }
+
+        let fileName: string[] = req.file.originalname.split('\.');
+
+        const ext = fileName[fileName.length - 1];
+
+        const validExtensions = ['png', 'jpg', 'jpeg'];
+
+        if(!validExtensions.includes(ext)){
+            fs.unlink(req.file?.path as string, err => {
+               console.log(err)
+            });
+
+            return res.status(400).json({msg: 'La extensión del archivo no es válida'});
+        }
+
+        return res.status(200).json({msg: 'Archivo subido correctamente', image: req.file?.filename});
+
+    }catch (e) {
+        console.log(e);
+        res.status(500).json({msg: e});
+    }
+}
+
+export const getImage = async (req: Request, res: Response) => {
+    const {image} = req.params;
+    const pathImage = `./src/uploads/products/${image}`;
+
+    fs.access(pathImage, err => {
+
+        if(err) {
+            return res.sendFile(path.resolve('./src/uploads/products/no-image.jpg'));
+        }
+
+        return res.sendFile(path.resolve(pathImage));
+
+    })
+}
