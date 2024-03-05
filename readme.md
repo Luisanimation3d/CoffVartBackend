@@ -27,11 +27,11 @@ Para instalar y configurar este proyecto, sigue los siguientes pasos:
 1. Clona el repositorio del proyecto.
 2. Instala las dependencias del proyecto usando el siguiente comando:
 
-```ts
+```bash
 npm install
 ```
 
-```ts
+```bash
 npm install -D
 ```
 
@@ -40,15 +40,20 @@ npm install -D
 ```
 PORT=3000
 ```
+4. Ejecuta los seeers para obtener los datos base de la base de datos
 
-4. Inicia el servidor usando el siguiente comando:
+```bash
+npm run seed
+```
 
-```ts
+5. Inicia el servidor usando el siguiente comando:
+
+```bash
 // Este comando primero ejecuta tsc y luego lanza el servidor de desarrollo
 npm run start
 ```
 
-```ts
+```bash
 // Este comando ejecuta tsc con el --watch para vigilar el archivo y compilarlo despues de cada cambio y al mismo tiempo ejecuta el node --watch dist/index.js para vigilar también los cambios del servidor en js
 npm run dev
 ``` 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getProductionOrders,deleteProductionOrder, getProductionOrder,postProductionOrder, putProductionOrder, postProductionOrderDetail } from "../controllers/productionOrders.controller";
-import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
+// import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
 import { validateRouteGet, validateRoutePost, validateRoutePut, validateRouteDelete } from "../middlewares/productionOrders.middleware";
 
 
