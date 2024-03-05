@@ -41,11 +41,11 @@ export const getShops = async (req: Request, res: Response) => {
                         },
                     ],
                 },
-                // {
-                //     model: supplierModel,
-                //     as: 'supplier',
-                //     attributes: ['id', 'name'],
-                // },
+                {
+                    model: supplierModel,
+                    as: 'supplier',
+                    attributes: ['id', 'name'],
+                },
             ],
         });
         res.status(200).json({shops, options});
