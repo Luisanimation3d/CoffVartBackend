@@ -1,6 +1,9 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database/config';
 import { suppliesModel } from './supplies.model';
+import { shopModel } from './shops.model';
+import { shopdetailsModel } from './shopdetails.model';
+
 
 export const supplierModel = sequelize.define(
 	'suppliers',
@@ -52,3 +55,22 @@ suppliesModel.belongsTo(supplierModel, {
 	foreignKey: 'supplierId',
 	targetKey: 'id',
 });
+// supplierModel.hasMany(shopdetailsModel, {
+// 	foreignKey: 'supplierId',
+// 	sourceKey: 'id'
+// });
+// shopdetailsModel.belongsTo(supplierModel, {
+// 	foreignKey: 'supplierId',
+// 	targetKey: 'id'
+// 	});
+
+// supplierModel.hasMany(shopModel, {
+// 	foreignKey: 'supplierId',
+// 	sourceKey: 'id'
+// });
+
+// shopModel.belongsTo(supplierModel, {
+// 	foreignKey: 'supplierId',
+// 	targetKey: 'id'
+// });
+
