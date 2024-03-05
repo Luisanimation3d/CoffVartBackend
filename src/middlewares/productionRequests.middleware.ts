@@ -1,5 +1,5 @@
 import { productionRequestModel } from "../models/productionRequests.model";
-import { validarNoNegativos, validarSoloNumeros } from "./globalValidations.middlewares";
+import { validarNoNegativos} from "./globalValidations.middlewares";
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
  * @param {any} req - The `req` parameter represents the HTTP request object, which contains
@@ -41,11 +41,11 @@ export const validateRouteGet = async (req: any, res: any, next: any) => {
 export const validateRoutePost = async (req: any, res: any, next: any) => {
     const { dateOfDispatch,quantity } = req.body;
 
-    let erroresNumbers = validarSoloNumeros(quantity);
+    /*let erroresNumbers = validarSoloNumeros(quantity);
     if(Object.keys(erroresNumbers).length > 0){
         res.status(400).json(erroresNumbers);
         return;
-    }
+    }*/
     let erroresNegativos = validarNoNegativos(quantity);
     if(Object.keys(erroresNegativos).length > 0){
         res.status(400).json(erroresNegativos);
@@ -79,11 +79,11 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
 export const validateRoutePut = async (req: any, res: any, next: any) => {
     const { dateOfDispatch,quantity } = req.body;
 
-    let erroresNumbers = validarSoloNumeros(quantity);
+    /*let erroresNumbers = validarSoloNumeros(quantity);
     if(Object.keys(erroresNumbers).length > 0){
         res.status(400).json(erroresNumbers);
         return;
-    }
+    }*/
     let erroresNegativos = validarNoNegativos(quantity);
     if(Object.keys(erroresNegativos).length > 0){
         res.status(400).json(erroresNegativos);

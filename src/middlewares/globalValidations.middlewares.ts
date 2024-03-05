@@ -20,7 +20,7 @@ export function validarSoloEspacios(args: {[key: string]: string | number}) {
     return erroresSpace;
     }
 
-export function validarSoloNumeros (args: {[key: string]: string | number}) {
+/*export function validarSoloNumeros (args: {[key: string]: string | number}) {
     const regex = /^[0-9]*$/;
     let erroresNumbers: {[key: string]: string| number} = {};
     Object.entries(args).forEach(([key, value]) => {
@@ -30,7 +30,7 @@ export function validarSoloNumeros (args: {[key: string]: string | number}) {
     });
     return erroresNumbers;
   }
-
+*/
 export function validarSoloLetras (args: {[key: string]: string | number}) {
     const regex = /^[a-zA-Z]*$/;
     let erroresLetter: {[key: string]: string| number} = {};

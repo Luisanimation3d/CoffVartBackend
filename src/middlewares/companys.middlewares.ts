@@ -1,6 +1,6 @@
 import { companyModel } from "../models/companys.model";    
 import { emailValidation } from "./login.middlewares";
-import { validarSinEspacios, validarSoloEspacios, validarSoloLetras, validarSoloNumeros } from "./globalValidations.middlewares";
+import { validarSinEspacios, validarSoloEspacios, validarSoloLetras} from "./globalValidations.middlewares";
 
 /**
  * The function validates if a companys exists before proceeding to the next middleware.
@@ -58,11 +58,11 @@ export const validateRoutePost = async (req:any, res: any, next: any) => {
         res.status(400).json(erroresSpace);
         return;
     }
-  let erroresNumbers = validarSoloNumeros({nit, phone});
+  /*let erroresNumbers = validarSoloNumeros({phone});
   if (Object.keys(erroresNumbers).length > 0) {
         res.status(400).json(erroresNumbers);
         return;
-    }
+    }*/
   let erroresLetter = validarSoloLetras({name});
     if (Object.keys(erroresLetter).length > 0) {
         res.status(400).json(erroresLetter);
@@ -146,11 +146,11 @@ export const validateRoutePut = async (req: any, res: any, next: any) => {
         res.status(400).json(erroresSpace);
         return;
     }
-  let erroresNumbers = validarSoloNumeros({nit, phone});
+  /*let erroresNumbers = validarSoloNumeros({nit, phone});
   if (Object.keys(erroresNumbers).length > 0) {
         res.status(400).json(erroresNumbers);
         return;
-    }
+    }*/
   let erroresLetter = validarSoloLetras({name});
     if (Object.keys(erroresLetter).length > 0) {
         res.status(400).json(erroresLetter);
