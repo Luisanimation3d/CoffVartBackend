@@ -46,7 +46,7 @@ export const getOrders = async (req: Request, res: Response) => {
                 {
                 model: coustumersModel,
                 as: 'coustumer',
-                attributes: [ 'id', 'name'],
+                attributes: [ 'id', 'name', 'address', 'phone', 'document', 'documentType'],
                 }
                 
             ],
