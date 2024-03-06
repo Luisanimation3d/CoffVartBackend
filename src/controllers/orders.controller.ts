@@ -3,8 +3,7 @@ import { ordersModel } from "../models/orders.model";
 import { ordersderailsModel } from "../models/ordersderails.model";
 import { productModel } from "../models/products.model";
 import { coustumersModel } from "../models/coustomers.model";
-import { optionsPagination } from '../types/generalTypes';
-import { salesModel } from "../models/sales.model";
+import { optionsPagination } from 'generalTypes';
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -87,6 +86,17 @@ export const postOrder = async (req: Request, res: Response) => {
         if(!coustumer){
             return res.status(404).json({msg: 'Coustumer not found'})
         }
+
+        for(const productDetail of Productdetails){
+            const product = await productModel.findByPk(productDetail.productId);
+            if(!product){
+                return res.status(404).json({msg: `Product with ID ${productDetail.productId} not found`});
+            }
+            if(productDetail.quantity > product.getDataValue('amount')){
+                return res.status(400).json({msg: `Quantity exceeds available stock for product ID ${productDetail.productId}`});
+            }
+        }
+
         const newOrder = await ordersModel.create({ code, state, customerId: coustumer.getDataValue('id'), total: 0});
         let orderDetails: any= [];
         let total= 0
@@ -127,7 +137,7 @@ export const postOrder = async (req: Request, res: Response) => {
     }
 };
 
-export const putOrders = async (req: any, res: any, next: any) => {
+export const putOrders = async (req: any, res: any) => {
     try{
     const { id } = req.params;
     const {  state  } = req.body;
@@ -143,7 +153,7 @@ export const putOrders = async (req: any, res: any, next: any) => {
 };
 
 
-export const deleteOrders = async (req: any, res: any, next: any) => {
+export const deleteOrders = async (req: any, res: any) => {
     try{
     const { id } = req.params;
     const orders = await ordersModel.findByPk(id);
