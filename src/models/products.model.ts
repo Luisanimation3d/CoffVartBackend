@@ -18,7 +18,7 @@ export const productModel = sequelize.define('product', {
     },
     amount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        defaultValue: 0,
     },
     stockMin: {
         type: DataTypes.INTEGER,
