@@ -93,7 +93,7 @@ export const postOrder = async (req: Request, res: Response) => {
                 return res.status(404).json({msg: `Product with ID ${productDetail.productId} not found`});
             }
             if(productDetail.quantity > product.getDataValue('amount')){
-                return res.status(400).json({msg: `Quantity exceeds available stock for product ID ${productDetail.productId}`});
+                return res.status(400).json({msg: `La cantidad excede el stock del producto actual`});
             }
         }
 
