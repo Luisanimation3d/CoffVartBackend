@@ -1,6 +1,7 @@
-import { Response, Request } from 'express';
-import { permissionsModel } from '../models/permissions.model';
-import { optionsPagination } from '../types/generalTypes';
+import {Response, Request} from 'express';
+import {permissionsModel} from '../models/permissions.model';
+import {optionsPagination} from 'generalTypes';
+import {Op} from "sequelize";
 
 
 /**
@@ -15,24 +16,30 @@ import { optionsPagination } from '../types/generalTypes';
  * as setting the status code, headers, and sending the response body.
  */
 export const getPermissions = async (req: Request, res: Response) => {
-	try {
-		const { page, limit, order } = req.query;
-		const options: optionsPagination = {
-			page: parseInt(page as string, 10) || 1,
-			limit: parseInt(limit as string, 10) || 10,
-			paginate: parseInt(limit as string, 10) || 10,
-			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
-		};
-		const permissions = await permissionsModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
-			order: [options.order],
-		});
-		res.status(200).json({ permissions, options });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+    try {
+        const {search} = req.query;
+        const {page, limit, order} = req.query;
+        const options: optionsPagination = {
+            page: parseInt(page as string, 10) || 1,
+            limit: parseInt(limit as string, 10) || 10,
+            paginate: parseInt(limit as string, 10) || 10,
+            order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+        };
+        const permissions = await permissionsModel.findAndCountAll({
+            limit: options.limit,
+            offset: options.limit * (options.page - 1),
+            order: [options.order],
+            where: search ? {
+                name: {
+                    [Op.iLike]: `%${search}%`,
+                },
+            } : []
+        });
+        res.status(200).json({permissions, options});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -47,17 +54,17 @@ export const getPermissions = async (req: Request, res: Response) => {
  * return a 500 status code with the error message.
  */
 export const getPermission = async (req: Request, res: Response) => {
-	try {
-		const { id } = req.params;
-		const permission = await permissionsModel.findByPk(id);
-		if (!permission) {
-			return res.status(404).json({ msg: 'Permission not found' });
-		}
-		res.status(200).json({ permission });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+    try {
+        const {id} = req.params;
+        const permission = await permissionsModel.findByPk(id);
+        if (!permission) {
+            return res.status(404).json({msg: 'Permission not found'});
+        }
+        res.status(200).json({permission});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -70,14 +77,14 @@ export const getPermission = async (req: Request, res: Response) => {
  * as setting the status code and sending JSON data.
  */
 export const postPermission = async (req: Request, res: Response) => {
-	try {
-		const { name, description } = req.body;
-		const newPermission = await permissionsModel.create({ name, description });
-		res.status(200).json({ newPermission });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+    try {
+        const {name, description} = req.body;
+        const newPermission = await permissionsModel.create({name, description});
+        res.status(200).json({newPermission});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -95,18 +102,18 @@ export const postPermission = async (req: Request, res: Response) => {
  * 500 status code with a JSON response containing the error message.
  */
 export const putPermission = async (req: Request, res: Response) => {
-    try{
-        const { id } = req.params;
-        const { name, description } = req.body;
+    try {
+        const {id} = req.params;
+        const {name, description} = req.body;
         const permission = await permissionsModel.findByPk(id);
         if (!permission) {
-            return res.status(404).json({ msg: 'Permission not found' });
+            return res.status(404).json({msg: 'Permission not found'});
         }
-        await permission.update({ name, description });
-        res.status(200).json({ permission });
-    }catch(error){
+        await permission.update({name, description});
+        res.status(200).json({permission});
+    } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
 };
 
@@ -124,16 +131,16 @@ export const putPermission = async (req: Request, res: Response) => {
  * message.
  */
 export const deletePermission = async (req: Request, res: Response) => {
-    try{
-        const { id } = req.params;
+    try {
+        const {id} = req.params;
         const permission = await permissionsModel.findByPk(id);
         if (!permission) {
-            return res.status(404).json({ msg: 'Permission not found' });
+            return res.status(404).json({msg: 'Permission not found'});
         }
         await permission.destroy();
-        res.status(200).json({ permission });
-    }catch(error){
+        res.status(200).json({permission});
+    } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: error });
+        res.status(500).json({msg: error});
     }
 };
