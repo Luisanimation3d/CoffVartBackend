@@ -72,7 +72,7 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
         return;
     }
     if (nit) {
-        const supplierFound = await supplierModel.findOne({ where: { name } });
+        const supplierFound = await supplierModel.findOne({ where: { nit } });
         if (supplierFound) {
             res.status(400).json({ error: 'El NIT ya está registrado' });
             return;
@@ -123,13 +123,13 @@ export const validateRoutePost = async (req: any, res: any, next: any) => {
  */
 
 export const validateRoutePut = async (req: any, res: any, next: any) => {
-    const { name, nit, coffeType, address, phone, quality} = req.body;
-    let errores = validarSinEspacios({nit, phone});
+    const { name, coffeType, address, phone, quality} = req.body;
+    let errores = validarSinEspacios({phone});
     if (Object.keys(errores).length > 0) {
         res.status(400).json(errores);
         return;
     }
-    let erroresSpace = validarSoloEspacios({name, nit, coffeType, address, phone, quality});
+    let erroresSpace = validarSoloEspacios({name, coffeType, address, phone, quality});
     if (Object.keys(erroresSpace).length > 0) {
         res.status(400).json(erroresSpace);
         return;
@@ -146,21 +146,6 @@ export const validateRoutePut = async (req: any, res: any, next: any) => {
     }
     if (!name) {
         res.status(400).json({ error: 'El nombre es requerido' });
-        return;
-    }
-    if (!nit) {
-        res.status(400).json({ error: 'El NIT es requerido' });
-        return;
-    }
-    if (nit) {
-        const supplierFound = await supplierModel.findOne({ where: { name } });
-        if (supplierFound) {
-            res.status(400).json({ error: 'El NIT ya está registrado' });
-            return;
-        }
-    }
-    if (NITvalidation.test(nit) === false) {
-        res.status(400).json({ error: 'El NIT no es valido example:00000000-0' });
         return;
     }
 

@@ -75,7 +75,7 @@ export const postCompanys =async(req:Request, res:Response)=> {
     try {
         const {name, nit , email,address,phone} = req.body;
         const newCompany = await companyModel.create({name,nit,email,address,phone});
-        res.status(200).json({newCompany});
+        res.status(200).json({newCompany,message: "Compañia creada correctamente"});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});

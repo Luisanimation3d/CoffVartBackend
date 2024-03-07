@@ -71,12 +71,12 @@ export const postSuppliers =async(req:Request, res:Response)=> {
     try {
         const {name, nit, coffeType,address,phone,quality} = req.body;
         const newSupplier = await supplierModel.create({name,nit,coffeType,address,phone,quality});
-        res.status(200).json({newSupplier});
+        res.status(200).json({newSupplier, message: 'Proveedor creado correctamente'});
     } catch (error) {
         console.log(error);
-		res.status(500).json({ msg: error });
+		res.status(500).json({ msg: error});
     }
-    
+
 };
 /**
  * The function `putsuppliers` updates a suppliers record in the database based on the provided ID,
