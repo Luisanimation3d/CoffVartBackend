@@ -40,7 +40,9 @@ export const getRoles = async (req: Request, res: Response) => {
 				},
 			],
 		});
-		res.status(200).json({ roles, options });
+
+
+		res.status(200).json({ roles: {...roles, count: roles.rows.length}, options });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ msg: error });

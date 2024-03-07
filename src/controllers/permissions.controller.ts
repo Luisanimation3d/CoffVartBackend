@@ -26,9 +26,9 @@ export const getPermissions = async (req: Request, res: Response) => {
             order: order ? JSON.parse(order as string) : ['id', 'ASC'],
         };
         const permissions = await permissionsModel.findAndCountAll({
-            limit: options.limit,
-            offset: options.limit * (options.page - 1),
-            order: [options.order],
+            // limit: options.limit,
+            // offset: options.limit * (options.page - 1),
+            // order: [options.order],
             where: search ? {
                 name: {
                     [Op.iLike]: `%${search}%`,
