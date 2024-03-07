@@ -8,6 +8,7 @@ import {rolesModel} from "../models/roles.model";
 
 import fs from 'fs';
 import path from "path";
+import {Op} from "sequelize";
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -21,6 +22,7 @@ import path from "path";
  */
 export const getUsers = async (req: Request, res: Response) => {
     try {
+        const {search} = req.query;
         const {page, limit, order} = req.query;
         const options: optionsPagination = {
             page: parseInt(page as string, 10) || 1,
@@ -32,6 +34,20 @@ export const getUsers = async (req: Request, res: Response) => {
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
+            where: search ? {
+                name: {
+                    [Op.iLike]: `%${search}%`,
+                },
+                lastname: {
+                    [Op.iLike]: `%${search}%`,
+                },
+                email: {
+                    [Op.iLike]: `%${search}%`,
+                },
+                phone: {
+                    [Op.iLike]: `%${search}%`,
+                }
+            } : {},
             include: [
                 {
                     model: rolesModel,
