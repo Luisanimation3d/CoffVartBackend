@@ -63,12 +63,12 @@ export const validateRoutePost = async (req:any, res: any, next: any) => {
         res.status(400).json(erroresNumbers);
         return;
     }*/
-  let erroresLetter = validarSoloLetras({name});
+  /*let erroresLetter = validarSoloLetras({name});
     if (Object.keys(erroresLetter).length > 0) {
         res.status(400).json(erroresLetter);
         return;
     }
-    
+    */
     
     if (!name){
         res.status(400).json({ error: 'El nombre es requerido'});
@@ -135,13 +135,13 @@ export const validateRoutePost = async (req:any, res: any, next: any) => {
 
 export const validateRoutePut = async (req: any, res: any, next: any) => {
     
-    const { name, nit, email, address, phone } = req.body;
-    let errores = validarSinEspacios({nit, email, phone});
+    const { name, email, address, phone } = req.body;
+    let errores = validarSinEspacios({ email, phone});
   if (Object.keys(errores).length > 0) {
         res.status(400).json(errores);
         return;
     } 
-  let erroresSpace = validarSoloEspacios({name, nit, email, address, phone});
+  let erroresSpace = validarSoloEspacios({name, email, address, phone});
   if (Object.keys(erroresSpace).length > 0) {
         res.status(400).json(erroresSpace);
         return;
@@ -151,34 +151,15 @@ export const validateRoutePut = async (req: any, res: any, next: any) => {
         res.status(400).json(erroresNumbers);
         return;
     }*/
-  let erroresLetter = validarSoloLetras({name});
+  /*let erroresLetter = validarSoloLetras({name});
     if (Object.keys(erroresLetter).length > 0) {
         res.status(400).json(erroresLetter);
         return;
     }
-    
+    */
     if (!name){
         res.status(400).json({ error: 'El nombre es requerido'});
         return;
-    }
-    if (!nit){
-        res.status(400).json({ error: 'El NIT es requerido'});
-        return;
-    }
-    
-    if (nit){
-        if(NITvalidation.test(nit) === false){
-            res.status(400).json({ error: 'El NIT no es valido ejemplo:00000000-0' });
-            return;
-        }
-    }
-    if (nit){
-        const companyFound = await companyModel.findOne({where: {nit}});
-        if( companyFound){
-            res.status(400).json({ error: 'El NIT ya existe'});
-            return;
-        }
-        
     }
     if (!email){
         res.status(400).json({ error: 'El correo es requerido'});
