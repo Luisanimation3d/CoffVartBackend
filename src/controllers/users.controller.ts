@@ -8,7 +8,7 @@ import {rolesModel} from "../models/roles.model";
 
 import fs from 'fs';
 import path from "path";
-import {Op} from "sequelize";
+import { Op } from 'sequelize';
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -22,7 +22,6 @@ import {Op} from "sequelize";
  */
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const {search} = req.query;
         const {page, limit, order} = req.query;
         const options: optionsPagination = {
             page: parseInt(page as string, 10) || 1,
@@ -34,20 +33,6 @@ export const getUsers = async (req: Request, res: Response) => {
             limit: options.limit,
             offset: options.limit * (options.page - 1),
             order: [options.order],
-            where: search ? {
-                name: {
-                    [Op.iLike]: `%${search}%`,
-                },
-                lastname: {
-                    [Op.iLike]: `%${search}%`,
-                },
-                email: {
-                    [Op.iLike]: `%${search}%`,
-                },
-                phone: {
-                    [Op.iLike]: `%${search}%`,
-                }
-            } : {},
             include: [
                 {
                     model: rolesModel,
@@ -162,36 +147,45 @@ export const postUser = async (req: Request, res: Response) => {
  * JSON response containing the error message.
  */
 export const putUser = async (req: Request, res: Response) => {
-    const {id} = req.params;
-    // const { name, lastname, address, phone, email, password, roleId } = req.body;
-    const {name, lastname, address, phone, email, roleId, documentType, document} = req.body;
+    const { id } = req.params;
+    const { name, lastname, address, phone, email, roleId, documentType, document } = req.body;
+
     try {
-        const existsEmail= await userModel.findOne( { where: {email} }); 
-        if (existsEmail){
-            return res.status(400).json({msg: `Este correo ya esta registrado`})
-        }
-        const existDocument= await coustumersModel.findOne( { where: {document} });
-        if(existDocument){
-            return res.status(400).json({msg: `Este documento ya esta registrado`})
-        }
         const user: UserModelType | null = await userModel.findByPk(id);
         if (!user) {
-            return res.status(404).json({msg: 'User not found'});
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
         }
-        console.log(user)
-        await user.update({name, lastname, address, phone, email, roleId});
 
-        const coustumer = await coustumersModel.findOne({where: {userId: user.id}});
-        if (!coustumer) {
-            return res.status(404).json({msg: 'Coustumer not found'});
+        // Verificar si el correo se está actualizando y es diferente al correo actual
+        if (email !== user.email) {
+            const existsEmail = await userModel.findOne({ where: { email } });
+            if (existsEmail) {
+                return res.status(400).json({ msg: `Este correo ya está registrado` });
+            }
         }
-        await coustumer.update({documentType, document, phone, address, name: `${name} ${lastname}`});
-        res.status(200).json({user, message: "Usuario actualizado correctamente"});
+
+        // Verificar si el documento se está actualizando y es diferente al documento actual
+        if (document !== user.document) {
+            const existDocument = await coustumersModel.findOne({ where: { document, userId: { [Op.ne]: user.id } } });
+            if (existDocument) {
+                return res.status(400).json({ msg: `Este documento ya está registrado` });
+            }
+        }
+
+        await user.update({ name, lastname, address, phone, email, roleId });
+
+        const coustumer = await coustumersModel.findOne({ where: { userId: user.id } });
+        if (!coustumer) {
+            return res.status(404).json({ msg: 'Cliente no encontrado' });
+        }
+
+        await coustumer.update({ documentType, document, phone, address, name: `${name} ${lastname}` });
+        res.status(200).json({ user, message: "Usuario actualizado correctamente" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: error});
+        res.status(500).json({ msg: error });
     }
-}
+};
 
 /**
  * The deleteUser function is an asynchronous function that deletes a user by their ID and updates
