@@ -30,7 +30,12 @@ export const getCoustumers = async (req: Request, res: Response) => {
 };
 export const getCoustumer = async (req: Request, res: Response) => {
     const {id} = req.params;
-    const coustomers= await coustumersModel.findByPk(id);
+    const coustomers= await coustumersModel.findByPk(id, {
+        include: [{
+            model: userModel,
+            attributes: ['lastname', 'email'],
+        }],
+    });
     if (!coustomers){
         return res.status(404).json({ msg: 'Coustumers not found' });
     }
