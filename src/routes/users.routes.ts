@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
-import { getUsers, getUser, postUser, putUser, deleteUser, validateUserAlreadyExists, uploadImage,  getImage } from "../controllers/users.controller";
+import { getUsers, getUser, postUser, putUser, deleteUser, validateUserAlreadyExists, uploadImage,  getImage, getMyProfile } from "../controllers/users.controller";
+import {extractUserMiddlewares} from "../middlewares/extractUser.middlewares";
 
 // import { extractUserMiddlewares } from "../middlewares/extractUser.middlewares";
 // import { GetUsersMiddleware, PostUsersMiddleware } from "../middlewares/users.middlewares";
@@ -32,5 +33,7 @@ router.get('/validate', validateUserAlreadyExists);
 router.post('/upload', upload.single('image'), uploadImage);
 
 router.get('/image/:image', getImage);
+
+router.get('/my-profile/obtener', extractUserMiddlewares, getMyProfile)
 
 export default router;
