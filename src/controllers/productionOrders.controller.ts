@@ -150,7 +150,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             
         });
         
-        res.status(201).json({newProductionOrder});
+        res.status(201).json({newProductionOrder, message: 'Orden P. creada correctamente'});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
