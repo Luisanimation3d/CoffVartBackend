@@ -9,6 +9,12 @@ import {rolesModel} from "../models/roles.model";
 import fs from 'fs';
 import path from "path";
 import { Op } from 'sequelize';
+import {JwtPayloadWithTokenData} from "token";
+
+interface ExtendRequest extends Request {
+    user?: JwtPayloadWithTokenData
+}
+
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -280,4 +286,17 @@ export const getImage = async (req: Request, res: Response) => {
         return res.sendFile(path.resolve(pathImage));
 
     })
+}
+
+export const getMyProfile = async (req: ExtendRequest , res: Response) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(404).json({msg: 'User not found'});
+        }
+        res.status(200).json({user});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 }
