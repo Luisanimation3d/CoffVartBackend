@@ -7,9 +7,9 @@ import { validateRouteGet, validateRoutePost, validateRoutePut, validateRouteDel
 const router= Router();
 
 router.get("/",/*extractUserMiddlewares,*/getProductionRequests);
-router.get('/:id',/*extractUserMiddlewares*/validateRouteGet,getProductionRequest)
-router.post("/",/*extractUserMiddlewares*/validateRoutePost,postProductionRequest);
-router.put("/:id",/*extractUserMiddlewares*/validateRoutePut,putProductionRequest);
-router.delete("/:id",/*extractUserMiddlewares*/validateRouteDelete,deleteProductionRequest);
+router.get('/:id',/*extractUserMiddlewaresvalidateRouteGet*/getProductionRequest)
+router.post("/",/*extractUserMiddlewaresvalidateRoutePost */postProductionRequest);
+router.put("/:id",/*extractUserMiddlewares validateRoutePut */putProductionRequest);
+router.delete("/:id",/*extractUserMiddlewares validateRouteDelete */deleteProductionRequest);
 
 export default router;
