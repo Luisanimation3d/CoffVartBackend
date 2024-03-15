@@ -22,7 +22,7 @@ export const ordersModel = sequelize.define('orders', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isIn: [['pendiente', 'confirmado',  'enviado', 'entregado', 'cancelado']],
+          isIn: [['Pendiente', 'Confirmado',  'Enviado', 'Entregado', 'Cancelado']],
         },
       },
 },
