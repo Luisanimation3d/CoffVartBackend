@@ -294,7 +294,10 @@ export const getMyProfile = async (req: ExtendRequest , res: Response) => {
         if (!user) {
             return res.status(404).json({msg: 'User not found'});
         }
-        res.status(200).json({user});
+
+        const userData = await userModel.findByPk(user.id)
+
+        res.status(200).json({user: userData});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
