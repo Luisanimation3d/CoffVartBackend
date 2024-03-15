@@ -20,7 +20,7 @@ export const salesModel = sequelize.define('sales', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isIn: [['pendiente', 'enviado', 'entregado']],
+          isIn: [['Pendiente', 'Enviado', 'Entregado']],
         },
         
     },
