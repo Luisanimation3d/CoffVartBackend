@@ -199,7 +199,7 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
                 return res.status(400).json({msg: `Quantity exceeds available stockMax for product ID ${productDetail.productId}`});
             }  
             const currentQuantity = productionOrder.getDataValue('quantity');
-                const updatedQuantity = currentQuantity - productDetail.Productdetails.quantity;
+                const updatedQuantity = currentQuantity - (product.getDataValue(`productAmount`) * productDetail.Productdetails.quantity);
                 await productionOrder.update({quantity: updatedQuantity }); 
             product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
             

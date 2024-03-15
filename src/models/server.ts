@@ -19,6 +19,7 @@ import shopRouter from '../routes/shops.routes';
 import recoveryPasswordRoter from '../routes/recoveryPassword.routes';
 import detailsRouter from '../routes/details.routes'
 import suppliesActiveRouter from '../routes/suppliesActive.route';
+import productsActiveRouter from '../routes/productsActive.route';
 import coustomersActive from '../routes/coustomersActive.routes';
 
 export class Server {
@@ -43,6 +44,7 @@ export class Server {
 	public recoveryPasswordPath: string;
 	public detailsPath: string;
 	public suppliesActivePath: string;
+	public productsActivePath: string;
 	public coustomersActivePath: string;
 	private apikey: string = '8b9c63adc6a049c291fb09ad35c3f14b';
 
@@ -69,6 +71,7 @@ export class Server {
 		this.recoveryPasswordPath = '/api/auth/';
 		this.detailsPath= '/api/details';
 		this.suppliesActivePath = '/api/suppliesActive';
+		this.productsActivePath = '/api/productsActive';
 		this.coustomersActivePath= '/api/coustumersActive';
 		this.routes();
 		this.dbConnection();
@@ -112,6 +115,7 @@ export class Server {
 		this.app.use(this.recoveryPasswordPath, recoveryPasswordRoter);
 		this.app.use(this.detailsPath,detailsRouter)
 		this.app.use(this.suppliesActivePath, suppliesActiveRouter);
+		this.app.use(this.productsActivePath, productsActiveRouter);
 		this.app.use(this.coustomersActivePath, coustomersActive);
 	}
 
