@@ -200,6 +200,9 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
             }  
             const currentQuantity = productionOrder.getDataValue('quantity');
                 const updatedQuantity = currentQuantity - (product.getDataValue(`productAmount`) * productDetail.Productdetails.quantity);
+                if (updatedQuantity < 0) {
+                    return res.status(400).json({msg: `La cantidad excede el insumo disponible ${productDetail.productId}`});
+                }
                 await productionOrder.update({quantity: updatedQuantity }); 
             product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
             
