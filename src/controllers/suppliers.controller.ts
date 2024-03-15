@@ -101,7 +101,7 @@ export const putSuppliers = async (req: Request, res: Response) => {
             return res.status(404).json({ msg: 'Supplier not found' });
         }
         await suppliers.update({ name, coffeType,address,phone,quiality,state });
-        res.status(200).json({ suppliers });
+        res.status(200).json({ suppliers, message: 'Proveedor editado correctamente' });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
