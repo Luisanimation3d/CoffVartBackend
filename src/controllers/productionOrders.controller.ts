@@ -199,7 +199,14 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
                 return res.status(400).json({msg: `Quantity exceeds available stockMax for product ID ${productDetail.productId}`});
             }  
             const currentQuantity = productionOrder.getDataValue('quantity');
-                const updatedQuantity = currentQuantity - productDetail.Productdetails.quantity;
+            if (currentQuantity === null || currentQuantity === undefined) {
+                console.error('La cantidad de la orden de producción no está definida');
+                    return res.status(400).json({msg: 'La cantidad de la orden de producción no está definida'});
+                }
+                const updatedQuantity = currentQuantity - (product.getDataValue(`productAmount`) * productDetail.Productdetails.quantity);
+                if (updatedQuantity < 0) {
+                    return res.status(400).json({msg: `La cantidad excede el insumo disponible ${productDetail.productId}`});
+                }
                 await productionOrder.update({quantity: updatedQuantity }); 
             product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
             
@@ -217,7 +224,7 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
 
         await productionOrdersDetailsModel.bulkCreate(productionOrdersDetails);
 
-        res.status(201).json({productionOrdersDetails});
+        res.status(201).json({productionOrdersDetails, message: 'Empaquetado creado correctamente'});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
