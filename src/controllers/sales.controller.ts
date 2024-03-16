@@ -187,7 +187,7 @@ export const postSale = async (req: Request, res: Response) => {
         }
 
         // Crear una nueva venta con el cliente asociado
-        const newSale = await salesModel.create({ invoice, state: 'pendiente', customerId: coustumer.getDataValue('id'), total: 0 });
+        const newSale = await salesModel.create({ invoice, state: 'Pendiente', customerId: coustumer.getDataValue('id'), total: 0 });
 
         // Crear una lista para guardar los detalles de la venta
         let saleDetails: any = [];
