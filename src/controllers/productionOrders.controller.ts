@@ -203,12 +203,16 @@ export const postProductionOrderDetail = async ( req: Request, res: Response )=>
                 console.error('La cantidad de la orden de producción no está definida');
                     return res.status(400).json({msg: 'La cantidad de la orden de producción no está definida'});
                 }
-                const updatedQuantity = currentQuantity - (product.getDataValue(`productAmount`) * productDetail.Productdetails.quantity);
+                const updatedQuantity = currentQuantity - (product.getDataValue('amountSupply') * productDetail.Productdetails.quantity);
                 if (updatedQuantity < 0) {
                     return res.status(400).json({msg: `La cantidad excede el insumo disponible ${productDetail.productId}`});
                 }
-                await productionOrder.update({quantity: updatedQuantity }); 
-            product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
+                if (isNaN(updatedQuantity) || updatedQuantity < 0) {
+                    console.error('La cantidad actualizada no es válida');
+                    return res.status(400).json({msg: 'La cantidad actualizada no es válida'});
+                }
+                await productionOrder.update({quantity: updatedQuantity });
+                product.setDataValue('amount', product.getDataValue('amount') + productDetail.Productdetails.quantity);
             
             await product.save();
             productionOrdersDetails = [...productionOrdersDetails, {
