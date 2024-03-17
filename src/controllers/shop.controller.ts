@@ -5,6 +5,7 @@ import {supplierModel} from "../models/suppliers.model";
 import {optionsPagination} from 'generalTypes';
 import { shopModel } from "../models/shops.model";
 
+
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
  * pagination and includes associated role details and permissions.
@@ -134,6 +135,11 @@ export const postShop = async (req: Request, res: Response) => {
         if (!supplier) {
             return res.status(404).json({ msg: `Supplier with ID ${supplierId} not found` });
         }
+        const existsInvoice = await shopModel.findOne({ where: { invoice } });
+        if (existsInvoice) {
+            return res.status(400).json({ msg: `La factura ya esta registrada` });
+        }
+
 
         // Crear una nueva venta con el cliente asociado
         const newShop = await shopModel.create({ invoice, state, date, description, supplierId: supplier.getDataValue('id'), total: 0 });
