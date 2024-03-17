@@ -169,6 +169,9 @@ export const putProductionRequest = async (req: Request, res: Response) => {
           await supplyToUpdate.increment('amount',{by: receivedQuantity})
         }
         const procesoRecibidoId = 3; 
+        if (receivedQuantity > ProductionRequests.getDataValue('quantity')) {
+          return res.status(400).json({ error: 'La cantidad recibida no puede superar el insumo enviado',quantity: ProductionRequests.getDataValue('quantity')});
+        }
         if (processId === procesoRecibidoId){
           const supplie = await suppliesModel.findByPk(ProductionRequests.getDataValue('supplieId'));
           if (supplie){
@@ -180,7 +183,7 @@ export const putProductionRequest = async (req: Request, res: Response) => {
         const supplieLost = sentQuantity - receivedQuantity;
 
         await ProductionRequests.update ({processId,supplieLost});
-        res.status(200).json({ ProductionRequests });
+        res.status(200).json({ ProductionRequests , message: "Cantidad de insumo recibida correctamente"});
       } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });
