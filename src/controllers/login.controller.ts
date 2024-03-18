@@ -49,7 +49,7 @@ export const loginController = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60
         }
     //}, process.env.SECRET_KEY || "Klingon", { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 });
-    }, process.env.SECRET_KEY || "Klingon", { expiresIn: 10m });
+    }, process.env.SECRET_KEY || "Klingon", { expiresIn: 60 * 10 });
             
 
     await tokenModel.create({ token });
@@ -127,6 +127,46 @@ export const getTokenData = async (req: ExtendRequest, res: Response) => {
         res.status(200).json({ user });
     }catch (e) {
         res.status(500).json({ error: e });
+        return;
+    }
+}
+
+export const validateToken = async (req: ExtendRequest, res: Response) => {
+    try{
+        const token = req.headers.authorization?.split(' ')[1];
+        console.log(token)
+        if (!token) {
+            console.log('entra aqui 1')
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+        const tokenDB = await tokenModel.findOne({ where: { token } });
+        if (!tokenDB) {
+            console.log('entra aqui 2')
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+        const decodedToken: JwtPayloadWithTokenData = jwt.verify(token, process.env.SECRET_KEY || "Klingon");
+        if(!decodedToken.user.id){
+            console.log('entra aqui 3')
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+    
+        if (decodedToken.user.exp > Math.floor(Date.now() / 1000) + 60 * 60) {
+            console.log('entra aqui 4')
+            console.log(decodedToken.user.exp)
+            console.log(Math.floor(Date.now() / 1000) + 60 * 60)
+            res.status(401).json({ error: 'Unauthorized' });
+            await tokenModel.destroy({ where: { token } });
+            return;
+        }
+
+        req.user = decodedToken.user;
+        return res.status(200).json({msg: 'is Authorized'});
+    }catch(err){
+        console.log(err)
+        res.status(500).json({ error: 'Internal server error' });
         return;
     }
 }
