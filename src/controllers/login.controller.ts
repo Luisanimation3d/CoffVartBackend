@@ -133,19 +133,19 @@ export const getTokenData = async (req: ExtendRequest, res: Response) => {
 
 export const validateToken = async (req: ExtendRequest, res: Response) => {
     try{
-        const token = req.headers.authorization?.split(' ')[1];
-        console.log(token)
-        if (!token) {
-            console.log('entra aqui 1')
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
-        }
-        const tokenDB = await tokenModel.findOne({ where: { token } });
-        if (!tokenDB) {
-            console.log('entra aqui 2')
-            res.status(401).json({ error: 'Unauthorized' });
-            return;
-        }
+        const {token} = req.body;
+        // console.log(token)
+        // if (!token) {
+        //     console.log('entra aqui 1')
+        //     res.status(401).json({ error: 'Unauthorized' });
+        //     return;
+        // }
+        // const tokenDB = await tokenModel.findOne({ where: { token } });
+        // if (!tokenDB) {
+        //     console.log('entra aqui 2')
+        //     res.status(401).json({ error: 'Unauthorized' });
+        //     return;
+        // }
         const decodedToken: JwtPayloadWithTokenData = jwt.verify(token, process.env.SECRET_KEY || "Klingon");
         if(!decodedToken.user.id){
             console.log('entra aqui 3')
@@ -153,14 +153,14 @@ export const validateToken = async (req: ExtendRequest, res: Response) => {
             return;
         }
     
-        if (decodedToken.user.exp > Math.floor(Date.now() / 1000) + 60 * 60) {
-            console.log('entra aqui 4')
-            console.log(decodedToken.user.exp)
-            console.log(Math.floor(Date.now() / 1000) + 60 * 60)
-            res.status(401).json({ error: 'Unauthorized' });
-            await tokenModel.destroy({ where: { token } });
-            return;
-        }
+        // if (decodedToken.user.exp > Math.floor(Date.now() / 1000) + 60 * 60) {
+        //     console.log('entra aqui 4')
+        //     console.log(decodedToken.user.exp)
+        //     console.log(Math.floor(Date.now() / 1000) + 60 * 60)
+        //     res.status(401).json({ error: 'Unauthorized' });
+        //     await tokenModel.destroy({ where: { token } });
+        //     return;
+        // }
 
         req.user = decodedToken.user;
         return res.status(200).json({msg: 'is Authorized'});

@@ -9,6 +9,6 @@ const router = Router();
 router.post('/', loginMiddlewares, loginController);
 router.get('/logout', extractUserMiddlewares, logoutController);
 router.get('/getTokenData', extractUserMiddlewares, getTokenData);
-router.get('/validateToken', validateToken);
+router.post('/validateToken', validateToken);
 
 export default router;
