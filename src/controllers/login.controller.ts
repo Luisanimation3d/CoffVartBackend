@@ -49,7 +49,7 @@ export const loginController = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60
         }
     //}, process.env.SECRET_KEY || "Klingon", { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 });
-    }, process.env.SECRET_KEY || "Klingon", { expiresIn: 60 * 10 });
+    }, process.env.SECRET_KEY || "Klingon", { expiresIn: '10m' });
             
 
     await tokenModel.create({ token });
