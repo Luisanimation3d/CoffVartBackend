@@ -100,7 +100,7 @@ export const putSuppliers = async (req: Request, res: Response) => {
         if (!suppliers) {
             return res.status(404).json({ msg: 'Supplier not found' });
         }
-        await suppliers.update({ name, coffeType,address,phone,quiality,state });
+        await suppliers.update({ name, coffeType,address,phone,quality,state });
         res.status(200).json({ suppliers, message: 'Proveedor editado correctamente' });
     } catch (error) {
         console.log(error);
