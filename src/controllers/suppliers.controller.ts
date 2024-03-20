@@ -95,12 +95,12 @@ export const postSuppliers =async(req:Request, res:Response)=> {
 export const putSuppliers = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { name,coffeType,address,phone,quiality,state } = req.body;
+        const { name,coffeType,address,phone,quality,state } = req.body;
         const suppliers = await supplierModel.findByPk(id);
         if (!suppliers) {
             return res.status(404).json({ msg: 'Supplier not found' });
         }
-        await suppliers.update({ name, coffeType,address,phone,quiality,state });
+        await suppliers.update({ name, coffeType,address,phone,quality,state });
         res.status(200).json({ suppliers });
     } catch (error) {
         console.log(error);
