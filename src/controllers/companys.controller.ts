@@ -107,7 +107,7 @@ export const putCompanys = async (req: Request, res: Response) => {
                 return res.status(404).json({ msg: 'Company not found' });
             }
             await companys.update({ name,email,address,phone,state });
-            res.status(200).json({ companys });
+            res.status(200).json({ companys, message: "Compañia editada correctamente"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: error });

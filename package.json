@@ -9,7 +9,8 @@
     "build": "tsc",
     "production": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "jsdoc": "jsdoc -c jsdoc.json"
+    "jsdoc": "jsdoc -c jsdoc.json",
+    "seed": "tsc && node dist/database/seeder.js"
   },
   "keywords": [],
   "author": "",

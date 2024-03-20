@@ -8,6 +8,13 @@ import {rolesModel} from "../models/roles.model";
 
 import fs from 'fs';
 import path from "path";
+import { Op } from 'sequelize';
+import {JwtPayloadWithTokenData} from "token";
+
+interface ExtendRequest extends Request {
+    user?: JwtPayloadWithTokenData
+}
+
 
 /**
  * The getUsers function is an asynchronous function that retrieves users from a database based on
@@ -146,36 +153,45 @@ export const postUser = async (req: Request, res: Response) => {
  * JSON response containing the error message.
  */
 export const putUser = async (req: Request, res: Response) => {
-    const {id} = req.params;
-    // const { name, lastname, address, phone, email, password, roleId } = req.body;
-    const {name, lastname, address, phone, email, roleId, documentType, document} = req.body;
+    const { id } = req.params;
+    const { name, lastname, address, phone, email, roleId, documentType, document } = req.body;
+
     try {
-        const existsEmail= await userModel.findOne( { where: {email} }); 
-        if (existsEmail){
-            return res.status(400).json({msg: `Este correo ya esta registrado`})
-        }
-        const existDocument= await coustumersModel.findOne( { where: {document} });
-        if(existDocument){
-            return res.status(400).json({msg: `Este documento ya esta registrado`})
-        }
         const user: UserModelType | null = await userModel.findByPk(id);
         if (!user) {
-            return res.status(404).json({msg: 'User not found'});
+            return res.status(404).json({ msg: 'Usuario no encontrado' });
         }
-        console.log(user)
-        await user.update({name, lastname, address, phone, email, roleId});
 
-        const coustumer = await coustumersModel.findOne({where: {userId: user.id}});
-        if (!coustumer) {
-            return res.status(404).json({msg: 'Coustumer not found'});
+        // Verificar si el correo se está actualizando y es diferente al correo actual
+        if (email !== user.email) {
+            const existsEmail = await userModel.findOne({ where: { email } });
+            if (existsEmail) {
+                return res.status(400).json({ msg: `Este correo ya está registrado` });
+            }
         }
-        await coustumer.update({documentType, document, phone, address, name: `${name} ${lastname}`});
-        res.status(200).json({user, message: "Usuario actualizado correctamente"});
+
+        // Verificar si el documento se está actualizando y es diferente al documento actual
+        if (document !== user.document) {
+            const existDocument = await coustumersModel.findOne({ where: { document, userId: { [Op.ne]: user.id } } });
+            if (existDocument) {
+                return res.status(400).json({ msg: `Este documento ya está registrado` });
+            }
+        }
+
+        await user.update({ name, lastname, address, phone, email, roleId });
+
+        const coustumer = await coustumersModel.findOne({ where: { userId: user.id } });
+        if (!coustumer) {
+            return res.status(404).json({ msg: 'Cliente no encontrado' });
+        }
+
+        await coustumer.update({ documentType, document, phone, address, name: `${name} ${lastname}` });
+        res.status(200).json({ user, message: "Usuario actualizado correctamente" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg: error});
+        res.status(500).json({ msg: error });
     }
-}
+};
 
 /**
  * The deleteUser function is an asynchronous function that deletes a user by their ID and updates
@@ -270,4 +286,33 @@ export const getImage = async (req: Request, res: Response) => {
         return res.sendFile(path.resolve(pathImage));
 
     })
+}
+
+export const getMyProfile = async (req: ExtendRequest , res: Response) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(404).json({msg: 'User not found'});
+        }
+
+        const userData = await userModel.findByPk(user.id, {
+            include: [
+                {
+                    model: rolesModel,
+                    as: 'role',
+                    attributes: ['name'],
+                },
+                {
+                    model: coustumersModel,
+                    as: 'coustumer',
+                    attributes: ['name', 'document', 'documentType', 'address', 'phone'],
+                }
+            ]
+        });
+
+        res.status(200).json({user: userData});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 }

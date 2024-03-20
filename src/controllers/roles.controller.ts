@@ -1,8 +1,9 @@
-import { Response, Request } from 'express';
-import { rolesModel } from '../models/roles.model';
-import { roleDetailsModel } from '../models/roleDetails.model';
-import { permissionsModel } from '../models/permissions.model';
-import { optionsPagination } from 'generalTypes';
+import {Response, Request} from 'express';
+import {rolesModel} from '../models/roles.model';
+import {roleDetailsModel} from '../models/roleDetails.model';
+import {permissionsModel} from '../models/permissions.model';
+import {optionsPagination} from 'generalTypes';
+import {Op} from "sequelize";
 
 /**
  * The `getRoles` function is an asynchronous function that retrieves roles from a database with
@@ -15,36 +16,47 @@ import { optionsPagination } from 'generalTypes';
  * as setting the status code and sending JSON data.
  */
 export const getRoles = async (req: Request, res: Response) => {
-	try {
-		const { page, limit, order } = req.query;
-		const options: optionsPagination = {
-			page: parseInt(page as string, 10) || 1,
-			limit: parseInt(limit as string, 10) || 10,
-			paginate: parseInt(limit as string, 10) || 10,
-			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
-		};
-		const roles = await rolesModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
-			order: [options.order],
-			include: [
-				{
-					model: roleDetailsModel,
-					// Get name of the permissions associated with the role
-					include: [
-						{
-							model: permissionsModel,
-							attributes: ['id', 'name'],
-						},
-					],
-				},
-			],
-		});
-		res.status(200).json({ roles, options });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+    try {
+        const {search} = req.query;
+        const {page, limit, order} = req.query;
+        const options: optionsPagination = {
+            page: parseInt(page as string, 10) || 1,
+            limit: parseInt(limit as string, 10) || 10,
+            paginate: parseInt(limit as string, 10) || 10,
+            order: order ? JSON.parse(order as string) : ['id', 'ASC'],
+        };
+        const roles = await rolesModel.findAndCountAll({
+            limit: options.limit,
+            offset: options.limit * (options.page - 1),
+            order: [options.order],
+            where: search ? {
+                name: {
+                    [Op.iLike]: `%${search}%`,
+                },
+                description: {
+                    [Op.iLike]: `%${search}%`,
+                }
+            } : {},
+            include: [
+                {
+                    model: roleDetailsModel,
+                    // Get name of the permissions associated with the role
+                    include: [
+                        {
+                            model: permissionsModel,
+                            attributes: ['id', 'name'],
+                        },
+                    ],
+                },
+            ],
+        });
+
+
+        res.status(200).json({roles: {...roles, count: roles.rows.length}, options});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -60,24 +72,24 @@ export const getRoles = async (req: Request, res: Response) => {
  * if the role is not found.
  */
 export const getRole = async (req: Request, res: Response) => {
-	const { id } = req.params;
-	const role = await rolesModel.findByPk(id, {
-		include: [
-			{
-				model: roleDetailsModel,
-				include: [
-					{
-						model: permissionsModel,
-						attributes: ['id', 'name'],
-					},
-				]
-			},
-		],
-	});
-	if (!role) {
-		return res.status(404).json({ msg: 'role not found' });
-	}
-	res.status(200).json({ role });
+    const {id} = req.params;
+    const role = await rolesModel.findByPk(id, {
+        include: [
+            {
+                model: roleDetailsModel,
+                include: [
+                    {
+                        model: permissionsModel,
+                        attributes: ['id', 'name'],
+                    },
+                ]
+            },
+        ],
+    });
+    if (!role) {
+        return res.status(404).json({msg: 'role not found'});
+    }
+    res.status(200).json({role});
 };
 
 /**
@@ -91,19 +103,19 @@ export const getRole = async (req: Request, res: Response) => {
  * as setting the status code, headers, and sending the response body.
  */
 export const postRole = async (req: Request, res: Response) => {
-	const { name, description, permissions } = req.body;
-	try {
-		const newRole = await rolesModel.create({ name, description });
-		const permissionsInstance = permissions.map((permission: any) => ({
-			rolId: newRole.getDataValue('id'),
-			permissionId: permission,
-		}));
-		await roleDetailsModel.bulkCreate(permissionsInstance);
-		res.status(201).json({ newRole, permissionsInstance });
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ msg: error });
-	}
+    const {name, description, permissions} = req.body;
+    try {
+        const newRole = await rolesModel.create({name, description});
+        const permissionsInstance = permissions.map((permission: any) => ({
+            rolId: newRole.getDataValue('id'),
+            permissionId: permission,
+        }));
+        await roleDetailsModel.bulkCreate(permissionsInstance);
+        res.status(201).json({newRole, permissionsInstance});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg: error});
+    }
 };
 
 /**
@@ -119,20 +131,20 @@ export const postRole = async (req: Request, res: Response) => {
  * the role was not found.
  */
 export const putRole = async (req: Request, res: Response) => {
-	const { id } = req.params;
-	const { name, description, permissions } = req.body;
-	const role = await rolesModel.findByPk(id);
-	if (!role) {
-		return res.status(404).json({ msg: 'role not found' });
-	}
-	role.update({ name, description });
-	const permissionsInstance = permissions.map((permission: any) => ({
-		rolId: role.getDataValue('id'),
-		permissionId: permission,
-	}));
-	await roleDetailsModel.destroy({ where: { rolId: id } });
-	await roleDetailsModel.bulkCreate(permissionsInstance);
-	res.status(200).json({ role });
+    const {id} = req.params;
+    const {name, description, permissions} = req.body;
+    const role = await rolesModel.findByPk(id);
+    if (!role) {
+        return res.status(404).json({msg: 'role not found'});
+    }
+    role.update({name, description});
+    const permissionsInstance = permissions.map((permission: any) => ({
+        rolId: role.getDataValue('id'),
+        permissionId: permission,
+    }));
+    await roleDetailsModel.destroy({where: {rolId: id}});
+    await roleDetailsModel.bulkCreate(permissionsInstance);
+    res.status(200).json({role});
 };
 
 /**
@@ -147,11 +159,11 @@ export const putRole = async (req: Request, res: Response) => {
  * returns a JSON response with a 404 status and a message stating that the role was not found.
  */
 export const deleteRole = async (req: Request, res: Response) => {
-	const { id } = req.params;
-	const role = await rolesModel.findByPk(id);
-	if (!role) {
-		return res.status(404).json({ msg: 'role not found' });
-	}
-	role.update({ state: !role.getDataValue('state') });
-	res.status(200).json({ role });
+    const {id} = req.params;
+    const role = await rolesModel.findByPk(id);
+    if (!role) {
+        return res.status(404).json({msg: 'role not found'});
+    }
+    role.update({state: !role.getDataValue('state')});
+    res.status(200).json({role});
 };

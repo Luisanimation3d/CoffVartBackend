@@ -130,7 +130,7 @@ export const postProductionRequest =async(req:Request, res:Response)=> {
         processId: process.getDataValue('id')
       });
 
-        res.status(201).json({newProductionRequest});
+        res.status(201).json({newProductionRequest, message: 'Solicitud P. creada correctamente'});
     } catch (error) {
         console.log(error);
 		res.status(500).json({ msg: error });
