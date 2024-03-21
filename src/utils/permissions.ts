@@ -92,7 +92,7 @@ export const permissions: {name: string, description: string}[] = [
         description: 'Get products'
     },
     {
-        name: 'post products',
+        name: 'post productos',
         description: 'Post products'
     },
     {
