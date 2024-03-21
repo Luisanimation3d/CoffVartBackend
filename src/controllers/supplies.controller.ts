@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { suppliesModel } from "../models/supplies.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 
 
@@ -14,7 +14,7 @@ export const getSupplies = async (req: Request, res: Response) => {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const supplies = await suppliesModel.findAndCountAll({
-			limit: options.limit,
+			limit: limit != 'ALL' ? options.limit : undefined,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});

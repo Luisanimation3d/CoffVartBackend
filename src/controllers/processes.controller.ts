@@ -23,8 +23,8 @@ export const getProcesses = async (req: Request, res: Response) => {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const processes = await processesModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
+            limit: limit != 'ALL' ? options.limit : undefined,
+            offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
 		res.status(200).json({ processes, options });

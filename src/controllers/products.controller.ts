@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { productModel } from "../models/products.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 import fs from 'fs';
 import path from "path";
@@ -15,8 +15,8 @@ export const getProducts = async (req: Request, res: Response) => {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const products = await productModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
+            limit: limit != 'ALL' ? options.limit : undefined,
+            offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
 		res.status(200).json({ products, options });

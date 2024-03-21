@@ -13,8 +13,8 @@ export const getCoustumers = async (req: Request, res: Response) => {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
         };
         const coustumers = await coustumersModel.findAndCountAll({
-            limit: options.limit,
-			offset: options.limit * (options.page - 1),
+            limit: limit != 'ALL' ? options.limit : undefined,
+            offset: options.limit * (options.page - 1),
 			order: [options.order],
             include: [{
                 model: userModel,

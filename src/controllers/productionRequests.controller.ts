@@ -1,6 +1,6 @@
 import {Response, Request} from "express";
 import { productionRequestModel } from "../models/productionRequests.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 import { suppliesModel } from "../models/supplies.model";
 import { processesModel } from "../models/processes.model";
 import { companyModel } from "../models/companys.model";
@@ -26,8 +26,8 @@ export const getProductionRequests = async (req: Request, res: Response)=> {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const ProductionRequests = await productionRequestModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
+            limit: limit != 'ALL' ? options.limit : undefined,
+            offset: options.limit * (options.page - 1),
 			order: [options.order],
             include: [
                 {
