@@ -26,7 +26,7 @@ export const getRoles = async (req: Request, res: Response) => {
             order: order ? JSON.parse(order as string) : ['id', 'ASC'],
         };
         const roles = await rolesModel.findAndCountAll({
-            limit: options.limit,
+            limit: limit != 'ALL' ? options.limit : undefined,
             offset: options.limit * (options.page - 1),
             order: [options.order],
             where: search ? {

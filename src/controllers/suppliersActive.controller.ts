@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { supplierModel } from "../models/suppliers.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 export const getSuppliersActive = async (req: Request, res: Response) => {
 	try {
@@ -13,8 +13,8 @@ export const getSuppliersActive = async (req: Request, res: Response) => {
 		};
 
 		const suppliers= await supplierModel.findAndCountAll({
-			where: { state: true },  
-			limit: options.limit,
+			where: { state: true },
+			limit: limit != 'ALL' ? options.limit : undefined,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});

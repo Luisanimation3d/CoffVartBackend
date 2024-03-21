@@ -24,7 +24,7 @@ export const getCompanys = async (req: Request, res: Response) => {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const companys = await companyModel.findAndCountAll({
-			limit: options.limit,
+            limit: limit != 'ALL' ? options.limit : undefined,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});

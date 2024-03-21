@@ -1,6 +1,6 @@
 import {Response, Request} from "express";
 import { supplierModel } from "../models/suppliers.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 /**
  * The function `getsupplierss` is an asynchronous function that retrieves supplierss from a database
@@ -23,8 +23,8 @@ export const getSuppliers = async (req: Request, res: Response)=> {
 			order: order ? JSON.parse(order as string) : ['id', 'ASC'],
 		};
 		const suppliers = await supplierModel.findAndCountAll({
-			limit: options.limit,
-			offset: options.limit * (options.page - 1),
+            limit: limit != 'ALL' ? options.limit : undefined,
+            offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
 		res.status(200).json({ suppliers, options });

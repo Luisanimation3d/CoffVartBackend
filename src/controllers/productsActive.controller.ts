@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { productModel } from "../models/products.model";
-import { optionsPagination } from '../types/generalTypes';
+import { optionsPagination } from 'generalTypes';
 
 export const getProductsActive = async (req: Request, res: Response) => {
 	try {
@@ -13,8 +13,8 @@ export const getProductsActive = async (req: Request, res: Response) => {
 		};
 
 		const products = await productModel.findAndCountAll({
-			where: { state: true },  
-			limit: options.limit,
+			where: { state: true },
+			limit: limit != 'ALL' ? options.limit : undefined,
 			offset: options.limit * (options.page - 1),
 			order: [options.order],
 		});
