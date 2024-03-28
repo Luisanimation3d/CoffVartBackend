@@ -260,7 +260,7 @@ export const putProductionOrder = async (req: Request, res: Response) => {
         await productionOrders.update({processId});
         console.log(processId,'aquí está el proceso................................................')
         
-        res.status(200).json({productionOrders});
+        res.status(200).json({productionOrders, message: "proceso actualizado correctamente"});
     } catch (error) {
         console.log(error);
         res.status(500).json({msg: error});
