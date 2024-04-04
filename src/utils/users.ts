@@ -20,7 +20,7 @@ export const users: {
         lastname: 'Correa',
         state: true,
         phone: '3045616983',
-        email: 'luisaniamtion3d@gmail.com',
+        email: 'luisanimation3d@gmail.com',
         password: 'Admin123*',
         roleId: 1,
         coustumer: {
