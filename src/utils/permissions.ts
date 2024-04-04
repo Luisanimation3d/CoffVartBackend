@@ -1,5 +1,9 @@
 export const permissions: {name: string, description: string}[] = [
     {
+        name: 'get Dashboard',
+        description: 'Get Dashboard'
+    },
+    {
         name: 'get usuarios',
         description: 'Get usuarios'
     },

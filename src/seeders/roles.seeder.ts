@@ -11,19 +11,22 @@ export async function rolesSeeder() {
                     name: element.name,
                     description: element.description
                 })
-                const permissionsInstance = element.permissions.map((permission) => ({
-                    rolId: newRole.getDataValue('id'),
-                    permissionId: permission
-                }));
+                if(element.permissions) {
+                    const permissionsInstance = element.permissions.map((permission) => ({
+                        rolId: newRole.getDataValue('id'),
+                        permissionId: permission
+                    }));
 
-                console.log(permissionsInstance[0], 'permissionsInstance');
+                    console.log(permissionsInstance[0], 'permissionsInstance');
 
-                await roleDetailsModel.bulkCreate(permissionsInstance);
+                    await roleDetailsModel.bulkCreate(permissionsInstance);
+                }
             }
 
             createRole();
 
         });
+
         return true;
     } catch (e) {
         console.log(e);
