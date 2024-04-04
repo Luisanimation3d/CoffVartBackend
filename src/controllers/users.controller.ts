@@ -109,7 +109,7 @@ export const getUser = async (req: Request, res: Response) => {
  * as setting the status code, headers, and sending the response body.
  */
 export const postUser = async (req: Request, res: Response) => {
-    const {name, lastname, address, phone, email, password, roleId, documentType, document} = req.body;
+    const {name, lastname, address, phone, email, password, roleId = 2, documentType, document} = req.body;
     try {
         const existsEmail= await userModel.findOne( { where: {email} }); 
         if (existsEmail){
