@@ -25,7 +25,7 @@ export const users: {
         roleId: 1,
         coustumer: {
             documentType: 'CC',
-            document: '1000099918',
+            document: '1000099926',
             address: 'Calle 96C # 80 - 15'
         }
     }
