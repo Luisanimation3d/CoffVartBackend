@@ -115,6 +115,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
             supplieId: number,
             processId: number,
         } = req.body;
+        let quantitypor1000 = quantity * 1000;
     try {
         const finalProcessId = processId || 4;
 
@@ -143,7 +144,7 @@ export const postProductionOrder = async (req: Request, res: Response) => {
         
 
         const newProductionOrder = await productionOrderModel.create({
-            quantity,
+            quantity: quantitypor1000,
             reasonCancellation,
             supplieId: supplie.getDataValue('id'),
             processId: process.getDataValue('id'),
